@@ -82,6 +82,10 @@ function findChrome() {
     await page.evaluate(() => window.__NL.invincible(true));
     assert("starts in PLAY on stage 0", (await state()) === "play" && (await stageIdx()) === 0);
 
+    // extend: crossing a score threshold grants a 1UP
+    const ext = await page.evaluate(() => { const before = window.__NL.lives; window.NL.game.addScore(60000); return { before, after: window.__NL.lives }; });
+    assert("score 60k grants a 1UP", ext.after === ext.before + 1, ext);
+
     // Stage 1 boss
     let b1 = await killBossByDPS("boss1");
     await page.waitForFunction(() => window.__NL.state === "clear", { timeout: 6000 });

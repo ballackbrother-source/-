@@ -35,8 +35,9 @@ node tools/serve.js 8080      # or: python3 -m http.server 8080
 
 Built to be approachable for everyone: a **difficulty selector** on the title
 (EASY gives 5 lives, slower enemy fire and frequent power-ups; HARD is for veterans),
-**infinite continues**, a short **HOW TO PLAY** prompt at the start of stage 1, and a
-"die-once-then-get-warned" trap system so nobody is stuck. Choose with ← → (or tap a
+**infinite continues**, **1UP extends** at score milestones (50k / 150k / 300k / +200k),
+a short **HOW TO PLAY** prompt at the start of stage 1, clearly-readable enemy bullets, a
+visible player hitbox marker, and a "die-once-then-get-warned" trap system so nobody is stuck. Choose with ← → (or tap a
 button) and start with Z / Space / Enter / click.
 
 ## 🎮 Controls

@@ -112,7 +112,8 @@
     select()  { blip({ type: "square", f0: 900, f1: 900, dur: 0.05, gain: 0.16 }); },
     start()   { blip({ type: "square", f0: 440, f1: 880, dur: 0.18, gain: 0.22 }); setTimeout(() => blip({ type: "square", f0: 880, f1: 1320, dur: 0.2, gain: 0.2 }), 120); },
     gameover(){ const seq = [392, 330, 294, 196]; seq.forEach((f, i) => setTimeout(() => blip({ type: "triangle", f0: f, f1: f * 0.6, dur: 0.4, gain: 0.2 }), i * 220)); },
-    clear()   { const seq = [523, 659, 784, 1046]; seq.forEach((f, i) => setTimeout(() => blip({ type: "square", f0: f, f1: f, dur: 0.22, gain: 0.2 }), i * 130)); }
+    clear()   { const seq = [523, 659, 784, 1046]; seq.forEach((f, i) => setTimeout(() => blip({ type: "square", f0: f, f1: f, dur: 0.22, gain: 0.2 }), i * 130)); },
+    extend()  { const seq = [659, 880, 1175, 1568]; seq.forEach((f, i) => setTimeout(() => blip({ type: "square", f0: f, f1: f, dur: 0.16, gain: 0.22 }), i * 80)); }
   };
 
   // ---- Sequenced chiptune BGM --------------------------------------------

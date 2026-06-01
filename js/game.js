@@ -47,6 +47,7 @@
     deathTimer: 0,
     clearTimer: 0,
     continueCount: 0, continueTimer: 0,
+    extendsAwarded: 0,
     bossDefeatedFlag: false,
     input: NL.input,
     paused: false
@@ -85,7 +86,22 @@
 
   function persist() { U.save({ hi: G.hiScore, learned: G.learned, difficulty: G.difficulty }); }
 
-  G.addScore = function (n) { G.score += n; if (G.score > G.hiScore) { G.hiScore = G.score; } };
+  // 1UP extends: rewards everyone and quietly helps newcomers survive.
+  const EXTEND_BASE = [50000, 150000, 300000];
+  const MAX_LIVES = 9;
+  function extendThreshold(i) {
+    return i < EXTEND_BASE.length ? EXTEND_BASE[i] : EXTEND_BASE[EXTEND_BASE.length - 1] + (i - EXTEND_BASE.length + 1) * 200000;
+  }
+  G.addScore = function (n) {
+    G.score += n;
+    if (G.score > G.hiScore) G.hiScore = G.score;
+    // consume any crossed extend thresholds (advance even if lives are capped,
+    // so dying later can't trigger a flood of 1UPs)
+    while (G.score >= extendThreshold(G.extendsAwarded)) {
+      G.extendsAwarded++;
+      if (G.lives < MAX_LIVES) { G.lives++; G.toast("1UP!"); NL.audio.sfx.extend(); FX.flashScreen(6, "120,255,160"); }
+    }
+  };
 
   // ---- drops ----
   G.maybeDrop = function (e) {
@@ -311,7 +327,7 @@
     G.difficulty = DIFF_ORDER[G.menuSel] || "normal";
     G.diff = DIFFS[G.difficulty]; NL.diff = G.diff;
     persist();
-    G.score = 0; G.lives = G.diff.lives; G.continueCount = 0;
+    G.score = 0; G.lives = G.diff.lives; G.continueCount = 0; G.extendsAwarded = 0;
     G.player.reset();
     G._victoryReady = false; G._vReadyT = 0;
     G.startStage(0);
