@@ -5,7 +5,9 @@
   "description": "NOVA LANCE — Burning Skies : browser horizontal shmup",
   "scripts": {
     "serve": "node tools/serve.js",
-    "qa": "node qa/qa.js"
+    "qa": "node qa/qa.js",
+    "flow": "node qa/flow.js",
+    "gif": "node qa/gif.js"
   },
   "devDependencies": {
     "playwright": "^1.60.0"

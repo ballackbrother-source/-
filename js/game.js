@@ -404,6 +404,8 @@
       return { before, after: G.boss.hp, delta: before - G.boss.hp };
     },
     killBoss() { if (G.boss) G.boss.beginDeath(G); },
+    setLives(n) { G.lives = n; },
+    killPlayer() { G.player.invuln = 0; G.player.shield = 0; G.player.hit(G); },
     addCapsule() { NL.powerups.spawn(G.player.x + 200, G.player.y, false); },
     invincible(v) { G.player.invuln = v ? 1e9 : 0; }
   };

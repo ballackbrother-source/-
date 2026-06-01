@@ -94,17 +94,22 @@ python3 tools/generate_assets.py         # writes assets/*.png, flips manifest "
 ## ✅ Quality assurance
 
 ```bash
-node qa/qa.js     # headless-Chrome QA
+node qa/qa.js     # headless-Chrome QA: screenshots + boss-hit verification
+node qa/flow.js   # end-to-end state-machine + balance integration test
+node qa/gif.js    # record a real playthrough and build demo.gif
 ```
 
-The harness:
+`qa/qa.js`:
 - boots the game through the local server and **fails on any console error** (currently **0**),
 - screenshots the **title, all 3 stages, and all 3 bosses** into `qa/shots/`,
 - **numerically verifies** that hitting each boss's **core weak point reduces its HP** — both via
   a direct hit-test and by spawning a real player shot and resolving collisions (armour never
-  blocks the core).
+  blocks the core),
+- regression-checks that recycled enemy-pool objects carry no stale state.
 
-`node qa/gif.js` records a real playthrough and builds `demo.gif`.
+`qa/flow.js` drives the **real transitions**: boss defeat → STAGE CLEAR → next stage → … →
+VICTORY, plus the death → CONTINUE → resume and CONTINUE-timeout → GAME OVER paths, and a
+balance sanity check on how long each boss survives sustained fire.
 
 ---
 
