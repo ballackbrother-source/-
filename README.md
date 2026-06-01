@@ -47,7 +47,7 @@ button) and start with Z / Space / Enter / click.
 | Move | Arrow keys / WASD, or hold-mouse to steer | drag on the left half of the screen |
 | Fire | `Z` / `Space` / left-click | **FIRE** button |
 | Power (activate meter slot) | `X` / `Shift` / right-click | **POWER** button |
-| Pause | `P` | — |
+| Pause menu (Resume / Restart stage / Quit to title) | `P` | **❚❚** button (top-right) |
 | Mute | `M` | — |
 
 ### Power meter (Gradius-style)

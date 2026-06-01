@@ -39,6 +39,8 @@
       document.getElementById("btn-fire"),
       document.getElementById("btn-power")
     );
+    const pb = document.getElementById("btn-pause");
+    if (pb) pb.addEventListener("touchstart", (e) => { e.preventDefault(); NL.input.virtualPress("pause"); }, { passive: false });
   }
 
   NL.input.attach(canvas);

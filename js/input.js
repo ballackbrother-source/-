@@ -131,6 +131,9 @@
 
   I.touchDelta = null;
 
+  // inject a virtual edge press from an on-screen button (e.g. touch pause)
+  I.virtualPress = function (action) { edge[action] = true; if (action !== "pause") edge.any = true; };
+
   // Called once per frame by the game to latch edges.
   I.poll = function () {
     I.up = !!held.up; I.down = !!held.down; I.left = !!held.left; I.right = !!held.right;

@@ -224,6 +224,28 @@
     g.restore();
   };
 
+  // ---------- pause menu ----------
+  UI.pauseRects = null;
+  UI.drawPauseMenu = function (g, game, items) {
+    g.fillStyle = "rgba(2,6,14,0.72)"; g.fillRect(0, 0, NL.W, NL.H);
+    glowTxt(g, "PAUSED", NL.W / 2, NL.H * 0.3, 52, "#eaf6ff", "rgba(54,224,255,.8)", "center");
+    const w = 360, h = 56, gap = 16;
+    const x = (NL.W - w) / 2; let y = NL.H * 0.42;
+    const rects = [];
+    for (let i = 0; i < items.length; i++) {
+      const sel = game.pauseSel === i;
+      rects.push({ x, y, w, h });
+      g.fillStyle = sel ? "rgba(54,224,255,.85)" : "rgba(10,24,40,.7)";
+      g.strokeStyle = sel ? "#eaffff" : "rgba(90,150,200,.5)";
+      g.lineWidth = sel ? 3 : 1.5;
+      roundRect(g, x, y, w, h, 8); g.fill(); g.stroke();
+      glowTxt(g, items[i], NL.W / 2, y + 36, 22, sel ? "#03121e" : "#cfe9ff", sel ? "rgba(255,255,255,.4)" : "rgba(0,0,0,0)", "center");
+      y += h + gap;
+    }
+    txt(g, game.input.isTouch ? "項目をタップ" : "↑↓ で選択   Z / ENTER で決定   P で再開", NL.W / 2, y + 14, 15, "#9fc4dd", "center");
+    UI.pauseRects = rects;
+  };
+
   UI.drawCenterPanel = function (g, lines, accent) {
     g.fillStyle = "rgba(2,6,14,0.72)"; g.fillRect(0, 0, NL.W, NL.H);
     let y = NL.H / 2 - (lines.length * 30);

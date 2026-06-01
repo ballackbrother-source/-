@@ -42,6 +42,7 @@
     difficulty: "normal",
     diff: DIFFS.normal,
     menuSel: 1,
+    pauseSel: 0,
     tutorialTimer: 0,
     flagsThisStage: {},
     deathTimer: 0,
@@ -260,12 +261,12 @@
         break;
 
       case STATE.PLAY:
-        if (In.pausePressed) { G.state = STATE.PAUSE; break; }
+        if (In.pausePressed) { enterPause(); break; }
         stepPlay();
         break;
 
       case STATE.PAUSE:
-        if (In.pausePressed) G.state = STATE.PLAY;
+        handlePause(In);
         break;
 
       case STATE.DEATH:
@@ -321,6 +322,30 @@
     }
     // keyboard start (Z / Space / Enter) — arrows only navigate
     if (In.firePressed || In.confirmPressed) { NL.audio.resume(); NL.audio.sfx.start(); startNewGame(); }
+  }
+
+  // ---- pause menu ----
+  const PAUSE_ITEMS = ["RESUME", "RESTART STAGE", "QUIT TO TITLE"];
+  function enterPause() { G.state = STATE.PAUSE; G.pauseSel = 0; NL.audio.stopMusic(); NL.audio.sfx.select(); }
+  function resumeMusic() { NL.audio.playMusic(G.boss && !G.boss.dead ? "boss" : NL.stages.list[G.stageIdx].music); }
+  function doPauseAction() {
+    switch (G.pauseSel) {
+      case 0: G.state = STATE.PLAY; resumeMusic(); break;
+      case 1: NL.audio.sfx.start(); G.startStage(G.stageIdx); G.state = STATE.PLAY; break;
+      case 2: NL.audio.sfx.select(); G.state = STATE.TITLE; NL.audio.playMusic("title"); break;
+    }
+  }
+  function handlePause(In) {
+    if (In.pausePressed) { G.state = STATE.PLAY; resumeMusic(); return; }
+    if (In.upPressed) { G.pauseSel = (G.pauseSel + 2) % 3; NL.audio.sfx.select(); }
+    if (In.downPressed) { G.pauseSel = (G.pauseSel + 1) % 3; NL.audio.sfx.select(); }
+    if (In.pointerPressed && In.tapPoint && NL.ui.pauseRects) {
+      const p = In.tapPoint; let hit = -1;
+      NL.ui.pauseRects.forEach((b, i) => { if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) hit = i; });
+      if (hit >= 0) { G.pauseSel = hit; doPauseAction(); }
+      return;
+    }
+    if (In.firePressed || In.confirmPressed) doPauseAction();
   }
 
   function startNewGame() {
@@ -409,13 +434,15 @@
     if (NL.input.isTouch) {
       if (!G._touchUIEl) G._touchUIEl = document.getElementById("touch-ui");
       if (G._touchUIEl) {
-        const show = (G.state === STATE.PLAY || G.state === STATE.PAUSE || G.state === STATE.DEATH);
+        // show pad/buttons only during active play (hidden in PAUSE so the
+        // pause-menu taps land on the canvas instead of the move pad)
+        const show = (G.state === STATE.PLAY || G.state === STATE.DEATH);
         G._touchUIEl.classList.toggle("hidden", !show);
       }
     }
 
     // overlays
-    if (G.state === STATE.PAUSE) NL.ui.drawCenterPanel(g, [{ s: "PAUSED", size: 48 }, { s: "P で再開", size: 20, col: "#9fc4dd" }]);
+    if (G.state === STATE.PAUSE) NL.ui.drawPauseMenu(g, G, PAUSE_ITEMS);
     if (G.state === STATE.CONTINUE) {
       const sec = Math.ceil(G.continueTimer / 60);
       NL.ui.drawCenterPanel(g, [

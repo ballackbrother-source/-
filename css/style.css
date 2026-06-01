@@ -55,6 +55,14 @@ html,body {
   border-color:rgba(255,140,90,.7); background:rgba(80,30,15,.45);
   text-shadow:0 0 10px rgba(255,120,60,.9); }
 .tbtn:active { transform:scale(.92); background:rgba(54,224,255,.35); }
+#btn-pause {
+  pointer-events:auto; position:absolute; top:54px; right:16px;
+  width:50px; height:38px; border-radius:8px;
+  border:2px solid rgba(120,200,255,.5); background:rgba(20,40,70,.5);
+  color:#dff; font-size:14px; letter-spacing:.08em;
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+}
+#btn-pause:active { background:rgba(54,224,255,.35); }
 
 /* Rotate hint */
 #rotate-hint {
