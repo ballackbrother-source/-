@@ -36,6 +36,7 @@
     toastText: "", toastTimer: 0,
     warnText: "", warnTimer: 0,
     cardTimer: 0,
+    bossIntroTimer: 0,
     stageName: "",
     bg: null,
     learned: {},
@@ -218,8 +219,9 @@
     G.boss = NL.bosses.make(G.stageIdx, G);
     G.scrollSpeed = 0;
     NL.audio.playMusic("boss");
-    G.toast("WARNING — BOSS APPROACHING");
+    G.bossIntroTimer = 150;
     NL.audio.sfx.warn();
+    setTimeout(() => NL.audio.sfx.warn(), 300);
   };
 
   G.onBossDead = function () {
@@ -374,6 +376,7 @@
     if (G.toastTimer > 0) G.toastTimer--;
     if (G.warnTimer > 0) G.warnTimer--;
     if (G.cardTimer > 0) G.cardTimer--;
+    if (G.bossIntroTimer > 0) G.bossIntroTimer--;
     if (G.tutorialTimer > 0) G.tutorialTimer--;
     if (!deathMode) { G.stageTimer++; runSchedule(); }
     G.scroll += G.scrollSpeed;
@@ -429,6 +432,8 @@
     if ((G.state === STATE.PLAY || G.state === STATE.DEATH) && G.cardTimer > 0) NL.ui.drawStageCard(g, G);
     // friendly control tutorial at the very start of a run
     if (G.state === STATE.PLAY && G.stageIdx === 0 && G.tutorialTimer > 0) NL.ui.drawTutorial(g, G);
+    // dramatic boss WARNING intro
+    if ((G.state === STATE.PLAY || G.state === STATE.DEATH) && G.boss && G.bossIntroTimer > 0) NL.ui.drawBossWarning(g, G);
 
     // touch controls only during gameplay, so title/menu taps reach the canvas
     if (NL.input.isTouch) {

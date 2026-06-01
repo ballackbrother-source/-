@@ -224,6 +224,35 @@
     g.restore();
   };
 
+  // ---------- boss WARNING intro ----------
+  UI.drawBossWarning = function (g, game) {
+    const t = game.bossIntroTimer, max = 150;
+    let a = 1;
+    if (max - t < 18) a = (max - t) / 18;     // fade in
+    else if (t < 30) a = t / 30;              // fade out
+    const cy = NL.H * 0.42, bh = 96, scroll = (game.frame * 6) % 80;
+    g.save(); g.globalAlpha = a;
+    // red edge pulse
+    const ep = 0.2 + 0.2 * Math.sin(game.frame * 0.4);
+    g.fillStyle = `rgba(180,20,10,${ep})`;
+    g.fillRect(0, 0, NL.W, 10); g.fillRect(0, NL.H - 10, NL.W, 10);
+    g.fillRect(0, 0, 10, NL.H); g.fillRect(NL.W - 10, 0, 10, NL.H);
+    // banner with scrolling hazard stripes
+    g.fillStyle = "rgba(8,4,2,0.82)"; g.fillRect(0, cy - bh / 2, NL.W, bh);
+    g.save(); g.beginPath(); g.rect(0, cy - bh / 2, NL.W, 12); g.rect(0, cy + bh / 2 - 12, NL.W, 12); g.clip();
+    for (let x = -80 + scroll; x < NL.W + 80; x += 80) {
+      g.fillStyle = "#ffcf2a";
+      g.beginPath(); g.moveTo(x, cy - bh / 2); g.lineTo(x + 40, cy - bh / 2); g.lineTo(x + 0, cy - bh / 2 + 12); g.lineTo(x - 40, cy - bh / 2 + 12); g.closePath(); g.fill();
+      g.beginPath(); g.moveTo(x, cy + bh / 2 - 12); g.lineTo(x + 40, cy + bh / 2 - 12); g.lineTo(x, cy + bh / 2); g.lineTo(x - 40, cy + bh / 2); g.closePath(); g.fill();
+    }
+    g.restore();
+    // flashing WARNING + boss name
+    const flash = Math.floor(game.frame / 8) % 2 === 0;
+    glowTxt(g, "⚠  W A R N I N G  ⚠", NL.W / 2, cy - 4, 40, flash ? "#ffd23a" : "#ff7a3a", "rgba(255,120,40,.9)", "center");
+    glowTxt(g, game.boss.name, NL.W / 2, cy + 30, 20, "#ffe0c0", "rgba(255,80,40,.7)", "center");
+    g.restore();
+  };
+
   // ---------- pause menu ----------
   UI.pauseRects = null;
   UI.drawPauseMenu = function (g, game, items) {

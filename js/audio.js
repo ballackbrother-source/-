@@ -124,23 +124,23 @@
   const SCALE_MIN = [0, 2, 3, 5, 7, 8, 10]; // natural minor
 
   const TRACKS = {
-    title: { bpm: 96, root: 57, // A3
+    title: { bpm: 96, root: 57, leadType: "square", bassType: "triangle",
       lead: [0,7,12,7, 3,10,15,10, 5,12,17,12, 3,10,7,3],
       bass: [-12,-12,-5,-5,-12,-12,-7,-7],
       mood: 0.7 },
-    stage1: { bpm: 132, root: 57,
+    stage1: { bpm: 132, root: 57, leadType: "square", bassType: "triangle",
       lead: [0,3,7,10, 7,3,0,-2, 5,8,12,8, 3,7,10,7],
       bass: [-12,-12,0,-12,-7,-7,0,-7],
       mood: 1.0 },
-    stage2: { bpm: 124, root: 55, // G3 darker
+    stage2: { bpm: 124, root: 55, leadType: "sawtooth", bassType: "sawtooth", // G3 darker
       lead: [0,5,7,3, 0,-2,-5,-2, 3,7,10,7, 5,3,0,-5],
       bass: [-12,-12,-10,-10,-12,-12,-5,-5],
       mood: 0.85 },
-    stage3: { bpm: 144, root: 53, // F3 tense
+    stage3: { bpm: 144, root: 53, leadType: "sawtooth", bassType: "square", // F3 tense
       lead: [0,3,5,7, 10,7,5,3, 0,-2,0,3, 7,10,12,15],
       bass: [-12,-12,-12,-10,-8,-8,-7,-5],
       mood: 1.1 },
-    boss: { bpm: 156, root: 50, // D3 heavy
+    boss: { bpm: 156, root: 50, leadType: "sawtooth", bassType: "square", // D3 heavy
       lead: [0,3,7,3, 0,3,8,3, 5,8,12,8, 3,0,-2,-5],
       bass: [-12,-12,-12,-12,-10,-10,-13,-13],
       mood: 1.3 }
@@ -168,14 +168,14 @@
     // bass (every step)
     if (bd != null) {
       const m = scaleNote(tr.root, bd) ;
-      blip({ type: "triangle", f0: midi(m + 0), dur: beat * 1.6, gain: 0.18 * mood, bus: musicGain, atk: 0.008 });
+      blip({ type: tr.bassType || "triangle", f0: midi(m + 0), dur: beat * 1.6, gain: 0.18 * mood, bus: musicGain, atk: 0.008 });
     }
     // lead (square arpeggio)
     if (ld != null && step % 1 === 0) {
       const m = scaleNote(tr.root, ld);
-      blip({ type: "square", f0: midi(m + 12), dur: beat * 0.9, gain: 0.12 * mood, bus: musicGain, filter: "lowpass", fco: 3000 });
+      blip({ type: tr.leadType || "square", f0: midi(m + 12), dur: beat * 0.9, gain: 0.12 * mood, bus: musicGain, filter: "lowpass", fco: 3000 });
       // soft echo
-      setTimeout(() => blip({ type: "square", f0: midi(m + 12), dur: beat * 0.5, gain: 0.05 * mood, bus: musicGain }), beat * 1000 * 0.5);
+      setTimeout(() => blip({ type: tr.leadType || "square", f0: midi(m + 12), dur: beat * 0.5, gain: 0.05 * mood, bus: musicGain }), beat * 1000 * 0.5);
     }
     // counter-melody: a softer voice a third above, on the off-eighths
     if (ld != null && step % 2 === 0) {
