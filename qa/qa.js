@@ -84,6 +84,22 @@ const STAGE_NAMES = ["STAGE1_DAWN", "STAGE2_ASTEROID", "STAGE3_OVERLORD"];
       await shot(`${30 + i}_${STAGE_NAMES[i]}_boss_hit`);
     }
 
+    // regression: a recycled enemy object must not carry stale flags
+    // (a freed 'press' set invincible=true; a reused drone must be killable)
+    report.recycle = await page.evaluate(() => {
+      const E = window.NL.enemies;
+      E.reset();
+      const p = E.press(900, true);          // press sets invincible=true, flipX stays false
+      const amb = E.ambush(300);             // ambush sets flipX=true, trapId='ambush'
+      p._dead = true; amb._dead = true; E.pool.sweep();   // free both -> reset wipes fields
+      const d = E.drone(800, 300);           // reuses one of the freed slots
+      const f = E.fighter(800, 200);         // reuses the other
+      const ok = d.invincible === false && d.flipX === false && d.trapId === null &&
+                 f.invincible === false && f.flipX === false;
+      E.reset();
+      return { ok, droneInvincible: d.invincible, fighterFlipX: f.flipX };
+    });
+
     // victory screen
     await page.evaluate(() => { window.__NL.gotoStage(2); window.__NL.jumpToBoss(); });
     await page.waitForFunction(() => window.__NL.bossHp !== null, { timeout: 8000 });
@@ -99,7 +115,8 @@ const STAGE_NAMES = ["STAGE1_DAWN", "STAGE2_ASTEROID", "STAGE3_OVERLORD"];
   const allCores = report.bossProbes.length === 3;
   const coreHitsOk = report.bossProbes.every((p) => p.coreHitPart === "core" && p.coreDelta > 0 && p.shotDelta > 0);
   report.bossHitVerified = allCores && coreHitsOk;
-  report.pass = errors.length === 0 && report.bossHitVerified;
+  const recycleOk = report.recycle && report.recycle.ok;
+  report.pass = errors.length === 0 && report.bossHitVerified && recycleOk;
 
   fs.writeFileSync(path.join(__dirname, "report.json"), JSON.stringify(report, null, 2));
   fs.writeFileSync(path.join(__dirname, "console.log"), logs.join("\n"));
@@ -114,6 +131,7 @@ const STAGE_NAMES = ["STAGE1_DAWN", "STAGE2_ASTEROID", "STAGE3_OVERLORD"];
   console.log("boss probes    :");
   report.bossProbes.forEach((p) => console.log(`   stage${p.stage} ${p.boss}: hitPart=${p.coreHitPart} coreDelta=${p.coreDelta} shotDelta=${p.shotDelta}`));
   console.log("boss hit verified:", report.bossHitVerified);
+  console.log("recycle clean    :", report.recycle && report.recycle.ok, JSON.stringify(report.recycle));
   console.log("PASS:", report.pass);
   process.exit(report.pass ? 0 : 1);
 })();

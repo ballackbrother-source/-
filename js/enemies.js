@@ -12,17 +12,26 @@
   const WP = NL.weapons;
 
   const E = (NL.enemies = {});
-  E.pool = new U.Pool(() => ({}));
+  // Wipe every field when an enemy returns to the pool, so a recycled object
+  // never carries stale flags from its previous life (e.g. a press machine's
+  // `invincible`/`scroll`, an ambush's `flipX`, a carrier's `dropAlways`).
+  E.pool = new U.Pool(() => ({}), (o) => { for (const k in o) if (k !== "_dead") delete o[k]; });
 
   E.reset = function () { E.pool.clear(); };
 
   function base(type, x, y, opt) {
     const e = E.pool.spawn();
+    // Full default set — every optional flag is given a value so the object is
+    // fully defined regardless of what type previously occupied this slot.
     Object.assign(e, {
       type, x, y, vx: 0, vy: 0, t: 0, hp: 1, maxhp: 1, r: 22,
       flash: 0, shootCd: 60, score: 100, touch: 1, hittable: true,
       img: null, w: 0, h: 0, phase: opt && opt.phase || 0, trap: false,
-      warned: false, ax: x, ay: y
+      warned: false, ax: x, ay: y,
+      invincible: false, scroll: false, flip: false, flipX: false,
+      dropAlways: false, fromTop: false, state: null, timer: 0,
+      baseY: y, amp: 0, freq: 0, spin: 0, spinV: 0, stopX: 0, slamY: 0, restY: 0,
+      trapId: null
     });
     if (opt) Object.assign(e, opt);
     return e;
@@ -99,7 +108,9 @@
           e.x += e.vx; e.y = e.baseY + Math.sin(e.t * 0.06 + e.phase) * (e.amp || 0);
           break;
         case "turret":
-          if (e.scroll) e.x += game.scrollSpeed * -1; // ride terrain
+          // ride the terrain; keep drifting even when the boss freezes the
+          // parallax scroll (scrollSpeed -> 0) so it always clears the screen
+          if (e.scroll) e.x -= (game.scrollSpeed || 3);
           if (--e.shootCd <= 0 && e.x < NL.W && e.x > 0 && player.alive) { fan(e, player, 3, 3.6, "255,150,80"); e.shootCd = 120; }
           break;
         case "mid":
@@ -156,7 +167,9 @@
   }
 
   function updatePress(e, game, player) {
-    e.x += game.scrollSpeed * -1;
+    // keep scrolling off even when the boss sets scrollSpeed to 0, otherwise a
+    // lingering press would freeze on screen and never cull
+    e.x -= (game.scrollSpeed || 3);
     if (e.x < -120) { e._dead = true; return; }
     // telegraph then slam then retract
     switch (e.state) {

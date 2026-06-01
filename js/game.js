@@ -280,8 +280,9 @@
     stepWorld(false);
     // power activation
     if (NL.input.powerPressed) NL.powerups.activate(G.player, G);
-    // boss trigger
-    if (!G.boss && G.stageTimer >= G.bossAt && E.pool.count < 3) G.spawnBoss();
+    // boss trigger: wait for the screen to mostly clear, but never let a few
+    // lingering enemies/hazards stall the boss indefinitely (hard cap +10s).
+    if (!G.boss && G.stageTimer >= G.bossAt && (E.pool.count < 3 || G.stageTimer >= G.bossAt + 600)) G.spawnBoss();
   }
 
   // advance world (player optional fire). Used by PLAY and DEATH.
