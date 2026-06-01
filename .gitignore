@@ -1,0 +1,5 @@
+node_modules/
+qa/shots/
+qa/frames/
+qa/report.json
+qa/console.log

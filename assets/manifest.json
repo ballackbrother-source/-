@@ -1,0 +1,15 @@
+{
+  "generated": false,
+  "note": "Set \"generated\": true after running tools/generate_assets.py with your OpenAI API key. The game then loads these PNGs (chroma-keyed, transparent) in place of the built-in procedural sprites. While false, the game runs in procedural-art mode.",
+  "sprites": {
+    "player": "player.png",
+    "option": "option.png",
+    "enemyFighter": "enemy_fighter.png",
+    "enemyDrone": "enemy_drone.png",
+    "turret": "turret.png",
+    "midEnemy": "mid_enemy.png",
+    "missile": "missile.png",
+    "capsule": "capsule.png",
+    "capsuleFake": "capsule_fake.png"
+  }
+}

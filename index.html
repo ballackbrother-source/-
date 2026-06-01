@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>NOVA LANCE — Burning Skies</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2305070d'/%3E%3Cpath d='M2 8 L13 8 M10 5 L14 8 L10 11' stroke='%2336e0ff' fill='none' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="stage">
+    <canvas id="game" width="1280" height="720"></canvas>
+
+    <!-- Touch controls (shown only on touch devices) -->
+    <div id="touch-ui" class="hidden">
+      <div id="tpad" aria-label="move"></div>
+      <div id="tbuttons">
+        <button id="btn-power" class="tbtn">POWER</button>
+        <button id="btn-fire" class="tbtn fire">FIRE</button>
+      </div>
+    </div>
+
+    <!-- Orientation hint for portrait phones -->
+    <div id="rotate-hint" class="hidden">
+      <div class="rot-ico">📱↻</div>
+      <div>横向きにすると遊びやすくなります</div>
+    </div>
+
+    <div id="loading">
+      <div class="ld-title">NOVA LANCE</div>
+      <div class="ld-sub">Burning Skies</div>
+      <div class="ld-bar"><i></i></div>
+      <div class="ld-msg">initializing systems…</div>
+    </div>
+  </div>
+
+  <!-- classic scripts (no modules) so the game also runs from file:// -->
+  <script src="js/util.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/assets.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/weapons.js"></script>
+  <script src="js/powerup.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/enemies.js"></script>
+  <script src="js/bosses.js"></script>
+  <script src="js/stages.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

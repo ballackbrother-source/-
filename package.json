@@ -1,0 +1,13 @@
+{
+  "name": "nova-lance",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NOVA LANCE — Burning Skies : browser horizontal shmup",
+  "scripts": {
+    "serve": "node tools/serve.js",
+    "qa": "node qa/qa.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}
