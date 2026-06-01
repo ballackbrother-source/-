@@ -10,6 +10,7 @@
   I.fire = false; I.power = false;
   I.firePressed = false;   // edge
   I.powerPressed = false;  // edge
+  I.upPressed = false; I.downPressed = false; I.leftPressed = false; I.rightPressed = false; // edges (menus)
   I.anyPressed = false;    // edge (start/continue)
   I.pausePressed = false;
   I.mutePressed = false;
@@ -29,7 +30,7 @@
       ArrowRight: "right", KeyD: "right",
       KeyZ: "fire", Space: "fire", KeyJ: "fire",
       KeyX: "power", ShiftLeft: "power", KeyK: "power",
-      Enter: "any", NumpadEnter: "any",
+      Enter: "confirm", NumpadEnter: "confirm",
       KeyP: "pause", KeyM: "mute"
     };
     const a = map[code];
@@ -64,8 +65,15 @@
       I.moveTarget = toLogical(e.clientX, e.clientY);
       if (e.button === 0) { held.fire = true; edge.fire = true; }
       if (e.button === 2) { held.power = true; edge.power = true; }
-      edge.any = true;
+      edge.any = true; edge.pointer = true; I.tapPoint = I.moveTarget;
     });
+    // taps directly on the canvas (used by the title menu; during play the
+    // touch-pad overlay sits on top so these only fire on uncovered areas)
+    canvas.addEventListener("touchstart", (e) => {
+      const t = e.changedTouches[0];
+      I.moveTarget = toLogical(t.clientX, t.clientY);
+      I.tapPoint = I.moveTarget; edge.any = true; edge.pointer = true;
+    }, { passive: true });
     window.addEventListener("mouseup", (e) => {
       if (e.button === 0) held.fire = false;
       if (e.button === 2) held.power = false;
@@ -128,9 +136,12 @@
     I.up = !!held.up; I.down = !!held.down; I.left = !!held.left; I.right = !!held.right;
     I.fire = !!held.fire; I.power = !!held.power;
     I.firePressed = !!edge.fire; I.powerPressed = !!edge.power;
+    I.upPressed = !!edge.up; I.downPressed = !!edge.down; I.leftPressed = !!edge.left; I.rightPressed = !!edge.right;
     I.anyPressed = !!edge.any; I.pausePressed = !!edge.pause; I.mutePressed = !!edge.mute;
+    I.pointerPressed = !!edge.pointer; I.confirmPressed = !!edge.confirm;
     // clear edges
-    edge.fire = edge.power = edge.any = edge.pause = edge.mute = false;
+    edge.fire = edge.power = edge.any = edge.pause = edge.mute = edge.pointer = edge.confirm = false;
+    edge.up = edge.down = edge.left = edge.right = false;
   };
 
 })();

@@ -39,7 +39,8 @@
       this.x = NL.W + 220; this.y = NL.H / 2;
       this.tx = cfg.tx || NL.W - 260; this.ty = NL.H / 2;
       this.w = cfg.w; this.h = cfg.h;
-      this.maxhp = cfg.hp; this.hp = cfg.hp;
+      const hpMul = (NL.diff && NL.diff.bossHp) || 1; // difficulty: boss durability
+      this.maxhp = Math.round(cfg.hp * hpMul); this.hp = this.maxhp;
       this.t = 0; this.flash = 0; this.entering = true;
       this.dead = false; this.dying = 0;
       this.bob = 0;

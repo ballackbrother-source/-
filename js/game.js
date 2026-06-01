@@ -13,6 +13,15 @@
 
   const STATE = { TITLE: "title", PLAY: "play", DEATH: "death", CLEAR: "clear", CONTINUE: "continue", GAMEOVER: "gameover", VICTORY: "victory", PAUSE: "pause" };
 
+  // Difficulty presets — broad appeal: EASY is genuinely forgiving, NORMAL is
+  // the balanced default, HARD is for veterans. Infinite continues regardless.
+  const DIFFS = {
+    easy:   { key: "easy",   label: "EASY",   lives: 5, bulletSpd: 0.74, dropMul: 1.6, bossHp: 0.78, tip: "はじめての方に。弾は遅め・残機多め" },
+    normal: { key: "normal", label: "NORMAL", lives: 3, bulletSpd: 1.0,  dropMul: 1.0, bossHp: 1.0,  tip: "ちょうどいい歯ごたえ" },
+    hard:   { key: "hard",   label: "HARD",   lives: 2, bulletSpd: 1.16, dropMul: 0.85, bossHp: 1.18, tip: "弾は速く・残機少なめ。腕に自信のある方へ" }
+  };
+  const DIFF_ORDER = ["easy", "normal", "hard"];
+
   const G = {
     state: STATE.TITLE,
     frame: 0,
@@ -30,6 +39,10 @@
     stageName: "",
     bg: null,
     learned: {},
+    difficulty: "normal",
+    diff: DIFFS.normal,
+    menuSel: 1,
+    tutorialTimer: 0,
     flagsThisStage: {},
     deathTimer: 0,
     clearTimer: 0,
@@ -47,6 +60,10 @@
     const save = U.load();
     G.hiScore = save.hi || 0;
     G.learned = save.learned || {};
+    G.difficulty = DIFFS[save.difficulty] ? save.difficulty : "normal";
+    G.diff = DIFFS[G.difficulty];
+    G.menuSel = DIFF_ORDER.indexOf(G.difficulty);
+    NL.diff = G.diff; // exposed for weapons/bosses to read
     G.bg = NL.stages.list[0].bg();
     G.state = STATE.TITLE;
     NL.audio.playMusic("title");
@@ -66,7 +83,7 @@
   G.learn = function (id) { if (!G.learned[id]) { G.learned[id] = true; persist(); } };
   G.warnIfLearned = function (id, text) { if (G.learned[id]) { G.warnText = text; G.warnTimer = 110; NL.audio.sfx.warn(); } };
 
-  function persist() { U.save({ hi: G.hiScore, learned: G.learned }); }
+  function persist() { U.save({ hi: G.hiScore, learned: G.learned, difficulty: G.difficulty }); }
 
   G.addScore = function (n) { G.score += n; if (G.score > G.hiScore) { G.hiScore = G.score; } };
 
@@ -75,7 +92,7 @@
     if (e.dropAlways) { NL.powerups.spawn(e.x, e.y, false); return; }
     // frequent early drops so the arsenal varies fast
     const early = G.stageTimer < 1800;
-    const p = early ? 0.22 : 0.12;
+    const p = (early ? 0.22 : 0.12) * G.diff.dropMul;
     if (U.chance(p)) NL.powerups.spawn(e.x, e.y, false);
   };
 
@@ -223,7 +240,7 @@
 
     switch (G.state) {
       case STATE.TITLE:
-        if (In.anyPressed || In.firePressed) { NL.audio.resume(); NL.audio.sfx.start(); startNewGame(); }
+        handleTitle(In);
         break;
 
       case STATE.PLAY:
@@ -250,7 +267,7 @@
 
       case STATE.CONTINUE:
         G.continueTimer--;
-        if (In.firePressed || In.anyPressed) { G.continueCount++; G.lives = 3; G.player.reset(); G.startStage(G.stageIdx); G.state = STATE.PLAY; }
+        if (In.firePressed || In.anyPressed) { G.continueCount++; G.lives = G.diff.lives; G.player.reset(); G.startStage(G.stageIdx); G.state = STATE.PLAY; }
         else if (G.continueTimer <= 0) { G.state = STATE.GAMEOVER; G.clearTimer = 240; persist(); }
         break;
 
@@ -269,11 +286,36 @@
     if (G.frame % 120 === 0 && G.score >= G.hiScore) persist();
   }
 
+  function handleTitle(In) {
+    // keyboard navigation between EASY / NORMAL / HARD
+    if (In.leftPressed || In.upPressed) { G.menuSel = (G.menuSel + 2) % 3; NL.audio.sfx.select(); }
+    if (In.rightPressed || In.downPressed) { G.menuSel = (G.menuSel + 1) % 3; NL.audio.sfx.select(); }
+
+    // pointer (mouse/touch) tap: select a difficulty if it lands on one,
+    // otherwise treat it as "start"
+    if (In.pointerPressed && In.tapPoint && NL.ui.titleRects) {
+      const p = In.tapPoint, r = NL.ui.titleRects;
+      let onBtn = false;
+      for (let i = 0; i < r.diffs.length; i++) {
+        const b = r.diffs[i];
+        if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) { G.menuSel = i; NL.audio.sfx.select(); onBtn = true; }
+      }
+      if (!onBtn) { NL.audio.resume(); NL.audio.sfx.start(); startNewGame(); }
+      return;
+    }
+    // keyboard start (Z / Space / Enter) — arrows only navigate
+    if (In.firePressed || In.confirmPressed) { NL.audio.resume(); NL.audio.sfx.start(); startNewGame(); }
+  }
+
   function startNewGame() {
-    G.score = 0; G.lives = 3; G.continueCount = 0;
+    G.difficulty = DIFF_ORDER[G.menuSel] || "normal";
+    G.diff = DIFFS[G.difficulty]; NL.diff = G.diff;
+    persist();
+    G.score = 0; G.lives = G.diff.lives; G.continueCount = 0;
     G.player.reset();
     G._victoryReady = false; G._vReadyT = 0;
     G.startStage(0);
+    G.tutorialTimer = 360; // ~6s of friendly control hints on stage 1
     G.state = STATE.PLAY;
   }
 
@@ -291,6 +333,7 @@
     if (G.toastTimer > 0) G.toastTimer--;
     if (G.warnTimer > 0) G.warnTimer--;
     if (G.cardTimer > 0) G.cardTimer--;
+    if (G.tutorialTimer > 0) G.tutorialTimer--;
     if (!deathMode) { G.stageTimer++; runSchedule(); }
     G.scroll += G.scrollSpeed;
 
@@ -343,6 +386,17 @@
 
     // stage-intro card
     if ((G.state === STATE.PLAY || G.state === STATE.DEATH) && G.cardTimer > 0) NL.ui.drawStageCard(g, G);
+    // friendly control tutorial at the very start of a run
+    if (G.state === STATE.PLAY && G.stageIdx === 0 && G.tutorialTimer > 0) NL.ui.drawTutorial(g, G);
+
+    // touch controls only during gameplay, so title/menu taps reach the canvas
+    if (NL.input.isTouch) {
+      if (!G._touchUIEl) G._touchUIEl = document.getElementById("touch-ui");
+      if (G._touchUIEl) {
+        const show = (G.state === STATE.PLAY || G.state === STATE.PAUSE || G.state === STATE.DEATH);
+        G._touchUIEl.classList.toggle("hidden", !show);
+      }
+    }
 
     // overlays
     if (G.state === STATE.PAUSE) NL.ui.drawCenterPanel(g, [{ s: "PAUSED", size: 48 }, { s: "P で再開", size: 20, col: "#9fc4dd" }]);

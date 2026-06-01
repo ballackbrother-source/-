@@ -49,7 +49,8 @@
   W.spawnEnemyBullet = function (x, y, vx, vy, opt) {
     opt = opt || {};
     const b = W.enemyBullets.spawn();
-    b.x = x; b.y = y; b.vx = vx; b.vy = vy;
+    const sp = (NL.diff && NL.diff.bulletSpd) || 1; // difficulty: bullet speed
+    b.x = x; b.y = y; b.vx = vx * sp; b.vy = vy * sp;
     b.r = opt.r || 7; b.dmg = opt.dmg || 1;
     b.col = opt.col || "255,120,90"; b.core = opt.core || "255,240,200";
     b.life = opt.life || 360; b.kind = opt.kind || "orb";

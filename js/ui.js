@@ -132,17 +132,59 @@
     glowTxt(g, "NOVA LANCE", NL.W / 2, NL.H * 0.36, 86, "#eaf6ff", "rgba(54,224,255,.9)", "center");
     glowTxt(g, "B U R N I N G   S K I E S", NL.W / 2, NL.H * 0.45, 26, "#36e0ff", "rgba(54,224,255,.7)", "center");
 
+    // difficulty selector
+    UI.drawDiffMenu(g, game);
+
     // prompt blink
     if (Math.floor(t / 30) % 2 === 0) {
-      glowTxt(g, game.input.isTouch ? "TAP TO START" : "PRESS ENTER / Z / CLICK TO START",
-        NL.W / 2, NL.H * 0.66, 24, "#ffd070", "rgba(255,180,60,.7)", "center");
+      glowTxt(g, game.input.isTouch ? "難易度をタップ → 画面タップでSTART" : "← → で難易度選択    ENTER / Z / CLICK で START",
+        NL.W / 2, NL.H * 0.74, 20, "#ffd070", "rgba(255,180,60,.7)", "center");
     }
-    txt(g, "ARROWS / WASD 移動    Z / SPACE FIRE    X / SHIFT POWER", NL.W / 2, NL.H * 0.76, 15, "#9fc4dd", "center");
-    txt(g, "P 一時停止    M ミュート", NL.W / 2, NL.H * 0.8, 14, "#7fa8c8", "center");
-    glowTxt(g, "HI-SCORE  " + String(game.hiScore).padStart(8, "0"), NL.W / 2, NL.H * 0.88, 16, "#ffd070", "rgba(255,180,60,.4)", "center");
+    txt(g, "ARROWS / WASD 移動    Z / SPACE FIRE    X / SHIFT POWER    P 一時停止    M ミュート", NL.W / 2, NL.H * 0.84, 14, "#9fc4dd", "center");
+    glowTxt(g, "HI-SCORE  " + String(game.hiScore).padStart(8, "0"), NL.W / 2, NL.H * 0.90, 16, "#ffd070", "rgba(255,180,60,.4)", "center");
 
     if (NL.assets.externalManifest) txt(g, "AI ART: ON", 20, NL.H - 20, 12, "#6e90b0", "left");
     else txt(g, "PROCEDURAL ART MODE", 20, NL.H - 20, 12, "#6e90b0", "left");
+  };
+
+  // difficulty buttons; also stores hit-test rects for pointer/touch selection
+  const DIFF_LABELS = [["EASY", "やさしい"], ["NORMAL", "ふつう"], ["HARD", "むずかしい"]];
+  const DIFF_TIPS = ["弾は遅め・残機5。はじめての方に。", "ちょうどいい歯ごたえ。残機3。", "弾は速く残機2。腕に自信のある方へ。"];
+  UI.titleRects = null;
+  UI.drawDiffMenu = function (g, game) {
+    const n = 3, w = 200, h = 54, gap = 24;
+    const total = n * w + (n - 1) * gap;
+    const x0 = (NL.W - total) / 2, y = NL.H * 0.555;
+    const rects = { diffs: [] };
+    for (let i = 0; i < n; i++) {
+      const x = x0 + i * (w + gap);
+      const sel = game.menuSel === i;
+      rects.diffs.push({ x, y, w, h });
+      g.fillStyle = sel ? "rgba(54,224,255,.85)" : "rgba(10,24,40,.7)";
+      g.strokeStyle = sel ? "#eaffff" : "rgba(90,150,200,.5)";
+      g.lineWidth = sel ? 3 : 1.5;
+      roundRect(g, x, y, w, h, 8); g.fill(); g.stroke();
+      glowTxt(g, DIFF_LABELS[i][0], x + w / 2, y + 26, 24, sel ? "#03121e" : "#cfe9ff", sel ? "rgba(255,255,255,.4)" : "rgba(0,0,0,0)", "center");
+      txt(g, DIFF_LABELS[i][1], x + w / 2, y + 44, 13, sel ? "#063042" : "#7fa8c8", "center", 600);
+    }
+    // tip for the selected difficulty
+    txt(g, DIFF_TIPS[game.menuSel] || "", NL.W / 2, y + h + 24, 15, "#9fd0ff", "center");
+    UI.titleRects = rects;
+  };
+
+  // friendly control tutorial shown at the start of stage 1
+  UI.drawTutorial = function (g, game) {
+    const a = Math.min(1, game.tutorialTimer / 40) * Math.min(1, (360 - game.tutorialTimer) / 20);
+    g.save(); g.globalAlpha = a;
+    const lines = game.input.isTouch
+      ? ["左側をドラッグで移動", "FIREボタンで攻撃", "光るカプセルを取り → POWERで強化"]
+      : ["矢印 / WASD で移動", "Z または SPACE で攻撃", "カプセルを取り → X / SHIFT で強化"];
+    const bx = NL.W / 2, by = NL.H * 0.7;
+    g.fillStyle = "rgba(2,8,16,0.5)"; roundRect(g, bx - 250, by - 28, 500, 86, 10); g.fill();
+    g.strokeStyle = "rgba(54,224,255,.4)"; g.lineWidth = 1.5; g.stroke();
+    glowTxt(g, "HOW TO PLAY", bx, by - 6, 16, "#ffd070", "rgba(255,180,60,.5)", "center");
+    for (let i = 0; i < lines.length; i++) txt(g, lines[i], bx, by + 18 + i * 18, 14, "#cfe9ff", "center");
+    g.restore();
   };
 
   // ---------- cinematic post-processing: vignette + subtle scanlines ----------

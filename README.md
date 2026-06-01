@@ -1,8 +1,8 @@
 # NOVA LANCE — Burning Skies
 
-A high-production browser **horizontal shoot-'em-up** (Gradius-style) — 3 stages, a mid-stage
-mini-boss and a full boss in each, a varied enemy roster (fighters, drones, weavers, turrets,
-gunships, drone-carriers),
+A high-production browser **horizontal shoot-'em-up** (Gradius-style) — pick **EASY / NORMAL /
+HARD**, then fight through 3 stages, each with a mid-stage mini-boss and a full boss, against a
+varied enemy roster (fighters, drones, weavers, turrets, gunships, drone-carriers),
 a full power-up arsenal, "learn-it-and-you-win" trap design, infinite continues, synthesised
 chiptune audio, and a built-in mecha-SF art style that runs anywhere. No build step, no
 dependencies to *play* — just open it.
@@ -30,6 +30,14 @@ node tools/serve.js 8080      # or: python3 -m http.server 8080
    pad appear automatically on touch devices.
 
 ---
+
+## 🙌 Easy to pick up
+
+Built to be approachable for everyone: a **difficulty selector** on the title
+(EASY gives 5 lives, slower enemy fire and frequent power-ups; HARD is for veterans),
+**infinite continues**, a short **HOW TO PLAY** prompt at the start of stage 1, and a
+"die-once-then-get-warned" trap system so nobody is stuck. Choose with ← → (or tap a
+button) and start with Z / Space / Enter / click.
 
 ## 🎮 Controls
 
