@@ -188,6 +188,46 @@
     g.fillStyle = "#ff8a3c"; g.fillRect(70, cy - 33, 30, 3);
     AS.images.midEnemy = c;
   }
+  function bakeWeaver() { // sleek teal interceptor, faces left
+    const W = 104, H = 64, c = mk(W, H), g = c.getContext("2d");
+    const cy = H / 2;
+    g.fillStyle = metalGrad(g, 0, cy - 22, 0, cy + 22, "#6fd6c8", "#2c8f86", "#0f3a38");
+    g.beginPath();
+    g.moveTo(4, cy); g.quadraticCurveTo(38, cy - 16, W - 22, cy - 14);
+    g.quadraticCurveTo(W - 2, cy, W - 22, cy + 14); g.quadraticCurveTo(38, cy + 16, 4, cy);
+    g.closePath(); g.fill();
+    g.strokeStyle = "rgba(0,0,0,.5)"; g.lineWidth = 2; g.stroke();
+    // forked tail
+    g.fillStyle = "#1a5a55";
+    g.beginPath(); g.moveTo(W - 24, cy - 5); g.lineTo(W - 2, cy - 22); g.lineTo(W - 36, cy - 10); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(W - 24, cy + 5); g.lineTo(W - 2, cy + 22); g.lineTo(W - 36, cy + 10); g.closePath(); g.fill();
+    // canopy + sensor
+    glowDot(g, 16, cy, 12, "rgba(120,255,230,.8)");
+    g.fillStyle = "#d6fff7"; g.beginPath(); g.arc(14, cy, 4, 0, 7); g.fill();
+    panelLines(g, 30, cy - 12, 50, 24, 3, "rgba(0,0,0,.3)");
+    g.fillStyle = "#ffe06a"; g.fillRect(34, cy + 9, 26, 2);
+    AS.images.enemyWeaver = c;
+  }
+  function bakeCarrier() { // big slow drone-carrier, faces left
+    const W = 180, H = 120, c = mk(W, H), g = c.getContext("2d");
+    const cy = H / 2;
+    g.fillStyle = metalGrad(g, 0, cy - 50, 0, cy + 50, "#7a7486", "#403a52", "#201c2c");
+    g.beginPath();
+    g.moveTo(10, cy); g.lineTo(40, cy - 46); g.lineTo(W - 24, cy - 44);
+    g.quadraticCurveTo(W - 2, cy, W - 24, cy + 44); g.lineTo(40, cy + 46); g.closePath(); g.fill();
+    g.strokeStyle = "rgba(0,0,0,.55)"; g.lineWidth = 2; g.stroke();
+    panelLines(g, 46, cy - 36, W - 90, 72, 5, "rgba(0,0,0,.3)");
+    // drone bays (dark slots)
+    g.fillStyle = "#120e18";
+    g.fillRect(36, cy - 34, 20, 22); g.fillRect(36, cy + 12, 20, 22);
+    g.strokeStyle = "#c060ff"; g.lineWidth = 1.5;
+    g.strokeRect(36, cy - 34, 20, 22); g.strokeRect(36, cy + 12, 20, 22);
+    // sensor
+    glowDot(g, 30, cy, 18, "rgba(200,90,255,.8)");
+    g.fillStyle = "#f0d0ff"; g.beginPath(); g.arc(26, cy, 6, 0, 7); g.fill();
+    g.fillStyle = "#c060ff"; g.fillRect(80, cy - 44, 40, 4);
+    AS.images.carrier = c;
+  }
 
   // ---------- POWER CAPSULE & fake ----------
   function bakeCapsule(fake) {
@@ -222,7 +262,8 @@
   // ---------- expose procedural background painters (used by stages) ----------
   AS.bakeAll = function () {
     bakePlayer(); bakeOption(); bakeEnemyFighter(); bakeEnemyDrone();
-    bakeTurret(); bakeMidEnemy(); bakeCapsule(false); bakeCapsule(true); bakeMissile();
+    bakeTurret(); bakeMidEnemy(); bakeWeaver(); bakeCarrier();
+    bakeCapsule(false); bakeCapsule(true); bakeMissile();
   };
 
   // ---------- external asset loading ----------

@@ -47,11 +47,15 @@ function findChrome() {
   });
   await page.keyboard.down("Space");
 
-  // weave the ship while capturing stage action
+  // weave the ship while capturing stage action; inject enemy variety so the
+  // demo shows fighters, drones, weavers and a carrier
   const moves = ["ArrowUp", "ArrowDown", "ArrowUp", "ArrowDown"];
   for (let k = 0; k < 26; k++) {
     if (k % 6 === 0) { await page.keyboard.down(moves[(k / 6) % moves.length]); }
     if (k % 6 === 3) { await page.keyboard.up(moves[Math.floor(k / 6) % moves.length]); }
+    if (k === 2) await page.evaluate(() => { const E = window.NL.enemies; E.fighter(1240, 200); E.fighter(1240, 480); for (let i = 0; i < 4; i++) E.drone(1240, 120 + i * 110); });
+    if (k === 8) await page.evaluate(() => { const E = window.NL.enemies; E.weaver(1240, 220); E.weaver(1240, 360); E.weaver(1240, 500); });
+    if (k === 15) await page.evaluate(() => { const c = window.NL.enemies.carrier(1240, 300); c.dropAlways = true; });
     await wait(90); await grab();
   }
   // switch to laser for variety

@@ -6,8 +6,10 @@
     "option": "option.png",
     "enemyFighter": "enemy_fighter.png",
     "enemyDrone": "enemy_drone.png",
+    "enemyWeaver": "enemy_weaver.png",
     "turret": "turret.png",
     "midEnemy": "mid_enemy.png",
+    "carrier": "carrier.png",
     "missile": "missile.png",
     "capsule": "capsule.png",
     "capsuleFake": "capsule_fake.png"

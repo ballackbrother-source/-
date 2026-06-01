@@ -66,6 +66,21 @@
     e.shootCd = 80; e.stopX = (opt && opt.stopX) || NL.W - 280;
     return e;
   };
+  // weaver: figure-8 interceptor that fires aimed 3-spreads
+  E.weaver = function (x, y, opt) {
+    const e = base("weaver", x, y, opt);
+    e.hp = e.maxhp = 4; e.r = 22; e.vx = -1.8; e.score = 180;
+    e.img = IMG().enemyWeaver; e.baseY = y; e.amp = 70; e.freq = 0.05;
+    e.shootCd = 55 + Math.random() * 30;
+    return e;
+  };
+  // carrier: slow heavy ship that periodically releases drone pairs
+  E.carrier = function (x, y, opt) {
+    const e = base("carrier", x, y, opt);
+    e.hp = e.maxhp = 22; e.r = 52; e.vx = -1.3; e.score = 800;
+    e.img = IMG().carrier; e.baseY = y; e.amp = 30; e.freq = 0.01; e.launchCd = 90;
+    return e;
+  };
   // rear ambush (comes from the LEFT, behind the player)
   E.ambush = function (y, opt) {
     const e = base("ambush", -60, y, opt);
@@ -117,6 +132,23 @@
           if (e.x > e.stopX) e.x += e.vx; else e.x += game.scrollSpeed * -0.15;
           e.y = e.baseY + Math.sin(e.t * e.freq) * e.amp;
           if (--e.shootCd <= 0 && player.alive) { fan(e, player, 5, 3.4, "255,120,150"); e.shootCd = 70; }
+          break;
+        case "weaver":
+          e.x += e.vx;
+          // figure-8: vertical sine + a slower horizontal wobble
+          e.y = e.baseY + Math.sin(e.t * e.freq) * e.amp;
+          e.x += Math.sin(e.t * e.freq * 0.5) * 1.2;
+          if (--e.shootCd <= 0 && e.x < NL.W - 30 && player.alive) { fan(e, player, 3, 4, "120,255,220"); e.shootCd = 80 + Math.random() * 40; }
+          break;
+        case "carrier":
+          e.x += e.vx; // slow drift across the screen, always exits in time
+          e.y = e.baseY + Math.sin(e.t * e.freq) * e.amp;
+          if (--e.launchCd <= 0 && e.x < NL.W && player.alive) {
+            const d1 = E.drone(e.x - 20, e.y - 24); d1.vx = -3.2; d1.baseY = e.y - 24; d1.amp = 40;
+            const d2 = E.drone(e.x - 20, e.y + 24); d2.vx = -3.2; d2.baseY = e.y + 24; d2.amp = 40;
+            FX.muzzle(e.x - 30, e.y, Math.PI, "200,120,255");
+            e.launchCd = 150;
+          }
           break;
         case "ambush":
           e.x += e.vx; e.vx *= 0.995;
@@ -245,8 +277,8 @@
       }
       g.restore();
 
-      // HP pip for mid enemies
-      if (e.type === "mid" && e.hp < e.maxhp) {
+      // HP pip for heavier enemies
+      if ((e.type === "mid" || e.type === "carrier") && e.hp < e.maxhp) {
         g.fillStyle = "rgba(0,0,0,.5)"; g.fillRect(e.x - 30, e.y - e.r - 14, 60, 5);
         g.fillStyle = "#ff5a4a"; g.fillRect(e.x - 30, e.y - e.r - 14, 60 * (e.hp / e.maxhp), 5);
       }

@@ -176,10 +176,22 @@
       // soft echo
       setTimeout(() => blip({ type: "square", f0: midi(m + 12), dur: beat * 0.5, gain: 0.05 * mood, bus: musicGain }), beat * 1000 * 0.5);
     }
+    // counter-melody: a softer voice a third above, on the off-eighths
+    if (ld != null && step % 2 === 0) {
+      const m = scaleNote(tr.root, ld + 2);
+      blip({ type: "triangle", f0: midi(m + 12), dur: beat * 1.2, gain: 0.05 * mood, bus: musicGain });
+    }
+    // sustained harmony pad once per bar (root + fifth), gives body
+    if (step % 8 === 0) {
+      const r = scaleNote(tr.root, 0), f = scaleNote(tr.root, 4);
+      blip({ type: "sawtooth", f0: midi(r), dur: beat * 7, gain: 0.04 * mood, bus: musicGain, filter: "lowpass", fco: 700, atk: 0.05 });
+      blip({ type: "sawtooth", f0: midi(f), dur: beat * 7, gain: 0.03 * mood, bus: musicGain, filter: "lowpass", fco: 700, atk: 0.05 });
+    }
     // hi-hat-ish noise on offbeats
     if (step % 2 === 1) noise({ fco0: 9000, fco1: 6000, dur: 0.03, gain: 0.05 * mood, filter: "highpass", bus: musicGain });
-    // kick on downbeats
-    if (step % 4 === 0) { blip({ type: "sine", f0: 120, f1: 45, dur: 0.14, gain: 0.3 * mood, bus: musicGain }); }
+    // kick on downbeats, snare on the backbeat
+    if (step % 4 === 0) blip({ type: "sine", f0: 120, f1: 45, dur: 0.14, gain: 0.3 * mood, bus: musicGain });
+    if (step % 8 === 4) { noise({ fco0: 3200, fco1: 1400, dur: 0.13, gain: 0.13 * mood, filter: "bandpass", bus: musicGain }); blip({ type: "triangle", f0: 220, f1: 160, dur: 0.06, gain: 0.06 * mood, bus: musicGain }); }
     step++;
   }
 

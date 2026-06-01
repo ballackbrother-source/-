@@ -57,7 +57,19 @@ const STAGE_NAMES = ["STAGE1_DAWN", "STAGE2_ASTEROID", "STAGE3_OVERLORD"];
       // --- gameplay shot (hold FIRE so weapon/muzzle effects are visible) ---
       await page.evaluate((idx) => { window.__NL.gotoStage(idx); window.__NL.invincible(true); }, i);
       await page.keyboard.down("Space");
-      await wait(2500); // let waves spawn & effects build
+      // spawn every enemy type up-front and let them actually FIRE — many bugs
+      // (e.g. a bad bullet colour) only surface when an enemy shoots/launches.
+      await page.evaluate(() => {
+        const E = window.NL.enemies;
+        E.fighter(1240, 200); E.fighter(1240, 480);
+        for (let k = 0; k < 3; k++) E.drone(1240, 150 + k * 120);
+        E.weaver(1180, 260); E.weaver(1180, 420);
+        E.turret(1180, 110); const t = E.turret(1180, 610); t.flip = true;
+        E.mid(1180, 360);
+        const c = E.carrier(1180, 300); c.dropAlways = true;
+        E.ambush(360);
+      });
+      await wait(2600); // long enough for shoot cooldowns to elapse and fire
       // throw in a capsule so the power meter shows life
       await page.evaluate(() => window.__NL.addCapsule());
       await wait(900);
