@@ -145,10 +145,15 @@
       g.fillStyle = grd; g.beginPath(); g.arc(b.x, b.y, b.r * 2.2, 0, 7); g.fill();
     });
     g.globalCompositeOperation = "source-over";
-    // solid core for readability of enemy bullets
+    // readability: a dark rim + bright white-hot core so enemy bullets stay
+    // legible against bright backgrounds, lasers and explosions
     W.enemyBullets.forEach((b) => {
-      g.fillStyle = `rgba(${b.core},0.95)`;
-      g.beginPath(); g.arc(b.x, b.y, b.r * 0.55, 0, 7); g.fill();
+      g.fillStyle = "rgba(10,4,2,0.55)";
+      g.beginPath(); g.arc(b.x, b.y, b.r * 0.78, 0, 7); g.fill();
+      g.fillStyle = `rgba(${b.col},1)`;
+      g.beginPath(); g.arc(b.x, b.y, b.r * 0.6, 0, 7); g.fill();
+      g.fillStyle = "rgba(255,255,255,0.95)";
+      g.beginPath(); g.arc(b.x, b.y, b.r * 0.3, 0, 7); g.fill();
     });
   };
 

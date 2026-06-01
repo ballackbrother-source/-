@@ -216,6 +216,20 @@
 
       if (!blink) this.drawShip(g, img, this.x, this.y, this.bank);
 
+      // hitbox indicator: a small bright marker at the TRUE hit point so the
+      // player always knows exactly what must be dodged (fairness/readability)
+      const hb = NL.game.frame * 0.15;
+      g.save();
+      g.globalCompositeOperation = "lighter";
+      g.strokeStyle = `rgba(120,230,255,${0.18 + 0.07 * Math.sin(hb)})`;
+      g.lineWidth = 1.5; g.beginPath(); g.arc(this.x, this.y, this.r, 0, 7); g.stroke();
+      g.globalCompositeOperation = "source-over";
+      g.fillStyle = "rgba(255,255,255,0.95)";
+      g.beginPath(); g.arc(this.x, this.y, 3, 0, 7); g.fill();
+      g.fillStyle = `rgba(120,230,255,${0.6 + 0.3 * Math.sin(hb)})`;
+      g.beginPath(); g.arc(this.x, this.y, 2, 0, 7); g.fill();
+      g.restore();
+
       // engine flame glow (pulsing)
       g.globalCompositeOperation = "lighter";
       const fp = 1 + 0.3 * Math.sin(this.enginePhase);
