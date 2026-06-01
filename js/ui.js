@@ -126,6 +126,43 @@
     else txt(g, "PROCEDURAL ART MODE", 20, NL.H - 20, 12, "#6e90b0", "left");
   };
 
+  // ---------- cinematic post-processing: vignette + subtle scanlines ----------
+  let _vig = null, _scan = null;
+  UI.drawPost = function (g) {
+    if (!_vig) {
+      _vig = g.createRadialGradient(NL.W / 2, NL.H / 2, NL.H * 0.35, NL.W / 2, NL.H / 2, NL.W * 0.62);
+      _vig.addColorStop(0, "rgba(0,0,0,0)");
+      _vig.addColorStop(1, "rgba(0,0,0,0.42)");
+      const c = document.createElement("canvas"); c.width = 3; c.height = 3;
+      const x = c.getContext("2d"); x.fillStyle = "rgba(0,0,0,0.07)"; x.fillRect(0, 2, 3, 1);
+      _scan = g.createPattern(c, "repeat");
+    }
+    g.fillStyle = _vig; g.fillRect(0, 0, NL.W, NL.H);
+    g.fillStyle = _scan; g.fillRect(0, 0, NL.W, NL.H);
+  };
+
+  // ---------- stage-intro card ----------
+  UI.drawStageCard = function (g, game) {
+    const t = game.cardTimer, max = 170;
+    if (t <= 0) return;
+    // fade in (first 25) / hold / fade out (last 40)
+    let a = 1;
+    if (max - t < 25) a = (max - t) / 25;
+    else if (t < 40) a = t / 40;
+    const parts = game.stageName.split("—");
+    const big = (parts[0] || game.stageName).trim();
+    const sub = (parts[1] || "").trim();
+    g.save(); g.globalAlpha = a;
+    // letterbox bars sliding feel
+    g.fillStyle = "rgba(2,6,14,0.55)"; g.fillRect(0, NL.H * 0.38, NL.W, 130);
+    g.strokeStyle = "rgba(54,224,255,0.5)"; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(NL.W * 0.2, NL.H * 0.38); g.lineTo(NL.W * 0.8, NL.H * 0.38);
+    g.moveTo(NL.W * 0.2, NL.H * 0.38 + 130); g.lineTo(NL.W * 0.8, NL.H * 0.38 + 130); g.stroke();
+    glowTxt(g, big, NL.W / 2, NL.H * 0.48, 54, "#eaf6ff", "rgba(54,224,255,.9)", "center");
+    if (sub) glowTxt(g, sub, NL.W / 2, NL.H * 0.55, 24, "#9fd0ff", "rgba(54,224,255,.6)", "center");
+    g.restore();
+  };
+
   UI.drawCenterPanel = function (g, lines, accent) {
     g.fillStyle = "rgba(2,6,14,0.72)"; g.fillRect(0, 0, NL.W, NL.H);
     let y = NL.H / 2 - (lines.length * 30);

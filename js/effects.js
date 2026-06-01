@@ -17,6 +17,7 @@
   const rings = new U.Pool(() => ({}));
   const flashes = new U.Pool(() => ({}));
   const trails = []; // lightweight trail segments {x,y,life,max,r,col}
+  const floats = []; // floating score/pickup text {x,y,vy,life,max,str,col,size}
 
   FX.shake = 0;
   FX.shakeMax = 0;
@@ -24,8 +25,13 @@
   FX._flashScreen = 0; FX._flashCol = "255,255,255";
 
   FX.reset = function () {
-    parts.clear(); rings.clear(); flashes.clear(); trails.length = 0;
+    parts.clear(); rings.clear(); flashes.clear(); trails.length = 0; floats.length = 0;
     FX.shake = 0; FX.hitStop = 0; FX._flashScreen = 0;
+  };
+
+  FX.floatText = function (x, y, str, col, size) {
+    floats.push({ x, y, vy: -0.7, life: 48, max: 48, str, col: col || "255,230,150", size: size || 18 });
+    if (floats.length > 80) floats.shift();
   };
 
   FX.addShake = function (amt) { FX.shake = Math.max(FX.shake, amt); FX.shakeMax = Math.max(FX.shakeMax, FX.shake); };
@@ -138,6 +144,7 @@
     flashes.forEach((f) => { f.life--; if (f.life <= 0) f._dead = true; });
     flashes.sweep();
     for (let i = trails.length - 1; i >= 0; i--) { if (--trails[i].life <= 0) trails.splice(i, 1); }
+    for (let i = floats.length - 1; i >= 0; i--) { const f = floats[i]; f.y += f.vy; f.vy *= 0.96; if (--f.life <= 0) floats.splice(i, 1); }
     if (FX.shake > 0) FX.shake *= 0.86; if (FX.shake < 0.2) FX.shake = 0;
     if (FX._flashScreen > 0) FX._flashScreen--;
   };
@@ -205,6 +212,15 @@
     });
 
     g.globalCompositeOperation = "source-over";
+
+    // floating score / pickup text
+    for (const f of floats) {
+      const a = Math.min(1, f.life / 18);
+      g.font = `800 ${f.size}px "Segoe UI", Roboto, sans-serif`;
+      g.textAlign = "center"; g.textBaseline = "middle";
+      g.fillStyle = `rgba(0,0,0,${a * 0.5})`; g.fillText(f.str, f.x + 1, f.y + 1);
+      g.fillStyle = `rgba(${f.col},${a})`; g.fillText(f.str, f.x, f.y);
+    }
   };
 
   FX.drawScreenFlash = function (g) {

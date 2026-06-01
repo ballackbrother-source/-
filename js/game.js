@@ -26,6 +26,7 @@
     schedule: [],
     toastText: "", toastTimer: 0,
     warnText: "", warnTimer: 0,
+    cardTimer: 0,
     stageName: "",
     bg: null,
     learned: {},
@@ -174,8 +175,8 @@
     E.reset(); WP.reset(); NL.powerups.reset(); FX.reset();
     st.build(G);
     G.bossAt = (st.duration || 64) * 60;
+    G.cardTimer = 170;
     NL.audio.playMusic(st.music);
-    G.toast(st.name);
   };
 
   G.spawnBoss = function () {
@@ -289,6 +290,7 @@
   function stepWorld(deathMode) {
     if (G.toastTimer > 0) G.toastTimer--;
     if (G.warnTimer > 0) G.warnTimer--;
+    if (G.cardTimer > 0) G.cardTimer--;
     if (!deathMode) { G.stageTimer++; runSchedule(); }
     G.scroll += G.scrollSpeed;
 
@@ -313,7 +315,7 @@
     g.save();
     g.translate(sx, sy);
 
-    if (G.state === STATE.TITLE) { NL.ui.drawTitle(g, G); g.restore(); return; }
+    if (G.state === STATE.TITLE) { NL.ui.drawTitle(g, G); g.restore(); NL.ui.drawPost(g); return; }
 
     // world
     G.bg.draw(g, G.scroll, G.frame);
@@ -333,8 +335,14 @@
 
     g.restore();
 
+    // cinematic post (vignette + scanlines), then HUD on top so it stays crisp
+    NL.ui.drawPost(g);
+
     // HUD (no shake)
     NL.ui.drawHUD(g, G);
+
+    // stage-intro card
+    if ((G.state === STATE.PLAY || G.state === STATE.DEATH) && G.cardTimer > 0) NL.ui.drawStageCard(g, G);
 
     // overlays
     if (G.state === STATE.PAUSE) NL.ui.drawCenterPanel(g, [{ s: "PAUSED", size: 48 }, { s: "P で再開", size: 20, col: "#9fc4dd" }]);

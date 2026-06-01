@@ -203,6 +203,7 @@
     if (e._dead) return;
     e._dead = true;
     game.addScore(e.score);
+    if (e.score > 0) FX.floatText(e.x, e.y, "+" + e.score, "255,230,150", e.type === "mid" ? 22 : 16);
     NL.audio.sfx.enemyDie();
     FX.explode(e.x, e.y, e.type === "mid" ? 1.8 : 1);
     game.maybeDrop(e);

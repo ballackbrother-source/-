@@ -149,6 +149,7 @@
           const pp = this.partPos(part);
           FX.explode(pp.x, pp.y, 1.4);
           game.addScore(500);
+          FX.floatText(pp.x, pp.y, "+500", "255,200,120", 20);
         }
       }
     }
