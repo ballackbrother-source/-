@@ -199,7 +199,7 @@
       _scan = g.createPattern(c, "repeat");
     }
     g.fillStyle = _vig; g.fillRect(0, 0, NL.W, NL.H);
-    g.fillStyle = _scan; g.fillRect(0, 0, NL.W, NL.H);
+    if (NL.fx.scanlines) { g.fillStyle = _scan; g.fillRect(0, 0, NL.W, NL.H); }
   };
 
   // ---------- stage-intro card ----------

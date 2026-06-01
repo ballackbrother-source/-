@@ -466,12 +466,22 @@
     ]);
   }
 
+  // ---- adaptive quality: scale effects to keep weak devices smooth ----
+  let _avgDt = 16.7, _qCooldown = 0;
+  function autoQuality(dt) {
+    if (dt > 0 && dt < 200) _avgDt = _avgDt * 0.9 + dt * 0.1; // rolling average
+    if (_qCooldown > 0) { _qCooldown--; return; }
+    if (_avgDt > 22 && FX.quality > 0.45) { FX.quality = 0.5; FX.scanlines = false; _qCooldown = 120; }      // < ~45fps -> lighten
+    else if (_avgDt < 17 && FX.quality < 1) { FX.quality = 1; FX.scanlines = true; _qCooldown = 120; } // smooth -> restore
+  }
+
   // ---- loop ----
   let acc = 0, last = 0; const STEP = 1000 / 60;
   G.loop = function (ts) {
     if (!last) last = ts;
     let dt = ts - last; last = ts;
     if (dt > 250) dt = 250; // clamp after tab-out
+    autoQuality(dt);
     acc += dt;
     let steps = 0;
     // hit-stop freezes logic briefly

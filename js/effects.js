@@ -22,6 +22,10 @@
   FX.shake = 0;
   FX.shakeMax = 0;
   FX.hitStop = 0; // frames of freeze
+  FX.quality = 1;        // 0.4..1, auto-scaled by the frame-rate guard
+  FX.scanlines = true;   // disabled on slow devices
+  const MAX_PARTS = 1500; // hard cap so weak devices never drown in particles
+  const _sink = {};       // throwaway returned when capped (callers may mutate it harmlessly)
   FX._flashScreen = 0; FX._flashCol = "255,255,255";
 
   FX.reset = function () {
@@ -40,6 +44,7 @@
 
   // generic particle
   function particle(x, y, vx, vy, life, r0, r1, col, additive, grav, drag) {
+    if (parts.active.length >= MAX_PARTS) return _sink; // bounded for weak devices
     const p = parts.spawn();
     p.x = x; p.y = y; p.vx = vx; p.vy = vy;
     p.life = life; p.max = life; p.r0 = r0; p.r1 = r1;
@@ -62,6 +67,7 @@
   };
 
   FX.spark = function (x, y, n, col, spd) {
+    n = Math.max(1, Math.round(n * FX.quality));
     for (let i = 0; i < n; i++) {
       const a = Math.random() * 7;
       const s = (spd || 4) * (0.4 + Math.random());
@@ -77,21 +83,22 @@
   // small enemy explosion
   FX.explode = function (x, y, scale) {
     scale = scale || 1;
+    const q = FX.quality;
     FX.flashScreen(0, ""); // nothing global
     FX.shockwave(x, y, 40 * scale, "255,200,120", 3);
     // fireball
-    for (let i = 0; i < 14 * scale; i++) {
+    for (let i = 0; i < 14 * scale * q; i++) {
       const a = Math.random() * 7, s = (1 + Math.random() * 4) * scale;
       const col = Math.random() < 0.5 ? "255,180,70" : "255,90,40";
       particle(x, y, Math.cos(a) * s, Math.sin(a) * s, 16 + Math.random() * 14, 6 * scale, 0, col, true, 0.02, 0.92);
     }
     // debris
-    for (let i = 0; i < 8 * scale; i++) {
+    for (let i = 0; i < 8 * scale * q; i++) {
       const a = Math.random() * 7, s = (2 + Math.random() * 5) * scale;
       particle(x, y, Math.cos(a) * s, Math.sin(a) * s, 24 + Math.random() * 18, 3, 0, "200,210,220", false, 0.18, 0.96);
     }
     // smoke
-    for (let i = 0; i < 6 * scale; i++) {
+    for (let i = 0; i < 6 * scale * q; i++) {
       const a = Math.random() * 7, s = (0.4 + Math.random() * 1.4) * scale;
       const p = particle(x, y, Math.cos(a) * s, Math.sin(a) * s - 0.4, 40 + Math.random() * 30, 8 * scale, 22 * scale, "60,60,70", false, -0.01, 0.95);
       p.smoke = true;
@@ -102,19 +109,20 @@
   // huge boss explosion (multi-stage handled by caller spamming this)
   FX.bigExplode = function (x, y, scale) {
     scale = scale || 2;
+    const q = FX.quality;
     FX.flashScreen(8, "255,240,210");
     FX.shockwave(x, y, 120 * scale, "255,230,160", 7);
     FX.shockwave(x, y, 70 * scale, "255,255,255", 4);
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 40 * q; i++) {
       const a = Math.random() * 7, s = (2 + Math.random() * 7) * scale;
       const col = Math.random() < 0.4 ? "255,255,210" : (Math.random() < 0.6 ? "255,170,60" : "255,80,30");
       particle(x, y, Math.cos(a) * s, Math.sin(a) * s, 24 + Math.random() * 26, 10 * scale, 0, col, true, 0.02, 0.93);
     }
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 24 * q; i++) {
       const a = Math.random() * 7, s = (3 + Math.random() * 8) * scale;
       particle(x, y, Math.cos(a) * s, Math.sin(a) * s, 40 + Math.random() * 30, 4, 0, "210,220,230", false, 0.2, 0.97);
     }
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 14 * q; i++) {
       const a = Math.random() * 7, s = (0.5 + Math.random() * 2) * scale;
       const p = particle(x, y, Math.cos(a) * s, Math.sin(a) * s - 0.5, 60 + Math.random() * 40, 14 * scale, 40 * scale, "50,50,60", false, -0.02, 0.96);
       p.smoke = true;
