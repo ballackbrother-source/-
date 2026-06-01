@@ -67,11 +67,15 @@
 
     W.missiles.forEach((m) => {
       m.life--; if (m.armed > 0) m.armed--;
-      // acquire / track nearest enemy
+      // Re-acquire the nearest target EVERY frame. Caching a target is unsafe:
+      // the boss is returned as a fresh fixed-position literal (would freeze the
+      // aim point), and enemy objects are recycled through the pool (a killed-
+      // then-respawned object would read as still-alive). Recomputing is cheap
+      // (few targets) and always tracks the live position.
       if (m.armed <= 0) {
-        if (!m.target || m.target._dead || m.target.hp <= 0) m.target = game.nearestEnemy(m.x, m.y);
-        if (m.target) {
-          const a = U.angleTo(m.x, m.y, m.target.x, m.target.y);
+        const tgt = game.nearestEnemy(m.x, m.y);
+        if (tgt) {
+          const a = U.angleTo(m.x, m.y, tgt.x, tgt.y);
           let da = a - m.dir;
           while (da > Math.PI) da -= 2 * Math.PI;
           while (da < -Math.PI) da += 2 * Math.PI;

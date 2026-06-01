@@ -145,7 +145,7 @@
           const r = findLaserHit(beam.x, beam.y);
           if (r.obj) {
             if (r.kind === "enemy") E.damage(r.obj, 1, G);
-            else { const part = G.boss.hitTest(r.hx, beam.y, 6); if (part) G.boss.damagePart(part, 1, G); }
+            else if (G.boss) { const part = G.boss.hitTest(r.hx, beam.y, 6); if (part) G.boss.damagePart(part, 1, G); }
             FX.spark(r.hx, beam.y, 2, "200,240,255", 3);
           }
         }
@@ -206,7 +206,7 @@
       NL.audio.stopMusic(); NL.audio.sfx.gameover();
     } else {
       G.player.onRespawn();
-      G.state = G.boss ? STATE.PLAY : STATE.PLAY;
+      G.state = STATE.PLAY;
       // resume appropriate music
       NL.audio.playMusic(G.boss ? "boss" : NL.stages.list[G.stageIdx].music);
     }
