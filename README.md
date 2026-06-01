@@ -1,6 +1,8 @@
 # NOVA LANCE — Burning Skies
 
-A high-production browser **horizontal shoot-'em-up** (Gradius-style) — 3 stages, 3 bosses,
+A high-production browser **horizontal shoot-'em-up** (Gradius-style) — 3 stages, a mid-stage
+mini-boss and a full boss in each, a varied enemy roster (fighters, drones, weavers, turrets,
+gunships, drone-carriers),
 a full power-up arsenal, "learn-it-and-you-win" trap design, infinite continues, synthesised
 chiptune audio, and a built-in mecha-SF art style that runs anywhere. No build step, no
 dependencies to *play* — just open it.
@@ -102,9 +104,11 @@ node qa/gif.js    # record a real playthrough and build demo.gif
 `qa/qa.js`:
 - boots the game through the local server and **fails on any console error** (currently **0**),
 - screenshots the **title, all 3 stages, and all 3 bosses** into `qa/shots/`,
+- spawns **every enemy type** and lets them actually fire/launch (catches bad projectile data),
 - **numerically verifies** that hitting each boss's **core weak point reduces its HP** — both via
   a direct hit-test and by spawning a real player shot and resolving collisions (armour never
   blocks the core),
+- verifies the **mini-boss** takes damage and can be destroyed,
 - regression-checks that recycled enemy-pool objects carry no stale state.
 
 `qa/flow.js` drives the **real transitions**: boss defeat → STAGE CLEAR → next stage → … →
@@ -127,7 +131,7 @@ js/
   weapons.js          player shots, missiles, laser, enemy bullets
   powerup.js          Gradius power meter + capsules (incl. fake trap)
   player.js           ship: movement, banking, afterimage, weapons, options, shield
-  enemies.js          enemy types + traps (ambush / press / debris)
+  enemies.js          enemy types, mini-boss, traps (ambush / press / debris)
   bosses.js           3 bosses; core is always hittable by design
   stages.js           parallax landscape backgrounds + spawn timelines
   ui.js               HUD, power meter, boss bar, title, menus, warnings

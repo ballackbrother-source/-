@@ -47,6 +47,7 @@ SPRITES = {
     "turret":        f"a ground anti-air gun turret with a domed base and a single barrel pointing up, front view, {STYLE}, {GREEN}",
     "midEnemy":      f"a medium hostile gunship seen from above, nose pointing LEFT, heavy grey armor plates, multiple gun ports, red sensors, {STYLE}, {GREEN}",
     "carrier":       f"a large hostile drone-carrier warship seen from above, nose pointing LEFT, dark purple-grey hull, open drone bays glowing violet, {STYLE}, {GREEN}",
+    "miniboss":      f"a heavy hostile assault gunship mini-boss seen from above, nose pointing LEFT, rust-red armored hull, many gun ports, a large glowing red central eye, menacing, {STYLE}, {GREEN}",
     "missile":       f"a small sleek guided missile pointing RIGHT with a glowing orange exhaust, side view, {STYLE}, {GREEN}",
     "capsule":       f"a glowing orange power-up capsule, faceted gem-like crystal with a metal frame and the letter P, top-down, {STYLE}, {GREEN}",
     "capsuleFake":   f"a glowing red warning power-up capsule, faceted crystal with a metal frame and a question mark, looks dangerous, top-down, {STYLE}, {GREEN}",

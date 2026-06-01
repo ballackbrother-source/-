@@ -228,6 +228,32 @@
     g.fillStyle = "#c060ff"; g.fillRect(80, cy - 44, 40, 4);
     AS.images.carrier = c;
   }
+  function bakeMiniboss() { // heavy assault gunship mini-boss, faces left
+    const W = 220, H = 160, c = mk(W, H), g = c.getContext("2d");
+    const cy = H / 2;
+    // main hull
+    const grd = metalGrad(g, 0, cy - 70, 0, cy + 70, "#a06a5a", "#5a342c", "#241410");
+    g.fillStyle = grd;
+    g.beginPath();
+    g.moveTo(6, cy); g.lineTo(46, cy - 64); g.lineTo(W - 50, cy - 60);
+    g.quadraticCurveTo(W - 8, cy - 30, W - 8, cy); g.quadraticCurveTo(W - 8, cy + 30, W - 50, cy + 60);
+    g.lineTo(46, cy + 64); g.closePath(); g.fill();
+    g.strokeStyle = "rgba(0,0,0,.6)"; g.lineWidth = 3; g.stroke();
+    panelLines(g, 50, cy - 46, W - 100, 92, 5, "rgba(0,0,0,.3)");
+    // shoulder armor blocks
+    g.fillStyle = "#6e4036"; g.fillRect(60, cy - 70, 40, 30); g.fillRect(60, cy + 40, 40, 30);
+    g.fillStyle = "#3a201a"; g.fillRect(W - 80, cy - 40, 30, 80);
+    // gun ports (left, facing player)
+    g.fillStyle = "#120a08";
+    g.fillRect(4, cy - 40, 14, 10); g.fillRect(4, cy + 30, 14, 10); g.fillRect(8, cy - 8, 16, 16);
+    // central menacing eye
+    glowDot(g, 40, cy, 26, "rgba(255,60,40,.9)");
+    g.fillStyle = "#ffd0c0"; g.beginPath(); g.arc(36, cy, 9, 0, 7); g.fill();
+    g.fillStyle = "#ff3a20"; g.beginPath(); g.arc(36, cy, 4, 0, 7); g.fill();
+    // accent
+    g.fillStyle = "#ff9a3c"; g.fillRect(70, cy + 50, W - 150, 5);
+    AS.images.miniboss = c;
+  }
 
   // ---------- POWER CAPSULE & fake ----------
   function bakeCapsule(fake) {
@@ -262,7 +288,7 @@
   // ---------- expose procedural background painters (used by stages) ----------
   AS.bakeAll = function () {
     bakePlayer(); bakeOption(); bakeEnemyFighter(); bakeEnemyDrone();
-    bakeTurret(); bakeMidEnemy(); bakeWeaver(); bakeCarrier();
+    bakeTurret(); bakeMidEnemy(); bakeWeaver(); bakeCarrier(); bakeMiniboss();
     bakeCapsule(false); bakeCapsule(true); bakeMissile();
   };
 

@@ -28,7 +28,7 @@
       flash: 0, shootCd: 60, score: 100, touch: 1, hittable: true,
       img: null, w: 0, h: 0, phase: opt && opt.phase || 0, trap: false,
       warned: false, ax: x, ay: y,
-      invincible: false, scroll: false, flip: false, flipX: false,
+      invincible: false, heavy: false, scroll: false, flip: false, flipX: false,
       dropAlways: false, fromTop: false, state: null, timer: 0,
       baseY: y, amp: 0, freq: 0, spin: 0, spinV: 0, stopX: 0, slamY: 0, restY: 0,
       trapId: null
@@ -61,7 +61,7 @@
   };
   E.mid = function (x, y, opt) {
     const e = base("mid", x, y, opt);
-    e.hp = e.maxhp = 16; e.r = 44; e.vx = -1.2; e.score = 600;
+    e.hp = e.maxhp = 16; e.r = 44; e.vx = -1.2; e.score = 600; e.heavy = true;
     e.img = IMG().midEnemy; e.baseY = y; e.amp = 50; e.freq = 0.012;
     e.shootCd = 80; e.stopX = (opt && opt.stopX) || NL.W - 280;
     return e;
@@ -77,8 +77,19 @@
   // carrier: slow heavy ship that periodically releases drone pairs
   E.carrier = function (x, y, opt) {
     const e = base("carrier", x, y, opt);
-    e.hp = e.maxhp = 22; e.r = 52; e.vx = -1.3; e.score = 800;
+    e.hp = e.maxhp = 22; e.r = 52; e.vx = -1.3; e.score = 800; e.heavy = true;
     e.img = IMG().carrier; e.baseY = y; e.amp = 30; e.freq = 0.01; e.launchCd = 90;
+    return e;
+  };
+  // mid-stage MINI-BOSS: enters, holds, cycles attack patterns, then retreats
+  // if not destroyed in time (so it never coexists with the end-stage boss).
+  E.miniboss = function (y, opt) {
+    const e = base("miniboss", NL.W + 130, y || NL.H / 2, opt);
+    e.hp = e.maxhp = 70; e.r = 64; e.vx = 0; e.score = 3000; e.heavy = true;
+    e.img = IMG().miniboss; e.isMiniboss = true; e.name = (opt && opt.name) || "ASSAULT FRAME";
+    e.holdX = (opt && opt.holdX) || NL.W - 280; e.baseY = y || NL.H / 2;
+    e.entering = true; e.pat = 0; e.patT = 0; e.life = 1320; e.leaving = false;
+    e.dropAlways = true; e.bob = 0;
     return e;
   };
   // rear ambush (comes from the LEFT, behind the player)
@@ -140,6 +151,8 @@
           e.x += Math.sin(e.t * e.freq * 0.5) * 1.2;
           if (--e.shootCd <= 0 && e.x < NL.W - 30 && player.alive) { fan(e, player, 3, 4, "120,255,220"); e.shootCd = 80 + Math.random() * 40; }
           break;
+        case "miniboss":
+          updateMiniboss(e, game, player); break;
         case "carrier":
           e.x += e.vx; // slow drift across the screen, always exits in time
           e.y = e.baseY + Math.sin(e.t * e.freq) * e.amp;
@@ -172,7 +185,9 @@
           if (U.circleHit(e.x, e.y, e.r * 0.8, b.x, b.y, b.r)) {
             if (e.trap) game.learn(e.trapId);
             player.hit(game);
-            if (!e.invincible) { e.hp = 0; FX.explode(e.x, e.y, 1); }
+            // small craft are destroyed by the collision; heavy/invincible
+            // ones (mid/carrier/mini-boss/press) shrug off a ram
+            if (!e.invincible && !e.heavy) { e.hp = 0; FX.explode(e.x, e.y, 1); }
             break;
           }
         }
@@ -197,6 +212,36 @@
     }
     FX.muzzle(e.x, e.y, a0, "255,140,90");
   }
+
+  function ring(e, n, spd, off, col) {
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + (off || 0);
+      WP.spawnEnemyBullet(e.x - 20, e.y, Math.cos(a) * spd, Math.sin(a) * spd, { col: col || "255,150,90", r: 7 });
+    }
+  }
+
+  function updateMiniboss(e, game, player) {
+    e.bob += 0.03;
+    if (e.entering) {
+      e.x += (e.holdX - e.x) * 0.05;
+      if (Math.abs(e.x - e.holdX) < 4) e.entering = false;
+      return;
+    }
+    e.y = e.baseY + Math.sin(e.bob) * 90;
+    if (--e.life <= 0) e.leaving = true;
+    if (e.leaving) { e.x += 4; if (e.x > NL.W + 160) e._dead = true; return; }
+    if (!player.alive) return;
+    const berserk = e.hp < e.maxhp * 0.35;
+    e.patT++;
+    // cycle: aimed wide fan -> aimed triple burst -> ring nova
+    const period = berserk ? 150 : 210;
+    const local = e.patT % period;
+    if (local === 0) fan(e, player, berserk ? 7 : 5, 3.4, "255,140,80");
+    else if (local === Math.floor(period * 0.33)) { for (let k = 0; k < 3; k++) game.delay(k * 6, () => player.alive && fanFrom(e, player, 3, 3.8, "255,110,90")); }
+    else if (local === Math.floor(period * 0.66)) { ring(e, berserk ? 20 : 14, 2.8, e.t * 0.05, "255,170,90"); if (berserk) ring(e, 14, 3.6, -e.t * 0.05, "255,120,60"); }
+  }
+  // helper that re-aims each call (used for delayed bursts)
+  function fanFrom(e, player, n, spd, col) { if (!e._dead) fan(e, player, n, spd, col); }
 
   function updatePress(e, game, player) {
     // keep scrolling off even when the boss sets scrollSpeed to 0, otherwise a
@@ -235,9 +280,14 @@
     if (e._dead) return;
     e._dead = true;
     game.addScore(e.score);
-    if (e.score > 0) FX.floatText(e.x, e.y, "+" + e.score, "255,230,150", e.type === "mid" ? 22 : 16);
-    NL.audio.sfx.enemyDie();
-    FX.explode(e.x, e.y, e.type === "mid" ? 1.8 : 1);
+    if (e.score > 0) FX.floatText(e.x, e.y, "+" + e.score, e.isMiniboss ? "255,210,120" : "255,230,150", e.isMiniboss ? 30 : e.type === "mid" ? 22 : 16);
+    if (e.isMiniboss) {
+      FX.bigExplode(e.x, e.y, 2.2); NL.audio.sfx.bigBoom(); FX.flashScreen(8, "255,230,200");
+      game.toast("MINI-BOSS DESTROYED");
+    } else {
+      NL.audio.sfx.enemyDie();
+      FX.explode(e.x, e.y, e.type === "mid" || e.type === "carrier" ? 1.8 : 1);
+    }
     game.maybeDrop(e);
   };
 

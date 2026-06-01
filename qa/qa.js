@@ -67,6 +67,7 @@ const STAGE_NAMES = ["STAGE1_DAWN", "STAGE2_ASTEROID", "STAGE3_OVERLORD"];
         E.turret(1180, 110); const t = E.turret(1180, 610); t.flip = true;
         E.mid(1180, 360);
         const c = E.carrier(1180, 300); c.dropAlways = true;
+        E.miniboss(360, { name: "QA FRAME" });
         E.ambush(360);
       });
       await wait(2600); // long enough for shoot cooldowns to elapse and fire
@@ -112,6 +113,9 @@ const STAGE_NAMES = ["STAGE1_DAWN", "STAGE2_ASTEROID", "STAGE3_OVERLORD"];
       return { ok, droneInvincible: d.invincible, fighterFlipX: f.flipX };
     });
 
+    // mini-boss: verify it takes damage and can be destroyed
+    report.miniboss = await page.evaluate(() => window.__NL.probeMiniboss());
+
     // victory screen
     await page.evaluate(() => { window.__NL.gotoStage(2); window.__NL.jumpToBoss(); });
     await page.waitForFunction(() => window.__NL.bossHp !== null, { timeout: 8000 });
@@ -128,7 +132,8 @@ const STAGE_NAMES = ["STAGE1_DAWN", "STAGE2_ASTEROID", "STAGE3_OVERLORD"];
   const coreHitsOk = report.bossProbes.every((p) => p.coreHitPart === "core" && p.coreDelta > 0 && p.shotDelta > 0);
   report.bossHitVerified = allCores && coreHitsOk;
   const recycleOk = report.recycle && report.recycle.ok;
-  report.pass = errors.length === 0 && report.bossHitVerified && recycleOk;
+  const minibossOk = report.miniboss && report.miniboss.delta > 0 && report.miniboss.dead;
+  report.pass = errors.length === 0 && report.bossHitVerified && recycleOk && minibossOk;
 
   fs.writeFileSync(path.join(__dirname, "report.json"), JSON.stringify(report, null, 2));
   fs.writeFileSync(path.join(__dirname, "console.log"), logs.join("\n"));
@@ -144,6 +149,7 @@ const STAGE_NAMES = ["STAGE1_DAWN", "STAGE2_ASTEROID", "STAGE3_OVERLORD"];
   report.bossProbes.forEach((p) => console.log(`   stage${p.stage} ${p.boss}: hitPart=${p.coreHitPart} coreDelta=${p.coreDelta} shotDelta=${p.shotDelta}`));
   console.log("boss hit verified:", report.bossHitVerified);
   console.log("recycle clean    :", report.recycle && report.recycle.ok, JSON.stringify(report.recycle));
+  console.log("mini-boss        :", JSON.stringify(report.miniboss));
   console.log("PASS:", report.pass);
   process.exit(report.pass ? 0 : 1);
 })();

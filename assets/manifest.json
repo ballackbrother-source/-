@@ -10,6 +10,7 @@
     "turret": "turret.png",
     "midEnemy": "mid_enemy.png",
     "carrier": "carrier.png",
+    "miniboss": "miniboss.png",
     "missile": "missile.png",
     "capsule": "capsule.png",
     "capsuleFake": "capsule_fake.png"

@@ -202,8 +202,10 @@
         game.delay(1100, () => { for (let k = 0; k < 3; k++) game.delay(k * 28, () => NL.enemies.weaver(NL.W + 40, 220 + k * 120)); });
         // FIRST TRAP: rear ambush (teaches "watch your back")
         game.delay(900, () => { game.warnIfLearned("ambush", "敵機 後方より接近!"); NL.enemies.ambush(NL.H * 0.5); });
+        // MINI-BOSS
+        game.delay(1750, () => { game.toast("WARNING"); NL.audio.sfx.warn(); NL.enemies.miniboss(NL.H / 2, { name: "GR-04 RAVAGER" }); });
         // drone carrier mini-threat
-        game.delay(2400, () => { const c = NL.enemies.carrier(NL.W + 70, 300); c.dropAlways = true; });
+        game.delay(2600, () => { const c = NL.enemies.carrier(NL.W + 70, 300); c.dropAlways = true; });
         game.delay(1500, () => { game.warnIfLearned("ambush", "後方 警戒!"); NL.enemies.ambush(220); NL.enemies.ambush(500); });
         // mid enemy mini-fight
         game.delay(2100, () => { const m = NL.enemies.mid(NL.W + 60, 300); m.dropAlways = true; });
@@ -236,8 +238,10 @@
         // weavers threading the canyon
         game.delay(1000, () => { for (let k = 0; k < 3; k++) game.delay(k * 24, () => NL.enemies.weaver(NL.W + 40, 200 + k * 110)); });
         game.delay(2800, () => { for (let k = 0; k < 4; k++) game.delay(k * 20, () => NL.enemies.weaver(NL.W + 40, 160 + k * 100)); });
+        // MINI-BOSS
+        game.delay(2000, () => { game.toast("WARNING"); NL.audio.sfx.warn(); NL.enemies.miniboss(NL.H / 2, { name: "BX-03 SHREDDER" }); });
         // drone carrier
-        game.delay(2200, () => { const c = NL.enemies.carrier(NL.W + 70, 360); c.dropAlways = true; });
+        game.delay(2300, () => { const c = NL.enemies.carrier(NL.W + 70, 360); c.dropAlways = true; });
         // mid gunships
         game.delay(2000, () => { const m = NL.enemies.mid(NL.W + 60, 360); m.dropAlways = true; });
         game.delay(3200, () => { NL.enemies.mid(NL.W + 60, 240); NL.enemies.mid(NL.W + 60, 480); });
@@ -261,7 +265,9 @@
         game.delay(3300, () => { for (let k = 0; k < 5; k++) game.delay(k * 16, () => { const e = NL.enemies.fighter(NL.W + 40, 140 + k * 100); e.amp = 70; }); });
         // weaver swarms + twin carriers (final gauntlet)
         game.delay(1200, () => { for (let k = 0; k < 4; k++) game.delay(k * 20, () => NL.enemies.weaver(NL.W + 40, 140 + k * 110)); });
-        game.delay(2400, () => { NL.enemies.carrier(NL.W + 70, 230); NL.enemies.carrier(NL.W + 70, 500); });
+        // MINI-BOSS
+        game.delay(1850, () => { game.toast("WARNING"); NL.audio.sfx.warn(); NL.enemies.miniboss(NL.H / 2, { name: "OV-02 SENTINEL" }); });
+        game.delay(2600, () => { NL.enemies.carrier(NL.W + 70, 230); NL.enemies.carrier(NL.W + 70, 500); });
         game.delay(3000, () => { for (let k = 0; k < 3; k++) game.delay(k * 24, () => NL.enemies.weaver(NL.W + 40, 220 + k * 130)); });
       }
     }

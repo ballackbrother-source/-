@@ -415,6 +415,20 @@
     setLives(n) { G.lives = n; },
     killPlayer() { G.player.invuln = 0; G.player.shield = 0; G.player.hit(G); },
     addCapsule() { NL.powerups.spawn(G.player.x + 200, G.player.y, false); },
+    // probe: spawn a mini-boss, fire shots into it, confirm HP drops & it dies
+    probeMiniboss() {
+      const E = NL.enemies; E.reset();
+      const mb = E.miniboss(NL.H / 2, { name: "PROBE" });
+      mb.entering = false; mb.x = NL.W - 300;
+      const before = mb.hp;
+      for (let i = 0; i < 80 && mb.hp > 0; i++) {
+        WP.spawnShot(mb.x - 80, mb.y, 36, 0, { r: 6, dmg: 3 });
+        WP.update(G); collisions();
+      }
+      const out = { before, after: mb.hp, delta: before - mb.hp, dead: mb._dead === true || mb.hp <= 0 };
+      E.reset();
+      return out;
+    },
     invincible(v) { G.player.invuln = v ? 1e9 : 0; }
   };
 

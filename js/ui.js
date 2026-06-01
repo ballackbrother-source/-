@@ -46,6 +46,13 @@
     // boss bar
     if (game.boss && !game.boss.dead) UI.drawBossBar(g, game.boss);
 
+    // mini-boss bar (scan active enemies for one flagged isMiniboss)
+    if (!game.boss) {
+      let mb = null;
+      NL.enemies.pool.forEach((e) => { if (e.isMiniboss && !e.leaving) mb = e; });
+      if (mb) UI.drawMiniBossBar(g, mb);
+    }
+
     // warning banner
     if (game.warnTimer > 0) {
       const a = Math.min(1, game.warnTimer / 30) * (0.6 + 0.4 * Math.sin(game.frame * 0.4));
@@ -93,6 +100,18 @@
     if (boss.flash > 0) { g.fillStyle = "rgba(255,255,255,.6)"; roundRect(g, x, y, w * frac, 18, 4); g.fill(); }
     g.strokeStyle = "rgba(255,200,160,.7)"; g.lineWidth = 1.5; roundRect(g, x, y, w, 18, 4); g.stroke();
     glowTxt(g, boss.name, NL.W / 2, y - 6, 14, "#ffd6c0", "rgba(255,80,40,.7)", "center");
+  };
+
+  UI.drawMiniBossBar = function (g, e) {
+    const w = NL.W * 0.42, x = (NL.W - w) / 2, y = 84;
+    g.fillStyle = "rgba(0,0,0,.45)"; roundRect(g, x - 2, y - 2, w + 4, 16, 3); g.fill();
+    const frac = Math.max(0, e.hp / e.maxhp);
+    const grd = g.createLinearGradient(x, 0, x + w, 0);
+    grd.addColorStop(0, "#ff8a2a"); grd.addColorStop(1, "#ffd23a");
+    g.fillStyle = grd; roundRect(g, x, y, w * frac, 12, 3); g.fill();
+    if (e.flash > 0) { g.fillStyle = "rgba(255,255,255,.6)"; roundRect(g, x, y, w * frac, 12, 3); g.fill(); }
+    g.strokeStyle = "rgba(255,200,160,.6)"; g.lineWidth = 1; roundRect(g, x, y, w, 12, 3); g.stroke();
+    glowTxt(g, "◈ " + (e.name || "MINI-BOSS"), NL.W / 2, y - 4, 12, "#ffe0c0", "rgba(255,120,40,.6)", "center");
   };
 
   function roundRect(g, x, y, w, h, r) {
