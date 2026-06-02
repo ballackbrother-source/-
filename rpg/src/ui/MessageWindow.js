@@ -20,7 +20,8 @@ export class MessageWindow {
   }
 
   show(text, opts = {}) {
-    this.text = text || '';
+    // 配列で渡された場合は改行連結（防御的）。1ボックスに複数行表示。
+    this.text = Array.isArray(text) ? text.join('\n') : (text || '');
     this.name = opts.name || '';
     this.shown = 0; this.active = true;
     return new Promise((res) => { this._resolve = res; });

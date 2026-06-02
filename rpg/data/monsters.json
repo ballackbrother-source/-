@@ -34,6 +34,20 @@
       "skills": ["poison_spore"],
       "ai": [{ "type": "attack", "weight": 2 }, { "type": "skill", "skillId": "poison_spore", "weight": 1 }]
     },
+    "ALDIA": {
+      "name": "創世神アルディア", "family": "demon", "boss": true,
+      "regenUntilBroken": true, "doomTurn": 14,
+      "stats": { "hp": 5200, "mp": 999, "atk": 84, "def": 22, "mat": 88, "mdf": 26, "agi": 16, "luk": 12 },
+      "element": { "weak": ["dark"], "resist": [], "absorb": ["light"], "null": [] },
+      "attackElement": "light", "exp": 0, "gold": 0,
+      "drops": [],
+      "skills": ["holy", "enemy_fang"],
+      "ai": [
+        { "type": "attack", "weight": 2 },
+        { "type": "skill", "skillId": "holy", "weight": 2 },
+        { "type": "skill", "skillId": "holy", "weight": 2, "cond": "low" }
+      ]
+    },
     "B2": {
       "name": "森獣ヴェルダンテ", "family": "plant", "boss": true,
       "stats": { "hp": 1100, "mp": 40, "atk": 21, "def": 13, "mat": 12, "mdf": 9, "agi": 7, "luk": 5 },
@@ -59,6 +73,7 @@
     "wolf":       { "members": ["M04"] },
     "wolf_pack":  { "members": ["M04", "M01"] },
     "moth":       { "members": ["M05", "M01"] },
-    "verdante":   { "members": ["B2"] }
+    "verdante":   { "members": ["B2"] },
+    "aldia":      { "members": ["ALDIA"] }
   }
 }

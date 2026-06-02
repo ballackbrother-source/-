@@ -10,6 +10,7 @@ import { SaveManager } from '../core/SaveManager.js';
 import { GameState } from '../core/GameState.js';
 import { FieldScene } from './FieldScene.js';
 import { SettingsScene } from './SettingsScene.js';
+import { TrialScene } from './TrialScene.js';
 
 export class TitleScene extends Scene {
   constructor(game) {
@@ -20,6 +21,7 @@ export class TitleScene extends Scene {
       { label: 'はじめから', value: 'new' },
       { label: 'つづきから', value: 'load' },
       { label: 'せってい', value: 'settings' },
+      { label: '★最終決戦 体験版', value: 'trial' },
     ]);
     this.slots = new CommandWindow([], { title: 'ロードする ぼうけんのしょ' });
   }
@@ -64,6 +66,7 @@ export class TitleScene extends Scene {
     if (value === 'new') this.startNewGame();
     else if (value === 'load') { this.refreshSlots(); this.mode = 'load'; }
     else if (value === 'settings') this.game.scenes.push(new SettingsScene(this.game));
+    else if (value === 'trial') this.game.scenes.replace(new TrialScene(this.game));
   }
 
   startNewGame() {
@@ -101,8 +104,8 @@ export class TitleScene extends Scene {
     r.text('～ 星を継ぐ者 ～', VIEW_W / 2, 150, { size: 22, align: 'center', color: COLORS.textDim });
 
     if (this.mode === 'main') {
-      r.window(VIEW_W / 2 - 110, 250, 220, 130);
-      this.menu.render(r, VIEW_W / 2 - 80, 270, 180);
+      r.window(VIEW_W / 2 - 130, 248, 260, 156);
+      this.menu.render(r, VIEW_W / 2 - 100, 264, 220);
     } else {
       r.window(VIEW_W / 2 - 170, 230, 340, 200);
       this.slots.render(r, VIEW_W / 2 - 140, 248, 300);

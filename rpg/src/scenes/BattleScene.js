@@ -40,6 +40,8 @@ export class BattleScene extends Scene {
 
     this.players = this.game.party.frontline();
     this.isBoss = params.opts?.isBoss || this.enemies.some((e) => e.isBoss);
+    this.bossEnemy = this.enemies.find((e) => e.isBoss) || null;
+    this.special = this.enemies.some((e) => e.def.regenUntilBroken); // 神（不死）戦
     this.system = new BattleSystem(this.players, this.enemies, this.game.db, rng, {
       canEscape: params.opts?.canEscape !== false, isBoss: this.isBoss,
     });
@@ -306,6 +308,24 @@ export class BattleScene extends Scene {
         const cx = (VIEW_W / (this.enemies.length + 1)) * (i + 1);
         r.text('▼', cx, 95, { size: 22, align: 'center', color: COLORS.selected });
       }
+    }
+
+    // ボスHPバー（ボス戦）
+    if (this.bossEnemy && !this.bossEnemy.isDead) {
+      const bw = 360, bx = (VIEW_W - bw) / 2, by = 64;
+      r.text(this.bossEnemy.def.name, bx, by - 18, { size: 14, color: '#ffd0d0' });
+      r.gauge(bx, by, bw, 10, this.bossEnemy.curHp / this.bossEnemy.maxHp, '#d2526b');
+      if (this.bossEnemy._broken) r.text('不死 崩壊', bx + bw - 70, by - 18, { size: 12, color: '#ffd23f' });
+    }
+    // 赦しゲージ（神戦のみ）
+    if (this.special) {
+      const f = this.game.state.variables.forgiveness || 0;
+      const gw = 220, gx = (VIEW_W - gw) / 2, gy = 92;
+      r.text(`赦し ${f}`, gx, gy - 16, { size: 12, color: '#aee0ff' });
+      r.gauge(gx, gy, gw, 8, f / 100, '#aee0ff');
+      const can = f >= 60;
+      r.text(can ? '連携「ラスト・レクイエム」 解放中' : '赦しが 足りない…連携は 使えない',
+        gx, gy + 12, { size: 11, color: can ? '#ffd23f' : '#9a6b6b' });
     }
 
     this.ui.drawLog(r, this.log);

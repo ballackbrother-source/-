@@ -22,6 +22,8 @@
 
   "star_read": { "name": "星詠", "type": "magic", "element": "light", "target": "oneEnemy", "mp": 6, "power": 2.4, "desc": "星の記憶を 読み 弱点を つく" },
 
+  "last_requiem": { "name": "ラスト・レクイエム", "type": "physical", "element": "dark", "target": "oneEnemy", "mp": 0, "power": 4.0, "breaksRegen": true, "desc": "赦しの 連携技。神の 不死を 打ち砕く唯一の 一撃" },
+
   "enemy_fang":  { "name": "かみつき", "type": "physical", "target": "oneEnemy", "mp": 0, "power": 1.5, "desc": "" },
   "root_slam":   { "name": "ねっこの一撃", "type": "physical", "element": "earth", "target": "allEnemies", "mp": 0, "power": 0.9, "desc": "" },
   "poison_spore":{ "name": "どくの ほうし", "type": "status", "target": "allEnemies", "mp": 0, "inflict": { "status": "poison", "rate": 0.5 }, "desc": "" }

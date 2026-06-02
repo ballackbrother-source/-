@@ -81,6 +81,22 @@ export class BattleSystem {
       SES.tickTurnEnd(a, log);
       for (const t of log) yield { text: t, se: a.isDead ? 'damage' : undefined };
     }
+
+    // ── 特殊ボス：神の「不死（無限回復）」と「世界の初期化（時間切れ）」 ──
+    for (const e of this.enemies) {
+      if (e.isDead || !e.def.regenUntilBroken || e._broken) continue;
+      if (e.curHp < e.maxHp) {
+        e.curHp = e.maxHp; // 不死性：傷が瞬時に塞がる
+        yield { text: `${e.def.name}の 傷が、みるみる ふさがっていく……！`, se: 'heal' };
+      }
+    }
+    const doom = this.enemies.find((e) =>
+      !e.isDead && e.def.doomTurn && !e._broken && this.turnCount >= e.def.doomTurn);
+    if (doom) {
+      yield { text: `${doom.def.name}「——もう いい。リセットの 時だ。」`, se: 'damage' };
+      for (const p of this.players) p.curHp = 0; // 世界の初期化＝全滅（Bad導線）
+      yield { text: '世界が、白く 塗りつぶされていく……', se: 'cancel' };
+    }
   }
 
   _agiAdvantage() {
@@ -208,6 +224,11 @@ export class BattleSystem {
         se: res.crit ? 'hit' : 'damage', flash: t,
       };
       for (const w of wake) yield { text: w };
+    }
+    // 連携技「ラスト・レクイエム」：神の不死性を打ち砕く
+    if (skill.breaksRegen && t.def && t.def.regenUntilBroken && !t._broken) {
+      t._broken = true;
+      yield { text: `${t.name}の 不死が——砕けた！ いまなら、届く！`, se: 'hit' };
     }
     // 状態異常付与
     if (skill.inflict && !t.isDead) {
