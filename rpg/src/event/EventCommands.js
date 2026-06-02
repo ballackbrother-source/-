@@ -52,6 +52,13 @@ export const COMMANDS = {
       await ctx.message(`${c.name} が なかまに 加わった！`);
     }
   },
+  async removeMember(cmd, _i, ctx) {
+    ctx.party.removeMember(cmd.id);
+    if (cmd.notify) {
+      const c = ctx.db.getCharacter(cmd.id);
+      await ctx.message(`${c.name} が パーティから 離れた。`);
+    }
+  },
 
   // 音
   async playBgm(cmd, _i, ctx) { ctx.audio.playBgm(cmd.id); },

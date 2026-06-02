@@ -28,6 +28,7 @@
   "panacea":       { "name": "まんびょう薬", "type": "consumable", "price": 120, "rarity": 2, "effect": { "cure": ["poison", "sleep", "paralyze", "silence", "confuse", "blind"] }, "usableInBattle": true, "usableInField": true, "desc": "すべての 状態異常を なおす。" },
   "revive_feather":{ "name": "復活のはね", "type": "consumable", "price": 150, "rarity": 2, "effect": { "revive": 0.5 }, "usableInBattle": true, "usableInField": true, "desc": "せんとうふのうを HP半分で 復活。" },
 
+  "star_core":     { "name": "星核", "type": "key", "price": 0, "rarity": 5, "desc": "古代遺跡に眠る 七つの結晶のひとつ。世界の核に つながる 鍵だという。" },
   "star_pendant":  { "name": "星のかけらのペンダント", "type": "key", "price": 0, "rarity": 5, "desc": "ミルカ婆から託された 古いペンダント。かすかに 星のように 光っている。" },
   "herb_bundle":   { "name": "やくそうの たば", "type": "key", "price": 0, "rarity": 1, "desc": "森で つんだ やくそうの たば。" }
 }

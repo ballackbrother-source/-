@@ -74,16 +74,57 @@
       ] } ]
     },
     {
-      "id": "guide", "x": 10, "y": 11, "dir": "down", "color": "#c8a06a", "wander": true,
+      "id": "guide", "x": 6, "y": 11, "dir": "down", "color": "#c8a06a", "wander": true,
       "pages": [
         { "conditions": { "notFlag": "verdante_down" }, "commands": [
           { "type": "message", "name": "ギルドの 受付", "text": ["北の森が モンスターで あれている らしい。","腕に おぼえが あるなら、奥の 巨獣を 倒してくれ。"] } ] },
+        { "conditions": { "flag": "betrayed" }, "commands": [
+          { "type": "message", "name": "ギルドの 受付", "text": ["あんた、ひどい 顔だ…。何が あったんだい?","…無理は すんなよ。"] } ] },
         { "conditions": { "flag": "verdante_down" }, "commands": [
-          { "type": "message", "name": "ギルドの 受付", "text": ["森を 鎮めて くれたんだって！？ ありがとう。","この先、聖都アルゲンタを 目指すと いい。","——ここから先は、つづく 物語で。(MVP版)"] } ] }
+          { "type": "message", "name": "ギルドの 受付", "text": ["森を 鎮めて くれて ありがとう！","聖王国の 使者が あんたを 探していたよ。"] } ] }
+      ]
+    },
+    {
+      "id": "carriage", "x": 13, "y": 11, "dir": "down", "color": "#8a6a4a",
+      "pages": [
+        { "conditions": { "flag": "betrayed" }, "commands": [
+          { "type": "message", "name": "御者", "text": "…もう、どこへ 行くんだい? 気を つけてな。" } ] },
+        { "conditions": { "flag": "ch2_intro" }, "commands": [
+          { "type": "message", "name": "御者", "text": "東の『古代遺跡』へ 向かうかい? 星核が 眠ってるって 噂だ。" },
+          { "type": "choice", "options": [
+            { "text": "古代遺跡へ 行く", "commands": [
+              { "type": "transfer", "mapId": "ruin", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "気が 向いたら 言ってくれ。" } ] }
+          ] } ] },
+        { "conditions": {}, "commands": [
+          { "type": "message", "name": "御者", "text": "馬車で どこへでも 運ぶよ。…今は 行き先が ないかい。" } ] }
       ]
     }
   ],
   "events": [
+    {
+      "trigger": "autorun",
+      "cond": { "flag": "betrayed", "notFlag": "ch3_seen" },
+      "commands": [
+        { "type": "playBgm", "id": "town" },
+        { "type": "message", "text": ["光を 失った 街。人々の 顔にも、暗い 影が さしている。"] },
+        { "type": "message", "text": ["星核も、信じた 兄も 失った。","——だが、ルゥの 旅は ここで 終わらない。"] },
+        { "type": "setFlag", "key": "ch3_seen" }
+      ]
+    },
+    {
+      "trigger": "autorun",
+      "cond": { "flag": "verdante_down", "notFlag": "ch2_intro" },
+      "commands": [
+        { "type": "playBgm", "id": "town" },
+        { "type": "message", "text": "森を 鎮めた 一行のもとへ、聖王国の 使者が 駆けつけた。" },
+        { "type": "message", "name": "聖王国の 使者", "text": ["勇者よ。星の翳りを 鎮める 道は ただ 一つ。","世界に 散った 七つの『星核』を 集め、星の祭壇に 捧げるのだ。"] },
+        { "type": "setChapter", "id": "ch2", "step": 0 },
+        { "type": "setFlag", "key": "ch2_intro" },
+        { "type": "message", "name": "シオン", "text": "星核、か。…（シオンの 横顔が、一瞬 だけ 曇った）" },
+        { "type": "message", "text": ["【第2章 裏切りの聖騎士】", "街の 御者に 話すと、東の『古代遺跡』へ 向かえる。"] }
+      ]
+    },
     {
       "trigger": "autorun",
       "cond": { "chapterAtLeast": "ch1", "notFlag": "ch1_join" },

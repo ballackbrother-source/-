@@ -46,6 +46,15 @@ export class Party {
     }
   }
 
+  /**
+   * 仲間を隊列から外す（裏切り・離脱）。
+   * メンバーレコード（Lv/装備）は保持し、再加入時に進行を引き継げるようにする。
+   */
+  removeMember(id) {
+    this.state.party.order = this.state.party.order.filter((x) => x !== id);
+    this.state.party.reserve = this.state.party.reserve.filter((x) => x !== id);
+  }
+
   /** 全回復（宿屋/教会） */
   fullHeal() {
     for (const c of this.all()) {

@@ -48,6 +48,20 @@
         { "type": "skill", "skillId": "holy", "weight": 2, "cond": "low" }
       ]
     },
+    "NEREID": {
+      "name": "水将ネレイド", "family": "aqua", "boss": true,
+      "stats": { "hp": 3400, "mp": 200, "atk": 35, "def": 15, "mat": 38, "mdf": 17, "agi": 15, "luk": 6 },
+      "element": { "weak": ["thunder"], "resist": [], "absorb": ["ice"], "null": [] },
+      "attackElement": "none", "exp": 200, "gold": 150,
+      "drops": [{ "item": "hi_herb", "rate": 1.0 }],
+      "skills": ["tsunami", "enemy_fang"],
+      "ai": [
+        { "type": "attack", "weight": 2 },
+        { "type": "skill", "skillId": "tsunami", "weight": 2 },
+        { "type": "skill", "skillId": "tsunami", "weight": 2, "cond": "low" },
+        { "type": "skill", "skillId": "enemy_fang", "weight": 1 }
+      ]
+    },
     "B2": {
       "name": "森獣ヴェルダンテ", "family": "plant", "boss": true,
       "stats": { "hp": 1100, "mp": 40, "atk": 21, "def": 13, "mat": 12, "mdf": 9, "agi": 7, "luk": 5 },
@@ -74,6 +88,7 @@
     "wolf_pack":  { "members": ["M04", "M01"] },
     "moth":       { "members": ["M05", "M01"] },
     "verdante":   { "members": ["B2"] },
+    "nereid":     { "members": ["NEREID"] },
     "aldia":      { "members": ["ALDIA"] }
   }
 }
