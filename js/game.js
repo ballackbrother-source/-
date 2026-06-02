@@ -42,6 +42,7 @@
     learned: {},
     difficulty: "normal",
     diff: DIFFS.normal,
+    lefty: false,
     menuSel: 1,
     pauseSel: 0,
     tutorialTimer: 0,
@@ -66,6 +67,8 @@
     G.difficulty = DIFFS[save.difficulty] ? save.difficulty : "normal";
     G.diff = DIFFS[G.difficulty];
     G.menuSel = DIFF_ORDER.indexOf(G.difficulty);
+    G.lefty = !!save.lefty;
+    applyLayout();
     NL.diff = G.diff; // exposed for weapons/bosses to read
     G.bg = NL.stages.list[0].bg();
     G.state = STATE.TITLE;
@@ -86,7 +89,12 @@
   G.learn = function (id) { if (!G.learned[id]) { G.learned[id] = true; persist(); } };
   G.warnIfLearned = function (id, text) { if (G.learned[id]) { G.warnText = text; G.warnTimer = 110; NL.audio.sfx.warn(); } };
 
-  function persist() { U.save({ hi: G.hiScore, learned: G.learned, difficulty: G.difficulty }); }
+  function persist() { U.save({ hi: G.hiScore, learned: G.learned, difficulty: G.difficulty, lefty: G.lefty }); }
+  function applyLayout() {
+    if (!NL.input.isTouch) return;
+    if (!G._touchUIEl) G._touchUIEl = document.getElementById("touch-ui");
+    if (G._touchUIEl) G._touchUIEl.classList.toggle("lefty", !!G.lefty);
+  }
 
   // 1UP extends: rewards everyone and quietly helps newcomers survive.
   const EXTEND_BASE = [50000, 150000, 300000];
@@ -326,8 +334,12 @@
     if (In.firePressed || In.confirmPressed) { NL.audio.resume(); NL.audio.sfx.start(); startNewGame(); }
   }
 
-  // ---- pause menu ----
-  const PAUSE_ITEMS = ["RESUME", "RESTART STAGE", "QUIT TO TITLE"];
+  // ---- pause menu (last item is a touch-only left/right layout toggle) ----
+  G.pauseItems = function () {
+    const items = ["RESUME", "RESTART STAGE", "QUIT TO TITLE"];
+    if (NL.input.isTouch) items.push("LAYOUT: " + (G.lefty ? "LEFT-HAND" : "RIGHT-HAND"));
+    return items;
+  };
   function enterPause() { G.state = STATE.PAUSE; G.pauseSel = 0; NL.audio.stopMusic(); NL.audio.sfx.select(); }
   function resumeMusic() { NL.audio.playMusic(G.boss && !G.boss.dead ? "boss" : NL.stages.list[G.stageIdx].music); }
   function doPauseAction() {
@@ -335,12 +347,14 @@
       case 0: G.state = STATE.PLAY; resumeMusic(); break;
       case 1: NL.audio.sfx.start(); G.startStage(G.stageIdx); G.state = STATE.PLAY; break;
       case 2: NL.audio.sfx.select(); G.state = STATE.TITLE; NL.audio.playMusic("title"); break;
+      case 3: G.lefty = !G.lefty; applyLayout(); persist(); NL.audio.sfx.select(); break; // toggle, stay paused
     }
   }
   function handlePause(In) {
+    const n = G.pauseItems().length;
     if (In.pausePressed) { G.state = STATE.PLAY; resumeMusic(); return; }
-    if (In.upPressed) { G.pauseSel = (G.pauseSel + 2) % 3; NL.audio.sfx.select(); }
-    if (In.downPressed) { G.pauseSel = (G.pauseSel + 1) % 3; NL.audio.sfx.select(); }
+    if (In.upPressed) { G.pauseSel = (G.pauseSel + n - 1) % n; NL.audio.sfx.select(); }
+    if (In.downPressed) { G.pauseSel = (G.pauseSel + 1) % n; NL.audio.sfx.select(); }
     if (In.pointerPressed && In.tapPoint && NL.ui.pauseRects) {
       const p = In.tapPoint; let hit = -1;
       NL.ui.pauseRects.forEach((b, i) => { if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) hit = i; });
@@ -447,7 +461,7 @@
     }
 
     // overlays
-    if (G.state === STATE.PAUSE) NL.ui.drawPauseMenu(g, G, PAUSE_ITEMS);
+    if (G.state === STATE.PAUSE) NL.ui.drawPauseMenu(g, G, G.pauseItems());
     if (G.state === STATE.CONTINUE) {
       const sec = Math.ceil(G.continueTimer / 60);
       NL.ui.drawCenterPanel(g, [

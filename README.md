@@ -38,7 +38,8 @@ Built to be approachable for everyone: a **difficulty selector** on the title
 **infinite continues**, **1UP extends** at score milestones (50k / 150k / 300k / +200k),
 a short **HOW TO PLAY** prompt at the start of stage 1, clearly-readable enemy bullets, a
 visible player hitbox marker, and a "die-once-then-get-warned" trap system so nobody is stuck. Choose with ← → (or tap a
-button) and start with Z / Space / Enter / click.
+button) and start with Z / Space / Enter / click. On phones, the pause menu has a
+**left-handed layout** toggle (move pad on the right, buttons on the left).
 
 ## 🎮 Controls
 
