@@ -1,0 +1,136 @@
+{
+  "name": "星の祭壇・神域",
+  "bgm": "boss",
+  "encounter": null,
+  "legend": { "f": "floor", "F": "darkfloor", "w": "water" },
+  "objectLegend": { "W": "wall", "S": "sign", "C": "chest" },
+  "ground": [
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff"
+  ],
+  "objects": [
+    "WWWWWWWWWWWWWWWWWWWW",
+    "W                  W",
+    "W                  W",
+    "W       W  W       W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "WWWWWWWWW  WWWWWWWWW"
+  ],
+  "portals": [
+    { "x": 9, "y": 11, "toMap": "hafen", "toX": 9, "toY": 12, "dir": "down" },
+    { "x": 10, "y": 11, "toMap": "hafen", "toX": 10, "toY": 12, "dir": "down" }
+  ],
+  "npcs": [],
+  "events": [
+    {
+      "trigger": "autorun", "cond": { "notFlag": "s_truth" },
+      "commands": [
+        { "type": "message", "text": ["神域へ 続く 回廊。星核の 気配を 追って、ルゥたちは ここへ たどり着いた。", "——だが、行く手を 阻むように、あの男が 立っていた。"] },
+        { "type": "message", "name": "シオン", "text": "よく 来たな、弟。…ここから先へは、行かせない。" },
+        { "type": "empower", "level": 38 },
+        { "type": "message", "text": "幾多の 死闘を 越え、ルゥたちは 大きく 力を つけていた。" },
+        { "type": "battle", "troopId": "shion_boss", "isBoss": true, "canEscape": false,
+          "onWin": [
+            { "type": "message", "name": "シオン", "text": "…強く なったな。少しだけ、誇らしいよ。" },
+            { "type": "message", "text": "膝をつく シオン。その口から、隠してきた 真実が こぼれ落ちた——" },
+            { "type": "message", "name": "シオン", "text": ["20年前、世界を 救った『英雄』など、居なかった。", "本当に 世界を 守ったのは——俺の 父だ。", "だが 神々は 歴史を 改ざんし、父の 存在ごと 消し去った。"] },
+            { "type": "message", "name": "シオン", "text": ["俺は、父を 奪った 神を 赦せない。", "だから——神に 抗う 魔王に ついた。それだけだ。"] },
+            { "type": "message", "text": "ルゥは 知った。——兄は、悪人では なかった。" },
+            { "type": "addVar", "key": "forgiveness", "delta": 30 },
+            { "type": "setFlag", "key": "s_truth" },
+            { "type": "setChapter", "id": "ch5" }
+          ] }
+      ]
+    },
+    {
+      "trigger": "autorun", "cond": { "flag": "s_truth", "notFlag": "s_choice" },
+      "commands": [
+        { "type": "message", "text": "去ろうとする シオン。ルゥは——何を 伝える?" },
+        { "type": "choice", "prompt": "シオンに、何を 伝える?", "options": [
+          { "text": "絶対に 許さない", "commands": [
+            { "type": "addVar", "key": "forgiveness", "delta": 0 },
+            { "type": "message", "name": "ルゥ", "text": "……お前を、絶対に 許さない。" } ] },
+          { "text": "それでも 信じたい", "commands": [
+            { "type": "addVar", "key": "forgiveness", "delta": 40 },
+            { "type": "message", "name": "ルゥ", "text": "それでも——俺は、兄さんを 信じたい。" } ] },
+          { "text": "理由を 聞かせて", "commands": [
+            { "type": "addVar", "key": "forgiveness", "delta": 65 },
+            { "type": "message", "name": "ルゥ", "text": "…全部、話して。俺は、兄さんを 理解したい。" },
+            { "type": "message", "name": "シオン", "text": "…ありがとう、弟。" } ] }
+        ] },
+        { "type": "setFlag", "key": "s_choice" },
+        { "type": "setChapter", "id": "ch6" }
+      ]
+    },
+    {
+      "trigger": "autorun", "cond": { "flag": "s_choice", "notFlag": "s_twist" },
+      "commands": [
+        { "type": "shake", "power": 8, "ms": 600 },
+        { "type": "message", "text": "その時、世界が 震えた。空が、白く 染まっていく——" },
+        { "type": "message", "name": "魔王ヴァルゼリオン", "text": ["——間に 合わなんだか。聞け、星を 継ぐ者よ。", "余は 世界を 滅ぼす者では ない。", "幾度も 世界を 作り直す 神の手から、この世界を 守ってきた 者だ。"] },
+        { "type": "message", "text": ["魔王は 真の敵の 名を 告げ、力尽きた——", "創世神アルディア。人を 実験材料と 見なし、世界を 何度も 初期化してきた 神。"] },
+        { "type": "message", "text": "星核は、神の 初期化を 阻む 鍵だった。シオンの 裏切りも——すべては、この時の ため。" },
+        { "type": "setFlag", "key": "s_twist" },
+        { "type": "setChapter", "id": "ch7" }
+      ]
+    },
+    {
+      "trigger": "autorun", "cond": { "flag": "s_twist", "notFlag": "s_final" },
+      "commands": [
+        { "type": "message", "text": "創世神アルディアが、世界の 初期化を 始める。仲間が、ひとり、また ひとりと 消えていく——" },
+        { "type": "if", "cond": { "varGte": ["forgiveness", 60] },
+          "then": [
+            { "type": "message", "text": "消えゆく 世界で——シオンが、戻ってきた。" },
+            { "type": "message", "name": "シオン", "text": "私は、許されない。それでも——戦わせてくれ。" },
+            { "type": "addMember", "id": "shion", "notify": false },
+            { "type": "empower", "level": 38 },
+            { "type": "learnSkill", "who": "lou", "skill": "last_requiem" },
+            { "type": "message", "text": "ルゥの 中で、兄への 想いが 力に なる——連携技『ラスト・レクイエム』が 使える！" }
+          ],
+          "else": [
+            { "type": "message", "text": "ルゥは、兄を 拒んだ。神の 不死を 砕く 力は——もう、無い。" }
+          ] },
+        { "type": "battle", "troopId": "aldia", "isBoss": true, "canEscape": false,
+          "onWin": [
+            { "type": "if", "cond": { "varGte": ["forgiveness", 90] },
+              "then": [
+                { "type": "playBgm", "id": "theme" },
+                { "type": "message", "text": ["「ラスト・レクイエム」が、神を 討った。", "奪われた すべてが、還ってくる——故郷も、仲間も、そして 兄も。"] },
+                { "type": "message", "name": "TRUE END", "text": "——星は、巡る。今度は、ずっと 一緒に。" }
+              ],
+              "else": [
+                { "type": "playBgm", "id": "town" },
+                { "type": "message", "text": ["神は 倒れ、世界は 救われた。", "だが——連携の 代償に、シオンは 静かに 微笑んで 消えていった。"] },
+                { "type": "message", "name": "NORMAL END", "text": "兄さん……ありがとう。さよなら。" }
+              ] },
+            { "type": "setFlag", "key": "s_final" },
+            { "type": "message", "text": "（ご清聴 ありがとう ございました。タイトルへ もどります）" },
+            { "type": "returnTitle" }
+          ],
+          "onLose": [
+            { "type": "playBgm", "id": "boss" },
+            { "type": "message", "text": ["シオンを 拒んだ ルゥは、神の 不死を 砕けなかった。", "世界は 白く 塗りつぶされ、すべてが リセットされた。"] },
+            { "type": "message", "name": "BAD END", "text": "——次の 世界で、誰も ルゥを 覚えていない。" },
+            { "type": "setFlag", "key": "s_final" },
+            { "type": "returnTitle" }
+          ] }
+      ]
+    }
+  ]
+}

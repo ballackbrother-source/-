@@ -87,17 +87,24 @@
     {
       "id": "carriage", "x": 13, "y": 11, "dir": "down", "color": "#8a6a4a",
       "pages": [
-        { "conditions": { "flag": "betrayed" }, "commands": [
-          { "type": "message", "name": "御者", "text": "…もう、どこへ 行くんだい? 気を つけてな。" } ] },
-        { "conditions": { "flag": "ch2_intro" }, "commands": [
+        { "conditions": {}, "commands": [
+          { "type": "message", "name": "御者", "text": "馬車で どこへでも 運ぶよ。…今は 行き先が ないかい。" } ] },
+        { "conditions": { "flag": "ch2_intro", "notFlag": "betrayed" }, "commands": [
           { "type": "message", "name": "御者", "text": "東の『古代遺跡』へ 向かうかい? 星核が 眠ってるって 噂だ。" },
           { "type": "choice", "options": [
             { "text": "古代遺跡へ 行く", "commands": [
               { "type": "transfer", "mapId": "ruin", "x": 9, "y": 14, "dir": "up" } ] },
             { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "気が 向いたら 言ってくれ。" } ] }
           ] } ] },
-        { "conditions": {}, "commands": [
-          { "type": "message", "name": "御者", "text": "馬車で どこへでも 運ぶよ。…今は 行き先が ないかい。" } ] }
+        { "conditions": { "flag": "betrayed", "notFlag": "regrouped" }, "commands": [
+          { "type": "message", "name": "御者", "text": "…ひどい 顔だ。今は、休んだ ほうが いい。" } ] },
+        { "conditions": { "chapterAtLeast": "ch4", "notFlag": "s_final" }, "commands": [
+          { "type": "message", "name": "御者", "text": "『星の祭壇・神域』へ——? 命の 保証は できんぞ。…それでも 行くか?" },
+          { "type": "choice", "options": [
+            { "text": "神域へ 行く", "commands": [
+              { "type": "transfer", "mapId": "shrine", "x": 9, "y": 10, "dir": "up" } ] },
+            { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "覚悟が できたら 言ってくれ。" } ] }
+          ] } ] }
       ]
     }
   ],
@@ -107,8 +114,14 @@
       "cond": { "flag": "betrayed", "notFlag": "ch3_seen" },
       "commands": [
         { "type": "playBgm", "id": "town" },
-        { "type": "message", "text": ["光を 失った 街。人々の 顔にも、暗い 影が さしている。"] },
-        { "type": "message", "text": ["星核も、信じた 兄も 失った。","——だが、ルゥの 旅は ここで 終わらない。"] },
+        { "type": "message", "text": ["——第3章 失われた光——","光を 失った 街。人々の 顔にも、暗い 影が さしている。"] },
+        { "type": "message", "text": ["星核も、信じた 兄も 失った。打ちひしがれる ルゥ。"] },
+        { "type": "message", "name": "フィーナ", "text": ["…ルゥ。まだ、終わって いません。","シオンが 星核を 奪った 理由を——確かめに いきましょう。"] },
+        { "type": "message", "name": "ガロード", "text": "ああ。俺たちが ついてる。立て、ルゥ。" },
+        { "type": "message", "text": ["散り散りに なりかけた 仲間が、ふたたび ルゥの もとに 集った。","——第4章。シオンの 真実を 追う 旅が 始まる。"] },
+        { "type": "setChapter", "id": "ch4" },
+        { "type": "setFlag", "key": "regrouped" },
+        { "type": "message", "text": "街の 御者に 話すと、シオンの 向かった『星の祭壇・神域』へ 行ける。" },
         { "type": "setFlag", "key": "ch3_seen" }
       ]
     },

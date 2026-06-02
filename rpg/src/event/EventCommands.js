@@ -6,6 +6,8 @@
  *
  * 新コマンド追加は、この辞書に1関数足すだけ（開放閉鎖）。
  */
+import { LevelSystem, totalExpFor } from '../domain/systems/LevelSystem.js';
+
 export const COMMANDS = {
   // 会話（送り待ち）
   async message(cmd, interp, ctx) {
@@ -107,6 +109,22 @@ export const COMMANDS = {
 
   // 全回復（宿/教会）
   async heal(_c, _i, ctx) { ctx.party.fullHeal(); },
+
+  // パーティ強化（物語上の覚醒・終盤の戦力調整）：指定Lvまで引き上げ全回復
+  async empower(cmd, _i, ctx) {
+    const lv = cmd.level || 30;
+    for (const c of ctx.party.all()) {
+      const need = totalExpFor(lv) - c.exp;
+      if (need > 0) LevelSystem.gainExp(c, need, ctx.db);
+      c.invalidate(); c.curHp = c.maxHp; c.curMp = c.maxMp;
+    }
+  },
+
+  // スキル習得付与（連携技などの物語的解放）
+  async learnSkill(cmd, _i, ctx) {
+    const c = ctx.party.char(cmd.who);
+    if (c) c.learn(cmd.skill);
+  },
 
   // 章管理
   async setChapter(cmd, _i, ctx) { ctx.chapter.set(cmd.id, cmd.step || 0); },

@@ -62,6 +62,19 @@
         { "type": "skill", "skillId": "enemy_fang", "weight": 1 }
       ]
     },
+    "SHION_BOSS": {
+      "name": "白銀の執行者シオン", "family": "demon", "boss": true,
+      "stats": { "hp": 7500, "mp": 200, "atk": 66, "def": 24, "mat": 30, "mdf": 22, "agi": 24, "luk": 12 },
+      "element": { "weak": [], "resist": [], "absorb": [], "null": [] },
+      "attackElement": "none", "exp": 0, "gold": 0,
+      "drops": [],
+      "skills": ["power_strike", "enemy_fang"],
+      "ai": [
+        { "type": "attack", "weight": 2 },
+        { "type": "skill", "skillId": "power_strike", "weight": 2 },
+        { "type": "skill", "skillId": "enemy_fang", "weight": 1 }
+      ]
+    },
     "B2": {
       "name": "森獣ヴェルダンテ", "family": "plant", "boss": true,
       "stats": { "hp": 1100, "mp": 40, "atk": 21, "def": 13, "mat": 12, "mdf": 9, "agi": 7, "luk": 5 },
@@ -89,6 +102,7 @@
     "moth":       { "members": ["M05", "M01"] },
     "verdante":   { "members": ["B2"] },
     "nereid":     { "members": ["NEREID"] },
+    "shion_boss": { "members": ["SHION_BOSS"] },
     "aldia":      { "members": ["ALDIA"] }
   }
 }

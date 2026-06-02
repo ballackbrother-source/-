@@ -15,9 +15,10 @@
     "lumina_house": "ミルカの家",
     "lumina_forest": "ルミナの森",
     "hafen": "宿場町ハーフェン",
-    "ruin": "古代遺跡"
+    "ruin": "古代遺跡",
+    "shrine": "星の祭壇・神域"
   },
-  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin"],
+  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin", "shrine"],
   "eventFiles": [],
   "encounters": {
     "forest1": {
