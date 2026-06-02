@@ -61,11 +61,13 @@
       if (In.up) dy -= 1; if (In.down) dy += 1;
       if (In.left) dx -= 1; if (In.right) dx += 1;
 
-      // pointer / touch movement
-      if (In.isTouch && In.touchDelta) {
-        this.x += In.touchDelta.dx * 1.4;
-        this.y += In.touchDelta.dy * 1.4;
-        In.touchDelta = null;
+      // touch movement: absolute drag target (tracks the finger 1:1 in logical space)
+      let touchBank = 0;
+      if (In.isTouch && In.touchMove) {
+        const tx = U.clamp(In.touchMove.x, 40, NL.W - 40);
+        const ty = U.clamp(In.touchMove.y, 30, NL.H - 30);
+        touchBank = U.clamp((ty - this.y) / 10, -1, 1);
+        this.x = tx; this.y = ty;
       } else if (!In.isTouch && In.moveTarget && (In.fire || In.moveActive)) {
         // mouse steering: glide toward cursor
         const a = U.angleTo(this.x, this.y, In.moveTarget.x, In.moveTarget.y);
@@ -78,8 +80,8 @@
         this.y += (dy / len) * this.speed;
       }
 
-      // banking from vertical velocity input
-      const targetBank = dy * 0.5 + (In.touchDelta ? 0 : 0);
+      // banking from vertical input / touch motion
+      const targetBank = dy * 0.5 + touchBank * 0.5;
       this.bank = U.lerp(this.bank, targetBank, 0.2);
 
       this.x = U.clamp(this.x, 40, NL.W - 40);
@@ -108,7 +110,7 @@
       if (this.fireCd > 0) this.fireCd--;
       if (this.missileCd > 0) this.missileCd--;
 
-      if (In.fire) this.fire(game);
+      if (In.fire || In.autoFire) this.fire(game);
 
       if (this.invuln > 0) this.invuln--;
     }

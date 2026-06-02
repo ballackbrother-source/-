@@ -44,8 +44,8 @@ button) and start with Z / Space / Enter / click.
 
 | Action | PC | Touch |
 |---|---|---|
-| Move | Arrow keys / WASD, or hold-mouse to steer | drag on the left half of the screen |
-| Fire | `Z` / `Space` / left-click | **FIRE** button |
+| Move | Arrow keys / WASD, or hold-mouse to steer | drag anywhere on the left side — the ship tracks your finger 1:1 |
+| Fire | `Z` / `Space` / left-click | **auto-fires while you drag**; **FIRE** button also available |
 | Power (activate meter slot) | `X` / `Shift` / right-click | **POWER** button |
 | Pause menu (Resume / Restart stage / Quit to title) | `P` | **❚❚** button (top-right) |
 | Mute | `M` | — |

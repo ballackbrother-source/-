@@ -92,30 +92,35 @@
 
   // ---- Touch controls ----
   I.bindTouch = function (pad, fireBtn, powerBtn) {
-    let padId = null, padStart = null, padTargetStart = null;
-
-    function getRect() { if (!rect) rect = canvas.getBoundingClientRect(); return rect; }
+    let padId = null;
+    const SENS = 1.3; // drag sensitivity in logical space (device-independent)
 
     pad.addEventListener("touchstart", (e) => {
       e.preventDefault();
       const t = e.changedTouches[0];
       padId = t.identifier;
-      padStart = { x: t.clientX, y: t.clientY };
+      const fl = toLogical(t.clientX, t.clientY);
+      const pl = NL.game && NL.game.player;
+      // anchor the ship to the finger so it tracks 1:1 from where it is (no jump)
+      I._anchor = { fx: fl.x, fy: fl.y, sx: pl ? pl.x : fl.x, sy: pl ? pl.y : fl.y };
+      I.touchMove = { x: I._anchor.sx, y: I._anchor.sy };
+      I.autoFire = true; // dragging also fires, so movement and shooting are one gesture
       edge.any = true;
-      // initialise move target at current ship pos handled by game; we set relative
-      I._touchActive = true;
     }, { passive: false });
     pad.addEventListener("touchmove", (e) => {
       e.preventDefault();
       for (const t of e.changedTouches) {
-        if (t.identifier === padId) {
-          I.touchDelta = { dx: t.clientX - padStart.x, dy: t.clientY - padStart.y };
-          padStart = { x: t.clientX, y: t.clientY };
+        if (t.identifier === padId && I._anchor) {
+          const fl = toLogical(t.clientX, t.clientY);
+          I.touchMove = {
+            x: I._anchor.sx + (fl.x - I._anchor.fx) * SENS,
+            y: I._anchor.sy + (fl.y - I._anchor.fy) * SENS
+          };
         }
       }
     }, { passive: false });
     const endPad = (e) => {
-      for (const t of e.changedTouches) if (t.identifier === padId) { padId = null; I.touchDelta = null; }
+      for (const t of e.changedTouches) if (t.identifier === padId) { padId = null; I.touchMove = null; I._anchor = null; I.autoFire = false; }
     };
     pad.addEventListener("touchend", endPad);
     pad.addEventListener("touchcancel", endPad);
@@ -129,7 +134,8 @@
     bindBtn(powerBtn, "power");
   };
 
-  I.touchDelta = null;
+  I.touchMove = null;   // absolute logical-space target while dragging
+  I.autoFire = false;   // true while the move pad is held
 
   // inject a virtual edge press from an on-screen button (e.g. touch pause)
   I.virtualPress = function (action) { edge[action] = true; if (action !== "pause") edge.any = true; };
