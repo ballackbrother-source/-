@@ -1,0 +1,41 @@
+{
+  "chapters": {
+    "prologue": { "name": "プロローグ" },
+    "ch1": { "name": "第1章 旅の始まり" },
+    "ch2": { "name": "第2章 聖都の影" },
+    "ch3": { "name": "第3章 真実への航海" },
+    "ch4": { "name": "第4章 炉の真実" },
+    "ch5": { "name": "第5章 天へ昇る" },
+    "ch6": { "name": "終章 星を継ぐ者" },
+    "end": { "name": "エピローグ" }
+  },
+  "mapNames": {
+    "lumina": "辺境の村ルミナ",
+    "lumina_house": "ミルカの家",
+    "lumina_forest": "ルミナの森",
+    "hafen": "宿場町ハーフェン"
+  },
+  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen"],
+  "eventFiles": [],
+  "encounters": {
+    "forest1": {
+      "steps": [4, 9],
+      "troops": [
+        { "troop": "rat", "weight": 3 },
+        { "troop": "rats", "weight": 2 },
+        { "troop": "rat_slime", "weight": 2 },
+        { "troop": "slimes", "weight": 1 }
+      ]
+    },
+    "forest2": {
+      "steps": [4, 8],
+      "troops": [
+        { "troop": "rats", "weight": 2 },
+        { "troop": "slime_trio", "weight": 2 },
+        { "troop": "wolf", "weight": 2 },
+        { "troop": "moth", "weight": 1 },
+        { "troop": "wolf_pack", "weight": 1 }
+      ]
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "copper_sword": { "name": "どうのつるぎ", "type": "weapon", "weaponType": "sword", "price": 120, "rarity": 1, "bonus": { "atk": 8 }, "desc": "かけ出しの剣士の剣。" },
+  "steel_sword":  { "name": "はがねのつるぎ", "type": "weapon", "weaponType": "sword", "price": 600, "rarity": 2, "bonus": { "atk": 20 }, "desc": "よく斬れる鋼の剣。" },
+  "star_blade":   { "name": "星見の刃", "type": "weapon", "weaponType": "sword", "price": 0, "rarity": 4, "element": "light", "bonus": { "atk": 34, "int": 4 }, "desc": "星の光を宿す刃。光属性。" },
+  "battle_axe":   { "name": "バトルアックス", "type": "weapon", "weaponType": "axe", "price": 280, "rarity": 2, "bonus": { "atk": 18 }, "desc": "重い一撃の戦斧。" },
+  "iron_dagger":  { "name": "てつのナイフ", "type": "weapon", "weaponType": "dagger", "price": 150, "rarity": 1, "bonus": { "atk": 10, "agi": 2 }, "desc": "軽くて素早い短剣。" },
+  "oak_staff":    { "name": "かしのつえ", "type": "weapon", "weaponType": "staff", "price": 100, "rarity": 1, "bonus": { "atk": 5, "mat": 8 }, "desc": "魔力を高める杖。" },
+  "holy_staff":   { "name": "聖樹の錫杖", "type": "weapon", "weaponType": "staff", "price": 720, "rarity": 3, "bonus": { "atk": 9, "mat": 20, "spi": 4 }, "desc": "回復を強める聖なる錫杖。" },
+
+  "leather_shield": { "name": "かわのたて", "type": "shield", "price": 90, "rarity": 1, "bonus": { "def": 6 }, "desc": "なめし革の盾。" },
+  "iron_shield":    { "name": "てつのたて", "type": "shield", "price": 350, "rarity": 2, "bonus": { "def": 14 }, "desc": "頑丈な鉄の盾。" },
+
+  "leather_cap":   { "name": "かわのぼうし", "type": "head", "price": 70, "rarity": 1, "bonus": { "def": 4 }, "desc": "簡素な革帽子。" },
+  "iron_helm":     { "name": "てつのかぶと", "type": "head", "price": 320, "rarity": 2, "bonus": { "def": 10 }, "desc": "鉄の兜。" },
+
+  "cloth_armor":   { "name": "ぬののふく", "type": "body", "price": 60, "rarity": 1, "bonus": { "def": 4 }, "desc": "ふつうの布の服。" },
+  "leather_armor": { "name": "かわのよろい", "type": "body", "price": 220, "rarity": 1, "bonus": { "def": 12 }, "desc": "なめし革の鎧。" },
+  "robe":          { "name": "ローブ", "type": "body", "price": 180, "rarity": 1, "bonus": { "def": 6, "mdf": 8, "mp": 10 }, "desc": "魔法使いのローブ。" },
+  "chain_mail":    { "name": "くさりかたびら", "type": "body", "price": 560, "rarity": 2, "bonus": { "def": 22 }, "desc": "鎖を編んだ鎧。" },
+
+  "power_ring":    { "name": "ちからのゆびわ", "type": "accessory", "price": 800, "rarity": 3, "bonus": { "str": 5, "atk": 4 }, "desc": "力がみなぎる指輪。" },
+  "guard_ring":    { "name": "まもりのゆびわ", "type": "accessory", "price": 800, "rarity": 3, "bonus": { "vit": 5, "def": 4 }, "desc": "守りを固める指輪。" },
+
+  "herb":          { "name": "やくそう", "type": "consumable", "price": 15, "rarity": 1, "effect": { "hp": 60 }, "usableInBattle": true, "usableInField": true, "desc": "HPを 60 かいふくする。" },
+  "hi_herb":       { "name": "じょうやくそう", "type": "consumable", "price": 80, "rarity": 1, "effect": { "hp": 200 }, "usableInBattle": true, "usableInField": true, "desc": "HPを 200 かいふくする。" },
+  "magic_water":   { "name": "まほうの水", "type": "consumable", "price": 60, "rarity": 1, "effect": { "mp": 40 }, "usableInBattle": true, "usableInField": true, "desc": "MPを 40 かいふくする。" },
+  "antidote":      { "name": "どくけし草", "type": "consumable", "price": 12, "rarity": 1, "effect": { "cure": ["poison"] }, "usableInBattle": true, "usableInField": true, "desc": "どくを なおす。" },
+  "panacea":       { "name": "まんびょう薬", "type": "consumable", "price": 120, "rarity": 2, "effect": { "cure": ["poison", "sleep", "paralyze", "silence", "confuse", "blind"] }, "usableInBattle": true, "usableInField": true, "desc": "すべての 状態異常を なおす。" },
+  "revive_feather":{ "name": "復活のはね", "type": "consumable", "price": 150, "rarity": 2, "effect": { "revive": 0.5 }, "usableInBattle": true, "usableInField": true, "desc": "せんとうふのうを HP半分で 復活。" },
+
+  "star_pendant":  { "name": "星のかけらのペンダント", "type": "key", "price": 0, "rarity": 5, "desc": "ミルカ婆から託された 古いペンダント。かすかに 星のように 光っている。" },
+  "herb_bundle":   { "name": "やくそうの たば", "type": "key", "price": 0, "rarity": 1, "desc": "森で つんだ やくそうの たば。" }
+}

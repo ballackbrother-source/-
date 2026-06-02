@@ -1,0 +1,103 @@
+{
+  "name": "ルミナの森",
+  "bgm": "field",
+  "encounter": "forest1",
+  "legend": { "g": "grass2", "G": "grass", "p": "path", "F": "flower", "w": "water" },
+  "objectLegend": { "T": "tree", "S": "sign", "C": "chest", "M": "mountain" },
+  "ground": [
+    "gggggggggppggggggggg",
+    "gggggggggppggggggggg",
+    "ggggggggGppGgggggggg",
+    "gggFggggGppGggggFggg",
+    "ggggggggGppGgggggggg",
+    "gggggggggppggggggggg",
+    "gggggggggppggggggggg",
+    "gggggggggppggggggggg",
+    "ggggggggggggggFggggg",
+    "gggggggggppggggggggg",
+    "gggggggggppggggggggg",
+    "gggggggggppggggggggg",
+    "gggggggggppggggggggg",
+    "gggFggggggggggggFggg",
+    "gggggggggppggggggggg",
+    "gggggggggppggggggggg"
+  ],
+  "objects": [
+    "TTTTTTTTT  TTTTTTTTT",
+    "T                  T",
+    "T    C             T",
+    "T                  T",
+    "T                  T",
+    "T  TTT      TTT    T",
+    "T                  T",
+    "T     TTT  TTT     T",
+    "T            S     T",
+    "T                  T",
+    "T                  T",
+    "T               S  T",
+    "T                  T",
+    "T  TTT      TTT    T",
+    "T                  T",
+    "TTTTTTTTT  TTTTTTTTT"
+  ],
+  "portals": [
+    { "x": 9, "y": 0, "toMap": "lumina", "toX": 9, "toY": 13, "dir": "up" },
+    { "x": 10, "y": 0, "toMap": "lumina", "toX": 10, "toY": 13, "dir": "up" },
+    { "x": 9, "y": 15, "toMap": "hafen", "toX": 9, "toY": 1, "dir": "down" },
+    { "x": 10, "y": 15, "toMap": "hafen", "toX": 10, "toY": 1, "dir": "down" }
+  ],
+  "npcs": [],
+  "events": [
+    {
+      "trigger": "touch", "x": 9, "y": 4, "once": true,
+      "cond": { "flag": "p_intro", "notFlag": "p_tutbattle" },
+      "commands": [
+        { "type": "message", "text": "やぶの中から 野ネズミが とびだしてきた！" },
+        { "type": "battle", "troopId": "tutorial_rat", "canEscape": false,
+          "onWin": [ { "type": "message", "text": ["ルゥは たたかいかたを 覚えた！","HP・MPは 戦闘のあとも そのまま。","つかれたら 村や 町で 休もう。"] },
+                     { "type": "setFlag", "key": "p_tutbattle" } ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 14, "y": 8,
+      "cond": { "notFlag": "p_herbs" },
+      "commands": [
+        { "type": "message", "text": "ここに やくそうが たくさん 生えている。" },
+        { "type": "giveItem", "id": "herb_bundle", "count": 1, "notify": false },
+        { "type": "giveItem", "id": "herb", "count": 2 },
+        { "type": "message", "text": "やくそうを つみおえた！ 村へ もどろう。" },
+        { "type": "setFlag", "key": "p_herbs" }
+      ]
+    },
+    {
+      "trigger": "action", "x": 14, "y": 8,
+      "cond": { "flag": "p_herbs" },
+      "commands": [ { "type": "message", "text": "やくそうは もう つみおえた。" } ]
+    },
+    {
+      "trigger": "action", "x": 16, "y": 11,
+      "cond": { "chapterAtLeast": "ch1", "notFlag": "verdante_down" },
+      "commands": [
+        { "type": "message", "text": "森の おくから、ただならぬ 気配が する…！" },
+        { "type": "choice", "prompt": "どうする？", "options": [
+          { "text": "立ち向かう", "commands": [
+            { "type": "message", "text": "枯れゆく 森を むしばむ 巨獣が あらわれた！" },
+            { "type": "battle", "troopId": "verdante", "isBoss": true, "canEscape": false,
+              "onWin": [
+                { "type": "setFlag", "key": "verdante_down" },
+                { "type": "message", "text": ["巨獣は ひかりに なって 還っていった。","森に しずけさが もどり、星霜が ほんの少し 戻った 気がする。"] }
+              ] }
+          ] },
+          { "text": "やめておく", "commands": [ { "type": "message", "text": "今は やめておこう。" } ] }
+        ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 5, "y": 2, "once": true,
+      "commands": [
+        { "type": "playSe", "id": "open" },
+        { "type": "giveItem", "id": "hi_herb", "count": 1 }
+      ]
+    }
+  ]
+}

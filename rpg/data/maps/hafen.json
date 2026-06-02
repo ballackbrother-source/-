@@ -1,0 +1,117 @@
+{
+  "name": "宿場町ハーフェン",
+  "bgm": "town",
+  "encounter": null,
+  "legend": { "G": "grass", "g": "grass2", "p": "path", "F": "flower", "w": "water" },
+  "objectLegend": { "T": "tree", "H": "roof", "h": "roof2", "D": "door", "C": "chest", "S": "sign" },
+  "ground": [
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG"
+  ],
+  "objects": [
+    "TTTTTTTTTTTTTTTTTTTT",
+    "T                  T",
+    "T HHHH      HHHH   T",
+    "T HHHH      HHHH   T",
+    "T  D         D     T",
+    "T                  T",
+    "T                  T",
+    "T                  T",
+    "T      HHHH        T",
+    "T      HHHH        T",
+    "T       D          T",
+    "T                  T",
+    "T              C   T",
+    "T                  T",
+    "TTTTTTTTT  TTTTTTTTT"
+  ],
+  "portals": [
+    { "x": 9, "y": 14, "toMap": "lumina_forest", "toX": 9, "toY": 14, "dir": "up" },
+    { "x": 10, "y": 14, "toMap": "lumina_forest", "toX": 10, "toY": 14, "dir": "up" }
+  ],
+  "npcs": [
+    {
+      "id": "innkeeper", "x": 4, "y": 5, "dir": "down", "color": "#cf9b5a",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "宿屋の主人", "text": "やどへ ようこそ。ひと晩 10ギルだよ。泊まるかい？" },
+        { "type": "choice", "options": [
+          { "text": "泊まる", "commands": [
+            { "type": "giveGold", "amount": -10, "notify": false },
+            { "type": "fade", "dir": "out", "color": "#000", "ms": 500 },
+            { "type": "playSe", "id": "heal" },
+            { "type": "heal" },
+            { "type": "wait", "ms": 400 },
+            { "type": "fade", "dir": "in", "color": "#000", "ms": 500 },
+            { "type": "message", "name": "宿屋の主人", "text": "ぐっすり 眠れたかい？ HPと MPが 全回復したよ。" }
+          ] },
+          { "text": "やめる", "commands": [ { "type": "message", "name": "宿屋の主人", "text": "またのお越しを。" } ] }
+        ] }
+      ] } ]
+    },
+    {
+      "id": "shopkeeper", "x": 13, "y": 5, "dir": "down", "color": "#6aa9cf",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "道具屋", "text": "いらっしゃい！ 何を 買うかね？" },
+        { "type": "choice", "prompt": "どうぐ屋", "options": [
+          { "text": "やくそう 15G", "commands": [ { "type": "buyItem", "id": "herb" } ] },
+          { "text": "まほうの水 60G", "commands": [ { "type": "buyItem", "id": "magic_water" } ] },
+          { "text": "復活のはね 150G", "commands": [ { "type": "buyItem", "id": "revive_feather" } ] },
+          { "text": "やめる", "commands": [ { "type": "message", "name": "道具屋", "text": "まいど！" } ] }
+        ] }
+      ] } ]
+    },
+    {
+      "id": "guide", "x": 10, "y": 11, "dir": "down", "color": "#c8a06a", "wander": true,
+      "pages": [
+        { "conditions": { "notFlag": "verdante_down" }, "commands": [
+          { "type": "message", "name": "ギルドの 受付", "text": ["北の森が モンスターで あれている らしい。","腕に おぼえが あるなら、奥の 巨獣を 倒してくれ。"] } ] },
+        { "conditions": { "flag": "verdante_down" }, "commands": [
+          { "type": "message", "name": "ギルドの 受付", "text": ["森を 鎮めて くれたんだって！？ ありがとう。","この先、聖都アルゲンタを 目指すと いい。","——ここから先は、つづく 物語で。(MVP版)"] } ] }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "trigger": "autorun",
+      "cond": { "chapterAtLeast": "ch1", "notFlag": "ch1_join" },
+      "commands": [
+        { "type": "setFlag", "key": "ch1_join" },
+        { "type": "playBgm", "id": "town" },
+        { "type": "message", "text": ["何日も 歩き、ルゥは 宿場町ハーフェンに たどり着いた。"] },
+        { "type": "message", "name": "ガロード", "text": ["——おい、ひとりで 旅か？ あぶなっかしいな。","おれは ガロード。流れの 剣闘士さ。","行く あてが ないなら、しばらく 付き合ってやる。"] },
+        { "type": "addMember", "id": "garrod" },
+        { "type": "message", "name": "フィーナ", "text": ["わたしも ごいっしょ させて ください。","フィーナと もうします。…あなたに、聞きたいことが あるのです。"] },
+        { "type": "addMember", "id": "fina" },
+        { "type": "message", "text": ["こうして、ルゥの 旅に なかまが 加わった。","【MVP版】森の 奥の 巨獣ヴェルダンテを 倒すと、第1章は ひと区切り。"] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 3, "y": 4,
+      "commands": [ { "type": "message", "text": "やどやの 入口だ。主人が 立っている。" } ]
+    },
+    {
+      "trigger": "action", "x": 13, "y": 4,
+      "commands": [ { "type": "message", "text": "どうぐ屋の 入口だ。" } ]
+    },
+    {
+      "trigger": "action", "x": 15, "y": 12, "once": true,
+      "commands": [
+        { "type": "playSe", "id": "open" },
+        { "type": "giveGold", "amount": 50, "notify": true }
+      ]
+    }
+  ]
+}

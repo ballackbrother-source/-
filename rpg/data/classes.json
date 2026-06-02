@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "name": "星継ぎの剣士",
+    "learn": [
+      { "lv": 3, "skill": "heal" },
+      { "lv": 5, "skill": "shine" },
+      { "lv": 8, "skill": "power_strike" },
+      { "lv": 12, "skill": "star_read" },
+      { "lv": 16, "skill": "holy" }
+    ]
+  },
+  "gladiator": {
+    "name": "剣闘士",
+    "learn": [
+      { "lv": 6, "skill": "guard_stance" },
+      { "lv": 10, "skill": "reckless" },
+      { "lv": 14, "skill": "earth_cleave" }
+    ]
+  },
+  "priestess": {
+    "name": "星詠みの巫女",
+    "learn": [
+      { "lv": 6, "skill": "ice" },
+      { "lv": 8, "skill": "area_heal" },
+      { "lv": 11, "skill": "holy" },
+      { "lv": 14, "skill": "revive" }
+    ]
+  },
+  "thief": {
+    "name": "盗賊",
+    "learn": [
+      { "lv": 13, "skill": "sleep_dust" },
+      { "lv": 16, "skill": "double_slash" }
+    ]
+  }
+}

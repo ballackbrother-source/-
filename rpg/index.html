@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#05070f" />
+  <title>ETERNIA ～星を継ぐ者～</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="stage">
+    <canvas id="game" width="640" height="480"></canvas>
+
+    <!-- タッチ操作UI（スマホ時のみ表示） -->
+    <div id="touch-ui" aria-hidden="true">
+      <div id="dpad">
+        <button id="btn-up"    class="pad">▲</button>
+        <button id="btn-left"  class="pad">◀</button>
+        <button id="btn-right" class="pad">▶</button>
+        <button id="btn-down"  class="pad">▼</button>
+      </div>
+      <div id="actions">
+        <button id="btn-confirm" class="act">決定</button>
+        <button id="btn-cancel"  class="act">取消</button>
+        <button id="btn-menu"    class="act">メニュー</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ES Modules（ビルド不要）。静的サーバ経由で開くこと。 -->
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
