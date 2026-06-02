@@ -68,8 +68,8 @@
         const ty = U.clamp(In.touchMove.y, 30, NL.H - 30);
         touchBank = U.clamp((ty - this.y) / 10, -1, 1);
         this.x = tx; this.y = ty;
-      } else if (!In.isTouch && In.moveTarget && (In.fire || In.moveActive)) {
-        // mouse steering: glide toward cursor
+      } else if (!In.isTouch && In.moveTarget && In.fire) {
+        // mouse steering: hold the button to glide toward the cursor (and fire)
         const a = U.angleTo(this.x, this.y, In.moveTarget.x, In.moveTarget.y);
         const d = U.dist(this.x, this.y, In.moveTarget.x, In.moveTarget.y);
         if (d > 4) { const s = Math.min(this.speed, d); this.x += Math.cos(a) * s; this.y += Math.sin(a) * s; }
