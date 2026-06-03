@@ -18,6 +18,7 @@ export class GameState {
     this.flags = {};                          // key -> bool|number
     this.variables = {};                      // key -> number
     this.bestiary = { seen: [], defeated: [], items: [] }; // items: 入手したことのあるアイテムid
+    this.titles = []; // 図鑑コンプ等で得る称号
     this.settings = {
       bgmVol: 0.6, seVol: 0.8, difficulty: 'normal',
       textSpeed: 'normal', touchLayout: 'right',

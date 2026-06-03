@@ -10,6 +10,7 @@ import { CommandWindow } from '../ui/CommandWindow.js';
 import { MenuUI } from '../ui/MenuUI.js';
 import { SettingsScene } from './SettingsScene.js';
 import { SaveManager } from '../core/SaveManager.js';
+import { checkDexRewards } from '../domain/systems/DexRewards.js';
 
 const SLOT_LABEL = { weapon: 'ぶき', shield: 'たて', head: 'あたま', body: 'からだ', acc1: 'アクセ1', acc2: 'アクセ2' };
 
@@ -238,6 +239,8 @@ export class MenuScene extends Scene {
     this.itemIds = Object.keys(this.game.db.items);
     this.monIdx = 0; this.itemIdx = 0;
     this.state = 'bestiary';
+    const rewards = checkDexRewards(this.game);
+    if (rewards.length) { this.setToast(rewards[rewards.length - 1]); this.game.audio.se('levelup'); }
   }
   updBestiary(a) {
     const input = this.game.input;
@@ -375,8 +378,9 @@ export class MenuScene extends Scene {
 
   renderBestiary(r, px) {
     // タブヘッダ
-    r.text(this.bestMode === 'monster' ? '◀ モンスター ／ アイテム ▶' : '◀ モンスター ／ アイテム ▶',
-      px, 0, { size: 12, color: COLORS.textDim });
+    r.text('◀ モンスター ／ アイテム ▶', px, 0, { size: 12, color: COLORS.textDim });
+    const titles = this.game.state.titles || [];
+    if (titles.length) r.text(`称号: ${titles.join('・')}`, px + 250, 0, { size: 12, color: COLORS.selected });
     if (this.bestMode === 'monster') this.renderMonDex(r, px);
     else this.renderItemDex(r, px);
   }

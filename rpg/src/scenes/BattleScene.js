@@ -11,6 +11,7 @@ import { BattleUI } from '../ui/BattleUI.js';
 import { BattleSystem } from '../domain/systems/BattleSystem.js';
 import { Enemy } from '../domain/entities/Enemy.js';
 import { LevelSystem } from '../domain/systems/LevelSystem.js';
+import { checkDexRewards } from '../domain/systems/DexRewards.js';
 import { rng } from '../core/RNG.js';
 
 const ENEMY_LABELS = ['Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ'];
@@ -271,6 +272,8 @@ export class BattleScene extends Scene {
         this.resultQueue.push(`${lu.name} は ${names} を おぼえた！`);
       }
     }
+    // 図鑑コンプ報酬（撃破登録のあとで判定）
+    for (const msg of checkDexRewards(this.game)) this.resultQueue.push(`★ ${msg}`);
     this.game.audio.playBgm('field');
     if (this.levelups.length) this.game.audio.se('levelup');
     this.phase = 'result'; this.resultIdx = 0; this.log = this.resultQueue[0]; this.msgTimer = 60;
