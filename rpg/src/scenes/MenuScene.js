@@ -35,6 +35,7 @@ export class MenuScene extends Scene {
       { value: 'bestiary', label: 'ずかん' },
       { value: 'save', label: 'セーブ' },
       { value: 'config', label: 'せってい' },
+      { value: 'title', label: 'タイトルへ' },
       { value: 'close', label: 'とじる' },
     ]);
     this.party = this.game.party.frontline().concat(
@@ -59,6 +60,7 @@ export class MenuScene extends Scene {
       case 'skill_view': return this.updSkillView(a);
       case 'formation': return this.updFormation(a);
       case 'bestiary': return this.updBestiary(a);
+      case 'quit': return this.updQuit(a);
       case 'save': return this.updSave(a);
     }
   }
@@ -76,7 +78,29 @@ export class MenuScene extends Scene {
       case 'bestiary': this.openBestiary(); break;
       case 'save': this.openSave(); break;
       case 'config': this.game.scenes.push(new SettingsScene(this.game)); break;
+      case 'title': this.openQuit(); break;
       case 'close': this.close();
+    }
+  }
+
+  openQuit() {
+    this.quitMenu = new CommandWindow([
+      { value: 'no', label: 'いいえ' },
+      { value: 'yes', label: 'はい（タイトルへ）' },
+    ]);
+    this.state = 'quit';
+  }
+  updQuit(a) {
+    const res = this.quitMenu.update(this.game.input, a);
+    if (res === 'cancel') { a.se('cancel'); this.state = 'root'; return; }
+    if (res === 'confirm') {
+      if (this.quitMenu.current.value === 'yes') {
+        a.se('confirm');
+        import('./TitleScene.js').then(({ TitleScene }) => {
+          this.game.audio.stopBgm();
+          this.game.scenes.reset(new TitleScene(this.game));
+        });
+      } else { this.state = 'root'; }
     }
   }
   close() { this.game.audio.se('cancel'); this.game.scenes.pop(); }
@@ -314,6 +338,12 @@ export class MenuScene extends Scene {
         this.renderFormation(r, px); break;
       case 'bestiary':
         this.renderBestiary(r, px); break;
+      case 'quit':
+        r.window(px, 60, 320, 130);
+        r.text('タイトルに もどりますか?', px + 20, 80, { size: 16, color: COLORS.selected });
+        r.text('（セーブしていない 進行は 失われます）', px + 20, 108, { size: 12, color: COLORS.textDim });
+        this.quitMenu.render(r, px + 20, 132, 280);
+        break;
       case 'save':
         r.window(px, 16, 340, 220); r.text('どこに きろくする？', px + 14, 24, { size: 15, color: COLORS.textDim });
         this.saveMenu.render(r, px + 14, 54, 310); break;
