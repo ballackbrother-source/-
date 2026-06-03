@@ -10,6 +10,9 @@ export class InventorySystem {
 
   add(itemId, n = 1) {
     this.state.inventory.items[itemId] = this.count(itemId) + n;
+    // アイテム図鑑：入手履歴を記録
+    const dex = (this.state.bestiary ||= {}).items ||= [];
+    if (!dex.includes(itemId)) dex.push(itemId);
   }
   remove(itemId, n = 1) {
     const c = this.count(itemId) - n;

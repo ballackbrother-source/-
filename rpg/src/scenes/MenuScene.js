@@ -226,16 +226,23 @@ export class MenuScene extends Scene {
     }
   }
 
-  // --- モンスター図鑑 ---
+  // --- 図鑑（モンスター / アイテム タブ切替） ---
   openBestiary() {
-    this.bestIds = Object.keys(this.game.db.monsters);
-    this.bestIdx = 0;
+    this.bestMode = 'monster';
+    this.monIds = Object.keys(this.game.db.monsters);
+    this.itemIds = Object.keys(this.game.db.items);
+    this.monIdx = 0; this.itemIdx = 0;
     this.state = 'bestiary';
   }
   updBestiary(a) {
-    const input = this.game.input, n = this.bestIds.length;
-    if (input.isPressed('up'))   { this.bestIdx = (this.bestIdx - 1 + n) % n; a.se('cursor'); }
-    if (input.isPressed('down')) { this.bestIdx = (this.bestIdx + 1) % n; a.se('cursor'); }
+    const input = this.game.input;
+    if (input.isPressed('left') || input.isPressed('right')) {
+      this.bestMode = this.bestMode === 'monster' ? 'item' : 'monster'; a.se('cursor');
+    }
+    const ids = this.bestMode === 'monster' ? this.monIds : this.itemIds;
+    const key = this.bestMode === 'monster' ? 'monIdx' : 'itemIdx';
+    if (input.isPressed('up'))   { this[key] = (this[key] - 1 + ids.length) % ids.length; a.se('cursor'); }
+    if (input.isPressed('down')) { this[key] = (this[key] + 1) % ids.length; a.se('cursor'); }
     if (input.isPressed('cancel')) { a.se('cancel'); this.state = 'root'; }
   }
 
@@ -362,65 +369,107 @@ export class MenuScene extends Scene {
   }
 
   renderBestiary(r, px) {
+    // タブヘッダ
+    r.text(this.bestMode === 'monster' ? '◀ モンスター ／ アイテム ▶' : '◀ モンスター ／ アイテム ▶',
+      px, 0, { size: 12, color: COLORS.textDim });
+    if (this.bestMode === 'monster') this.renderMonDex(r, px);
+    else this.renderItemDex(r, px);
+  }
+
+  renderMonDex(r, px) {
     const db = this.game.db, b = this.game.state.bestiary;
-    const ids = this.bestIds;
-    const total = ids.length;
+    const ids = this.monIds, total = ids.length;
     const defeated = ids.filter((id) => b.defeated.includes(id)).length;
-    // 左：一覧（カーソル中心にスクロール）
     const listW = 210;
     r.window(px, 16, listW, 440);
-    r.text(`モンスター図鑑  ${defeated}/${total}`, px + 12, 24, { size: 14, color: COLORS.selected });
-    const rows = 11, start = Math.max(0, Math.min(this.bestIdx - 5, Math.max(0, total - rows)));
+    r.text(`モンスター ${defeated}/${total}  (←→で切替)`, px + 12, 24, { size: 13, color: COLORS.selected });
+    const rows = 11, start = Math.max(0, Math.min(this.monIdx - 5, Math.max(0, total - rows)));
     for (let k = 0; k < rows && start + k < total; k++) {
       const i = start + k, id = ids[i];
       const seen = b.seen.includes(id), beat = b.defeated.includes(id);
       const def = db.getMonster(id);
-      const label = beat ? def.name : (seen ? def.name : '？？？？？');
-      const sel = i === this.bestIdx;
+      const label = seen ? def.name : '？？？？？';
       const y = 54 + k * 33;
-      if (sel) r.text('▶', px + 10, y, { size: 16, color: COLORS.selected });
+      if (i === this.monIdx) r.text('▶', px + 10, y, { size: 16, color: COLORS.selected });
       r.text(`${String(i + 1).padStart(2, '0')}`, px + 28, y, { size: 12, color: COLORS.textDim });
       r.text(label, px + 56, y, { size: 15, color: beat ? COLORS.text : (seen ? COLORS.textDim : '#5a6488') });
     }
-    // 右：詳細
     const dx = px + listW + 12, dw = VIEW_W - dx - 16;
     r.window(dx, 16, dw, 440);
-    const id = ids[this.bestIdx], def = db.getMonster(id);
+    const id = ids[this.monIdx], def = db.getMonster(id);
     const seen = b.seen.includes(id), beat = b.defeated.includes(id);
     if (!seen) {
       r.text('？？？？？', dx + dw / 2, 200, { size: 28, align: 'center', color: '#5a6488' });
       r.text('まだ 出会っていない', dx + dw / 2, 240, { size: 14, align: 'center', color: COLORS.textDim });
       return;
     }
-    // スプライト
-    const fam = def.family, col = FAM_COLOR[fam] || '#aa6cc8';
-    this.game.assets.drawMonster(r.ctx, dx + dw / 2, 96, fam, col, def.boss ? 1.3 : 1.0);
+    this.game.assets.drawMonster(r.ctx, dx + dw / 2, 96, def.family, FAM_COLOR[def.family] || '#aa6cc8', def.boss ? 1.3 : 1.0);
     r.text(def.name, dx + dw / 2, 150, { size: 20, align: 'center', color: COLORS.selected });
-    if (!beat) {
-      r.text('（討伐すると 詳細が 見られる）', dx + dw / 2, 188, { size: 13, align: 'center', color: COLORS.textDim });
-      return;
-    }
-    // 撃破済み：ステータス
-    const s = def.stats;
-    const el = def.element || {};
+    if (!beat) { r.text('（討伐すると 詳細が 見られる）', dx + dw / 2, 188, { size: 13, align: 'center', color: COLORS.textDim }); return; }
+    const s = def.stats, el = def.element || {};
     const join = (arr) => (arr && arr.length ? arr.map((e) => ELEMENT_LABEL[e] || e).join('・') : 'なし');
-    const rowsTxt = [
-      ['さいだいHP', s.hp], ['こうげき', s.atk], ['しゅび', s.def],
-      ['まこうげき', s.mat || 0], ['すばやさ', s.agi], ['EXP', def.exp], ['ゴールド', def.gold],
-    ];
-    rowsTxt.forEach((row, i) => {
+    [['さいだいHP', s.hp], ['こうげき', s.atk], ['しゅび', s.def], ['まこうげき', s.mat || 0],
+     ['すばやさ', s.agi], ['EXP', def.exp], ['ゴールド', def.gold]].forEach((row, i) => {
       const y = 196 + i * 24;
       r.text(row[0], dx + 24, y, { size: 14, color: COLORS.textDim });
       r.text(`${row[1]}`, dx + 170, y, { size: 14 });
     });
-    let yy = 196 + rowsTxt.length * 24 + 6;
+    let yy = 196 + 7 * 24 + 6;
     r.text(`よわ点：${join(el.weak)}`, dx + 24, yy, { size: 13, color: '#ff9a9a' }); yy += 22;
     r.text(`半減：${join(el.resist)}　吸収：${join(el.absorb)}`, dx + 24, yy, { size: 13, color: COLORS.mp }); yy += 22;
     if (def.steal) {
-      const stealItem = Array.isArray(def.steal) ? def.steal[0].item : def.steal.item;
-      const it = db.getItem(stealItem);
+      const sid = Array.isArray(def.steal) ? def.steal[0].item : def.steal.item;
+      const it = db.getItem(sid);
       r.text(`ぬすめる：${it ? it.name : '—'}`, dx + 24, yy, { size: 13, color: '#ffd23f' });
     }
+  }
+
+  renderItemDex(r, px) {
+    const db = this.game.db;
+    const dex = this.game.state.bestiary.items || [];
+    const ids = this.itemIds, total = ids.length, found = ids.filter((id) => dex.includes(id)).length;
+    const listW = 230;
+    r.window(px, 16, listW, 440);
+    r.text(`アイテム ${found}/${total}  (←→で切替)`, px + 12, 24, { size: 13, color: COLORS.selected });
+    const rows = 11, start = Math.max(0, Math.min(this.itemIdx - 5, Math.max(0, total - rows)));
+    for (let k = 0; k < rows && start + k < total; k++) {
+      const i = start + k, id = ids[i];
+      const has = dex.includes(id), it = db.getItem(id);
+      const y = 54 + k * 33;
+      if (i === this.itemIdx) r.text('▶', px + 10, y, { size: 16, color: COLORS.selected });
+      r.text(`${String(i + 1).padStart(2, '0')}`, px + 28, y, { size: 12, color: COLORS.textDim });
+      r.text(has ? it.name : '？？？？？', px + 56, y, { size: 15, color: has ? COLORS.text : '#5a6488' });
+    }
+    const dx = px + listW + 12, dw = VIEW_W - dx - 16;
+    r.window(dx, 16, dw, 440);
+    const id = ids[this.itemIdx], it = db.getItem(id), has = dex.includes(id);
+    if (!has) {
+      r.text('？？？？？', dx + dw / 2, 200, { size: 26, align: 'center', color: '#5a6488' });
+      r.text('まだ 手に入れていない', dx + dw / 2, 238, { size: 14, align: 'center', color: COLORS.textDim });
+      return;
+    }
+    const TYPE = { weapon: 'ぶき', shield: 'たて', head: 'あたま', body: 'からだ', accessory: 'アクセサリ', consumable: 'どうぐ', key: 'だいじなもの', material: 'そざい' };
+    r.text(it.name, dx + 20, 36, { size: 20, color: COLORS.selected });
+    r.text(`種別：${TYPE[it.type] || it.type}`, dx + 20, 72, { size: 14, color: COLORS.textDim });
+    if (it.price) r.text(`売値：${Math.floor(it.price * 0.5)} ギル`, dx + 20, 96, { size: 14, color: COLORS.textDim });
+    let yy = 128;
+    const b = it.bonus || {};
+    const bparts = [];
+    if (b.atk) bparts.push(`攻+${b.atk}`); if (b.def) bparts.push(`守+${b.def}`);
+    if (b.mat) bparts.push(`魔攻+${b.mat}`); if (b.mdf) bparts.push(`魔守+${b.mdf}`);
+    ['str', 'vit', 'agi', 'dex', 'int', 'spi', 'luk', 'hp', 'mp'].forEach((k) => { if (b[k]) bparts.push(`${k.toUpperCase()}+${b[k]}`); });
+    if (it.element) bparts.push(`${ELEMENT_LABEL[it.element]}属性`);
+    if (bparts.length) { r.text(`効果：${bparts.join(' ')}`, dx + 20, yy, { size: 14, color: COLORS.hp }); yy += 26; }
+    const ef = it.effect || {};
+    const eparts = [];
+    if (ef.hp) eparts.push(`HP+${ef.hp}`); if (ef.mp) eparts.push(`MP+${ef.mp}`);
+    if (ef.revive) eparts.push('そせい'); if (ef.cure) eparts.push('状態かいふく');
+    if (ef.inflict) {
+      const sj = { poison: 'どく', sleep: 'ねむり', paralyze: 'まひ', silence: 'ちんもく', confuse: 'こんらん', blind: 'くらやみ' };
+      eparts.push(`${sj[ef.inflict.status] || '状態異常'}を 付与`);
+    }
+    if (eparts.length) { r.text(`効果：${eparts.join(' ')}`, dx + 20, yy, { size: 14, color: COLORS.hp }); yy += 26; }
+    wrapText(r, it.desc || '', dx + 20, yy + 4, dw - 40, 15);
   }
 }
 

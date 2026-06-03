@@ -17,7 +17,7 @@ export class GameState {
     this.inventory = { items: {} };          // id -> 個数
     this.flags = {};                          // key -> bool|number
     this.variables = {};                      // key -> number
-    this.bestiary = { seen: [], defeated: [] };
+    this.bestiary = { seen: [], defeated: [], items: [] }; // items: 入手したことのあるアイテムid
     this.settings = {
       bgmVol: 0.6, seVol: 0.8, difficulty: 'normal',
       textSpeed: 'normal', touchLayout: 'right',
@@ -36,6 +36,7 @@ export class GameState {
     s.party.order = [...start.party];
     s.party.reserve = [...(start.reserve ?? [])];
     s.inventory.items = { ...(start.items ?? {}) };
+    s.bestiary.items = Object.keys(s.inventory.items); // 初期所持も図鑑に記録
     s.flags = { ...(start.flags ?? {}) };
     // メンバーの可変分（Lv/EXP/HP/装備/スキル）を初期化
     for (const id of [...s.party.order, ...s.party.reserve]) {
