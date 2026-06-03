@@ -24,9 +24,19 @@ function aggregateEquip(member, db) {
     for (const k of PRIMARY) acc[k] += b[k] || 0;
     if (it.element && slot === 'weapon') weaponElement = it.element;
     if (it.resist) affinity.resist.push(...it.resist);
+    // 装備強化（+N）：武器は攻/魔攻、防具は守/魔守を1レベルごとに加算
+    const enh = (member.enhById && member.enhById[itemId]) || 0;
+    if (enh > 0) {
+      const inc = (base) => Math.max(1, Math.round((base || 0) * 0.18));
+      if (it.type === 'weapon') { acc.atk += inc(b.atk) * enh; if (b.mat) acc.mat += inc(b.mat) * enh; }
+      else { if (b.def) acc.def += inc(b.def) * enh; if (b.mdf) acc.mdf += inc(b.mdf) * enh; }
+    }
   }
   return { acc, affinity, weaponElement };
 }
+
+/** 装備強化の1レベルあたり上昇量（UI表示用） */
+export function enhIncrement(base) { return Math.max(1, Math.round((base || 0) * 0.18)); }
 
 /** メンバーの全ステータスを計算して返す */
 export function computeStats(member, db) {

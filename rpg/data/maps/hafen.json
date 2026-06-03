@@ -102,6 +102,13 @@
       ] } ]
     },
     {
+      "id": "forge_master", "x": 7, "y": 6, "dir": "down", "color": "#9a5a3a",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "改造屋", "text": "装備を 鍛えて やろうか? ゴールドぶん、強くしてやるぜ。" },
+        { "type": "forge" }
+      ] } ]
+    },
+    {
       "id": "guide", "x": 6, "y": 11, "dir": "down", "color": "#c8a06a", "wander": true,
       "pages": [
         { "conditions": { "notFlag": "verdante_down" }, "commands": [

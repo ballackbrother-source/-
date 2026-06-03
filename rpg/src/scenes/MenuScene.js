@@ -330,7 +330,8 @@ export class MenuScene extends Scene {
     EQUIP_SLOTS.forEach((slot, i) => {
       const sel = (this.state === 'equip_slot') && i === this.slotIdx;
       const itId = c.member.equip[slot];
-      const name = itId ? this.game.db.getItem(itId)?.name : '—';
+      const lv = itId ? this.game.inventory.enhLevel(c.member, itId) : 0;
+      const name = itId ? `${this.game.db.getItem(itId)?.name}${lv ? ` +${lv}` : ''}` : '—';
       if (sel) r.text('▶', px + 14, 62 + i * 30, { size: 16, color: COLORS.selected });
       r.text(SLOT_LABEL[slot], px + 34, 62 + i * 30, { size: 14, color: COLORS.textDim });
       r.text(name, px + 110, 62 + i * 30, { size: 14, color: sel ? COLORS.selected : COLORS.text });

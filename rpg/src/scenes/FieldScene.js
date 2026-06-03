@@ -20,6 +20,7 @@ import { rng } from '../core/RNG.js';
 import { sleep } from '../core/util.js';
 import { BattleScene } from './BattleScene.js';
 import { MenuScene } from './MenuScene.js';
+import { ForgeScene } from './ForgeScene.js';
 
 export class FieldScene extends Scene {
   constructor(game) {
@@ -207,6 +208,7 @@ export class FieldScene extends Scene {
       transfer: (mapId, x, y, dir) => { this.loadMap(mapId, x, y, dir); this.runAutoruns(); },
       moveActor: (who, path) => this.moveActor(who, path),
       battle: (troopId, opts) => this.startBattle(troopId, opts),
+      openForge: () => this.game.scenes.push(new ForgeScene(this.game)),
       autosave: () => this.autosave(),
       gameOver: () => this.gameOver(),
       returnTitle: () => this.returnTitle(),

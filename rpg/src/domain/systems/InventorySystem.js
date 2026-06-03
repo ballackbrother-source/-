@@ -74,4 +74,24 @@ export class InventorySystem {
     this.state.party.gold += Math.floor(it.price * 0.5);
     return true;
   }
+
+  // ── 装備強化（改造） ──
+  static MAX_ENH = 10;
+  enhLevel(member, itemId) { return (member.enhById && member.enhById[itemId]) || 0; }
+  upgradeCost(itemId, lv) {
+    const it = this.db.getItem(itemId);
+    return Math.round((40 + (it?.price || 0) * 0.25) * (lv + 1));
+  }
+  /** 指定キャラのスロットの装備を +1 強化。{ok, lv, cost, reason} を返す */
+  upgrade(member, slot) {
+    const id = member.equip[slot];
+    if (!id) return { ok: false, reason: 'no_item' };
+    const lv = this.enhLevel(member, id);
+    if (lv >= InventorySystem.MAX_ENH) return { ok: false, reason: 'max' };
+    const cost = this.upgradeCost(id, lv);
+    if (this.state.party.gold < cost) return { ok: false, reason: 'gold', cost };
+    this.state.party.gold -= cost;
+    (member.enhById ||= {})[id] = lv + 1;
+    return { ok: true, lv: lv + 1, cost };
+  }
 }

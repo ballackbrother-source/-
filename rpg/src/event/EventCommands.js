@@ -107,6 +107,9 @@ export const COMMANDS = {
     await ctx.message(`${it.name}を 買った！ (のこり ${ctx.party.gold} ギル)`);
   },
 
+  // 改造屋を開く
+  async forge(_c, _i, ctx) { ctx.openForge(); },
+
   // 全回復（宿/教会）
   async heal(_c, _i, ctx) { ctx.party.fullHeal(); },
 

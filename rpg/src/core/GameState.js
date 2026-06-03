@@ -59,6 +59,7 @@ export class GameState {
       learnedSkills: [...(def.startSkills ?? [])],
       equip: { ...(def.startEquip ?? {}) },
       bonusStats: {}, // 種などの永続ステータスボーナス
+      enhById: {},    // 装備強化値（itemId -> +N、キャラごと）
       statusEffects: [],
       bond: 0,
     };
