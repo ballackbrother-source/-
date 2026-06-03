@@ -5,13 +5,20 @@
  * 育成・装備変更・アイテム使用・セーブの入口。
  */
 import { Scene } from '../core/Scene.js';
-import { VIEW_W, VIEW_H, COLORS, EQUIP_SLOTS } from '../config/constants.js';
+import { VIEW_W, VIEW_H, COLORS, EQUIP_SLOTS, ELEMENT_LABEL } from '../config/constants.js';
 import { CommandWindow } from '../ui/CommandWindow.js';
 import { MenuUI } from '../ui/MenuUI.js';
 import { SettingsScene } from './SettingsScene.js';
 import { SaveManager } from '../core/SaveManager.js';
 
 const SLOT_LABEL = { weapon: 'ぶき', shield: 'たて', head: 'あたま', body: 'からだ', acc1: 'アクセ1', acc2: 'アクセ2' };
+
+// 系統→色（図鑑スプライト用。BattleUIと同方針）
+const FAM_COLOR = {
+  beast: '#b9783f', plant: '#4caf50', insect: '#9ccc3f', undead: '#c8d0d8',
+  machine: '#9aa6b8', aqua: '#3fa9d8', flying: '#d8c23f', dragon: '#c0392b',
+  elemental: '#e0533f', demon: '#7e57c2', boss: '#b03060', slime: '#5fd38a',
+};
 
 export class MenuScene extends Scene {
   constructor(game) { super(game); this.opaque = false; this.toast = ''; this.toastT = 0; }
@@ -24,6 +31,7 @@ export class MenuScene extends Scene {
       { value: 'equip', label: 'そうび' },
       { value: 'skill', label: 'じゅもん' },
       { value: 'formation', label: 'メンバー' },
+      { value: 'bestiary', label: 'ずかん' },
       { value: 'save', label: 'セーブ' },
       { value: 'config', label: 'せってい' },
       { value: 'close', label: 'とじる' },
@@ -49,6 +57,7 @@ export class MenuScene extends Scene {
       case 'skill_char': return this.updSkillChar(a);
       case 'skill_view': return this.updSkillView(a);
       case 'formation': return this.updFormation(a);
+      case 'bestiary': return this.updBestiary(a);
       case 'save': return this.updSave(a);
     }
   }
@@ -63,6 +72,7 @@ export class MenuScene extends Scene {
       case 'equip': this.openCharSelect('equip_char'); break;
       case 'skill': this.openCharSelect('skill_char'); break;
       case 'formation': this.openFormation(); break;
+      case 'bestiary': this.openBestiary(); break;
       case 'save': this.openSave(); break;
       case 'config': this.game.scenes.push(new SettingsScene(this.game)); break;
       case 'close': this.close();
@@ -216,6 +226,19 @@ export class MenuScene extends Scene {
     }
   }
 
+  // --- モンスター図鑑 ---
+  openBestiary() {
+    this.bestIds = Object.keys(this.game.db.monsters);
+    this.bestIdx = 0;
+    this.state = 'bestiary';
+  }
+  updBestiary(a) {
+    const input = this.game.input, n = this.bestIds.length;
+    if (input.isPressed('up'))   { this.bestIdx = (this.bestIdx - 1 + n) % n; a.se('cursor'); }
+    if (input.isPressed('down')) { this.bestIdx = (this.bestIdx + 1) % n; a.se('cursor'); }
+    if (input.isPressed('cancel')) { a.se('cancel'); this.state = 'root'; }
+  }
+
   // --- セーブ ---
   openSave() {
     const list = SaveManager.list();
@@ -274,6 +297,8 @@ export class MenuScene extends Scene {
         this.renderSkills(r, px); break;
       case 'formation':
         this.renderFormation(r, px); break;
+      case 'bestiary':
+        this.renderBestiary(r, px); break;
       case 'save':
         r.window(px, 16, 340, 220); r.text('どこに きろくする？', px + 14, 24, { size: 15, color: COLORS.textDim });
         this.saveMenu.render(r, px + 14, 54, 310); break;
@@ -334,6 +359,68 @@ export class MenuScene extends Scene {
       }
     });
     r.text('前衛(上から4人)が 戦闘に 参加。控えにも 経験値が 入る。', px + 14, VIEW_H - 30, { size: 12, color: COLORS.textDim });
+  }
+
+  renderBestiary(r, px) {
+    const db = this.game.db, b = this.game.state.bestiary;
+    const ids = this.bestIds;
+    const total = ids.length;
+    const defeated = ids.filter((id) => b.defeated.includes(id)).length;
+    // 左：一覧（カーソル中心にスクロール）
+    const listW = 210;
+    r.window(px, 16, listW, 440);
+    r.text(`モンスター図鑑  ${defeated}/${total}`, px + 12, 24, { size: 14, color: COLORS.selected });
+    const rows = 11, start = Math.max(0, Math.min(this.bestIdx - 5, Math.max(0, total - rows)));
+    for (let k = 0; k < rows && start + k < total; k++) {
+      const i = start + k, id = ids[i];
+      const seen = b.seen.includes(id), beat = b.defeated.includes(id);
+      const def = db.getMonster(id);
+      const label = beat ? def.name : (seen ? def.name : '？？？？？');
+      const sel = i === this.bestIdx;
+      const y = 54 + k * 33;
+      if (sel) r.text('▶', px + 10, y, { size: 16, color: COLORS.selected });
+      r.text(`${String(i + 1).padStart(2, '0')}`, px + 28, y, { size: 12, color: COLORS.textDim });
+      r.text(label, px + 56, y, { size: 15, color: beat ? COLORS.text : (seen ? COLORS.textDim : '#5a6488') });
+    }
+    // 右：詳細
+    const dx = px + listW + 12, dw = VIEW_W - dx - 16;
+    r.window(dx, 16, dw, 440);
+    const id = ids[this.bestIdx], def = db.getMonster(id);
+    const seen = b.seen.includes(id), beat = b.defeated.includes(id);
+    if (!seen) {
+      r.text('？？？？？', dx + dw / 2, 200, { size: 28, align: 'center', color: '#5a6488' });
+      r.text('まだ 出会っていない', dx + dw / 2, 240, { size: 14, align: 'center', color: COLORS.textDim });
+      return;
+    }
+    // スプライト
+    const fam = def.family, col = FAM_COLOR[fam] || '#aa6cc8';
+    this.game.assets.drawMonster(r.ctx, dx + dw / 2, 96, fam, col, def.boss ? 1.3 : 1.0);
+    r.text(def.name, dx + dw / 2, 150, { size: 20, align: 'center', color: COLORS.selected });
+    if (!beat) {
+      r.text('（討伐すると 詳細が 見られる）', dx + dw / 2, 188, { size: 13, align: 'center', color: COLORS.textDim });
+      return;
+    }
+    // 撃破済み：ステータス
+    const s = def.stats;
+    const el = def.element || {};
+    const join = (arr) => (arr && arr.length ? arr.map((e) => ELEMENT_LABEL[e] || e).join('・') : 'なし');
+    const rowsTxt = [
+      ['さいだいHP', s.hp], ['こうげき', s.atk], ['しゅび', s.def],
+      ['まこうげき', s.mat || 0], ['すばやさ', s.agi], ['EXP', def.exp], ['ゴールド', def.gold],
+    ];
+    rowsTxt.forEach((row, i) => {
+      const y = 196 + i * 24;
+      r.text(row[0], dx + 24, y, { size: 14, color: COLORS.textDim });
+      r.text(`${row[1]}`, dx + 170, y, { size: 14 });
+    });
+    let yy = 196 + rowsTxt.length * 24 + 6;
+    r.text(`よわ点：${join(el.weak)}`, dx + 24, yy, { size: 13, color: '#ff9a9a' }); yy += 22;
+    r.text(`半減：${join(el.resist)}　吸収：${join(el.absorb)}`, dx + 24, yy, { size: 13, color: COLORS.mp }); yy += 22;
+    if (def.steal) {
+      const stealItem = Array.isArray(def.steal) ? def.steal[0].item : def.steal.item;
+      const it = db.getItem(stealItem);
+      r.text(`ぬすめる：${it ? it.name : '—'}`, dx + 24, yy, { size: 13, color: '#ffd23f' });
+    }
   }
 }
 

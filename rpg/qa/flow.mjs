@@ -245,7 +245,12 @@ async function testSaveLoad({ press, burst, evaluate, page }) {
   await burst(26);                                     // プロローグ完了
   await evaluate(() => { window.__ETERNIA.game.state.party.gold = 777; });
   await press('c'); await sleep(200);                  // メニュー
-  for (let i = 0; i < 5; i++) await press('ArrowDown'); // セーブ（status/item/equip/skill/formation の次）
+  // 「セーブ」項目までカーソルを送る（メニュー構成の変更に強い）
+  for (let i = 0; i < 12; i++) {
+    const v = await evaluate(() => window.__ETERNIA.game.scenes.current.root?.current?.value);
+    if (v === 'save') break;
+    await press('ArrowDown');
+  }
   await press('Enter'); await sleep(200);
   await press('Enter'); await sleep(300);              // slot1 保存
   const saved = await evaluate(() => !!localStorage.getItem('eternia.save.slot1'));
