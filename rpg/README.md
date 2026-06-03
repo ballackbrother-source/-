@@ -76,11 +76,24 @@ data/         マスターデータ（characters/classes/skills/items/monsters/w
 ## QA（ヘッドレス検証）
 
 ```bash
-cd rpg && npm run qa
-# = node qa/play.mjs
-# タイトル→新規→プロローグ→移動→戦闘→メニューを自動操作し、
-# コンソールエラー0を確認。スクリーンショットは qa/shots/ に保存。
+cd rpg && npm run qa     # = node qa/flow.mjs  （フル回帰：~40秒）
+cd rpg && npm run smoke   # = node qa/play.mjs  （クイックスモーク）
 ```
+
+`npm run qa`（`qa/flow.mjs`）は実装済みの全ルートを独立contextで通し、**コンソールエラー0**と主要なステート遷移を検証する：
+
+| # | 検証ルート |
+| --- | --- |
+| 1 | タイトル起動（メニュー4項目） |
+| 2 | 新規ゲーム→プロローグ（p_intro） |
+| 3 | 第1章 仲間＆シオン加入（4人パーティ） |
+| 4 | 第2章 裏切り（シオン離脱・星核喪失・章ch3） |
+| 5 | 後半TRUE（赦し95→神撃破→True ED） |
+| 6 | 後半BAD（拒絶→不死を破れず敗北→リセット） |
+| 7 | セーブ→リロード→ロード（LocalStorage往復） |
+
+ボス戦は決定論化（戦闘中に敵HPを1にして1ターン決着）しており、毎回同じ結果になる。
+進捗は `qa/last-run.log` に逐次出力。スクリーンショットは `qa/shots/`（共に.gitignore）。
 
 ドメインロジック（ダメージ式・レベル計算・1戦闘）は Node で純粋にテスト可能（`src/domain/` は副作用なし）。
 
