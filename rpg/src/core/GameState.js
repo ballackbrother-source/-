@@ -60,6 +60,7 @@ export class GameState {
       equip: { ...(def.startEquip ?? {}) },
       bonusStats: {}, // 種などの永続ステータスボーナス
       enhById: {},    // 装備強化値（itemId -> +N、キャラごと）
+      imbueById: {},  // 武器の属性付与（itemId -> element、キャラごと）
       statusEffects: [],
       bond: 0,
     };

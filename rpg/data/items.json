@@ -39,6 +39,13 @@
   "spirit_seed": { "name": "せいしんのたね", "type": "consumable", "price": 0, "rarity": 3, "effect": { "raise": { "spi": 2 } }, "usableInField": true, "desc": "使うと せいしんが 永久に +2。" },
   "life_seed":   { "name": "いのちのきのみ", "type": "consumable", "price": 0, "rarity": 3, "effect": { "raise": { "hp": 25 } }, "usableInField": true, "desc": "使うと さいだいHPが 永久に +25。" },
 
+  "fire_crystal":    { "name": "炎の結晶", "type": "material", "price": 300, "rarity": 2, "imbueElement": "fire", "desc": "改造屋で 武器に 炎属性を 付与できる。" },
+  "ice_crystal":     { "name": "氷の結晶", "type": "material", "price": 300, "rarity": 2, "imbueElement": "ice", "desc": "改造屋で 武器に 氷属性を 付与できる。" },
+  "thunder_crystal": { "name": "雷の結晶", "type": "material", "price": 300, "rarity": 2, "imbueElement": "thunder", "desc": "改造屋で 武器に 雷属性を 付与できる。" },
+  "wind_crystal":    { "name": "風の結晶", "type": "material", "price": 300, "rarity": 2, "imbueElement": "wind", "desc": "改造屋で 武器に 風属性を 付与できる。" },
+  "light_crystal":   { "name": "光の結晶", "type": "material", "price": 400, "rarity": 3, "imbueElement": "light", "desc": "改造屋で 武器に 光属性を 付与できる。" },
+  "dark_crystal":    { "name": "闇の結晶", "type": "material", "price": 400, "rarity": 3, "imbueElement": "dark", "desc": "改造屋で 武器に 闇属性を 付与できる。" },
+
   "star_core":     { "name": "星核", "type": "key", "price": 0, "rarity": 5, "desc": "古代遺跡に眠る 七つの結晶のひとつ。世界の核に つながる 鍵だという。" },
   "star_pendant":  { "name": "星のかけらのペンダント", "type": "key", "price": 0, "rarity": 5, "desc": "ミルカ婆から託された 古いペンダント。かすかに 星のように 光っている。" },
   "herb_bundle":   { "name": "やくそうの たば", "type": "key", "price": 0, "rarity": 1, "desc": "森で つんだ やくそうの たば。" }

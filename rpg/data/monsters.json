@@ -176,6 +176,10 @@
         {
           "item": "antidote",
           "rate": 0.15
+        },
+        {
+          "item": "wind_crystal",
+          "rate": 0.08
         }
       ],
       "skills": [
@@ -290,6 +294,10 @@
         },
         {
           "item": "guard_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "ice_crystal",
           "rate": 1.0
         }
       ],
@@ -476,6 +484,10 @@
         {
           "item": "power_seed",
           "rate": 1.0
+        },
+        {
+          "item": "fire_crystal",
+          "rate": 0.6
         }
       ],
       "skills": [
@@ -589,6 +601,10 @@
         {
           "item": "herb",
           "rate": 0.1
+        },
+        {
+          "item": "wind_crystal",
+          "rate": 0.12
         }
       ],
       "skills": [],
@@ -684,6 +700,10 @@
         {
           "item": "antidote",
           "rate": 0.1
+        },
+        {
+          "item": "dark_crystal",
+          "rate": 0.12
         }
       ],
       "skills": [
@@ -739,6 +759,10 @@
         {
           "item": "chain_mail",
           "rate": 0.5
+        },
+        {
+          "item": "thunder_crystal",
+          "rate": 1.0
         }
       ],
       "skills": [

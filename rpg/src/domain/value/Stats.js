@@ -22,7 +22,7 @@ function aggregateEquip(member, db) {
     acc.mat += b.mat || 0; acc.mdf += b.mdf || 0;
     acc.hpc += b.hp || 0;  acc.mpc += b.mp || 0;
     for (const k of PRIMARY) acc[k] += b[k] || 0;
-    if (it.element && slot === 'weapon') weaponElement = it.element;
+    if (slot === 'weapon') weaponElement = (member.imbueById && member.imbueById[itemId]) || it.element || 'none';
     if (it.resist) affinity.resist.push(...it.resist);
     // 装備強化（+N）：武器は攻/魔攻、防具は守/魔守を1レベルごとに加算
     const enh = (member.enhById && member.enhById[itemId]) || 0;

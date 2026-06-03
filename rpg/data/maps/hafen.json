@@ -97,6 +97,14 @@
               { "text": "はやての羽かざり 600G", "commands": [ { "type": "buyItem", "id": "feather_charm" } ] },
               { "text": "やめる", "commands": [] }
             ] } ] },
+          { "text": "結晶を 見る（属性付与用）", "commands": [
+            { "type": "choice", "prompt": "結晶（改造屋で 武器に 付与）", "options": [
+              { "text": "炎の結晶 300G", "commands": [ { "type": "buyItem", "id": "fire_crystal" } ] },
+              { "text": "氷の結晶 300G", "commands": [ { "type": "buyItem", "id": "ice_crystal" } ] },
+              { "text": "雷の結晶 300G", "commands": [ { "type": "buyItem", "id": "thunder_crystal" } ] },
+              { "text": "光の結晶 400G", "commands": [ { "type": "buyItem", "id": "light_crystal" } ] },
+              { "text": "やめる", "commands": [] }
+            ] } ] },
           { "text": "やめる", "commands": [ { "type": "message", "name": "武器防具屋", "text": "まいど！" } ] }
         ] }
       ] } ]

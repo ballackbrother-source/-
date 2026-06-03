@@ -82,6 +82,22 @@ export class InventorySystem {
     const it = this.db.getItem(itemId);
     return Math.round((40 + (it?.price || 0) * 0.25) * (lv + 1));
   }
+  // ── 属性付与（武器に結晶で属性を付ける） ──
+  static IMBUE_COST = 200;
+  imbuedElement(member, itemId) { return (member.imbueById && member.imbueById[itemId]) || null; }
+  /** 武器に結晶の属性を付与（結晶1個＋ゴールド消費）。{ok, reason, element} */
+  imbue(member, crystalId) {
+    const id = member.equip.weapon;
+    if (!id) return { ok: false, reason: 'no_weapon' };
+    const crystal = this.db.getItem(crystalId);
+    if (!crystal || !crystal.imbueElement || !this.has(crystalId)) return { ok: false, reason: 'no_crystal' };
+    if (this.state.party.gold < InventorySystem.IMBUE_COST) return { ok: false, reason: 'gold', cost: InventorySystem.IMBUE_COST };
+    this.state.party.gold -= InventorySystem.IMBUE_COST;
+    this.remove(crystalId, 1);
+    (member.imbueById ||= {})[id] = crystal.imbueElement;
+    return { ok: true, element: crystal.imbueElement };
+  }
+
   /** 指定キャラのスロットの装備を +1 強化。{ok, lv, cost, reason} を返す */
   upgrade(member, slot) {
     const id = member.equip[slot];
