@@ -77,6 +77,24 @@
     {
       "trigger": "action", "x": 9, "y": 1,
       "commands": [ { "type": "message", "text": "奥の 結晶は 静かに 光っている。もう 守り手は いない。" } ]
+    },
+    {
+      "trigger": "action", "x": 7, "y": 8,
+      "cond": { "flag": "cavern_clear", "notFlag": "ignis_down" },
+      "commands": [
+        { "type": "message", "text": "…この 柱、かすかに 熱い。押してみると——奥に 隠し通路が 現れた！" },
+        { "type": "message", "text": "灼熱の 空洞。封じられていた 業火竜イグニスが 目を 覚ます！" },
+        { "type": "battle", "troopId": "ignis", "isBoss": true, "canEscape": true,
+          "onWin": [
+            { "type": "message", "text": "業火竜を 討ち取った！ その牙から 鍛えられた『炎竜の大剣』を 手に入れた！" },
+            { "type": "setFlag", "key": "ignis_down" }
+          ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 7, "y": 8,
+      "cond": { "flag": "ignis_down" },
+      "commands": [ { "type": "message", "text": "隠し通路の 奥は、もう もぬけの殻だ。" } ]
     }
   ]
 }

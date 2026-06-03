@@ -823,6 +823,97 @@
           ]
         }
       ]
+    },
+    "IGNIS": {
+      "name": "業火竜イグニス",
+      "family": "dragon",
+      "boss": true,
+      "stats": {
+        "hp": 4200,
+        "mp": 99,
+        "atk": 42,
+        "def": 22,
+        "mat": 38,
+        "mdf": 18,
+        "agi": 15,
+        "luk": 8
+      },
+      "element": {
+        "weak": [
+          "ice"
+        ],
+        "resist": [],
+        "absorb": [
+          "fire"
+        ],
+        "null": []
+      },
+      "attackElement": "fire",
+      "exp": 300,
+      "gold": 300,
+      "drops": [
+        {
+          "item": "dragon_blade",
+          "rate": 1.0
+        },
+        {
+          "item": "life_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "power_seed",
+          "rate": 0.5
+        }
+      ],
+      "skills": [
+        "hellflame",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "hellflame",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "hellflame",
+          "weight": 2,
+          "cond": "low"
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "fire_crystal",
+        "rate": 0.5
+      },
+      "statusResist": 0.55,
+      "phases": [
+        {
+          "hp": 0.5,
+          "message": "業火竜イグニスが 怒りに 燃え上がった！",
+          "atkMul": 1.3,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "hellflame",
+              "weight": 3
+            }
+          ]
+        }
+      ]
     }
   },
   "troops": {
@@ -926,6 +1017,11 @@
     "golem": {
       "members": [
         "B_GOLEM"
+      ]
+    },
+    "ignis": {
+      "members": [
+        "IGNIS"
       ]
     }
   }

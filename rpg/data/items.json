@@ -2,6 +2,7 @@
   "copper_sword": { "name": "どうのつるぎ", "type": "weapon", "weaponType": "sword", "price": 120, "rarity": 1, "bonus": { "atk": 8 }, "desc": "かけ出しの剣士の剣。" },
   "steel_sword":  { "name": "はがねのつるぎ", "type": "weapon", "weaponType": "sword", "price": 600, "rarity": 2, "bonus": { "atk": 20 }, "desc": "よく斬れる鋼の剣。" },
   "star_blade":   { "name": "星見の刃", "type": "weapon", "weaponType": "sword", "price": 0, "rarity": 4, "element": "light", "bonus": { "atk": 34, "int": 4 }, "desc": "星の光を宿す刃。光属性。" },
+  "dragon_blade": { "name": "炎竜の大剣", "type": "weapon", "weaponType": "sword", "price": 0, "rarity": 5, "element": "fire", "bonus": { "atk": 68, "str": 6 }, "desc": "業火竜の 牙から 鍛えた 大剣。炎属性・隠しボスの 戦利品。" },
   "battle_axe":   { "name": "バトルアックス", "type": "weapon", "weaponType": "axe", "price": 280, "rarity": 2, "bonus": { "atk": 18 }, "desc": "重い一撃の戦斧。" },
   "iron_dagger":  { "name": "てつのナイフ", "type": "weapon", "weaponType": "dagger", "price": 150, "rarity": 1, "bonus": { "atk": 10, "agi": 2 }, "desc": "軽くて素早い短剣。" },
   "oak_staff":    { "name": "かしのつえ", "type": "weapon", "weaponType": "staff", "price": 100, "rarity": 1, "bonus": { "atk": 5, "mat": 8 }, "desc": "魔力を高める杖。" },
