@@ -241,7 +241,7 @@ export class BattleSystem {
         t._stolen = true;
         if (this._inv) this._inv.add(entry.item, 1);
         const it = this.db.getItem(entry.item);
-        yield { text: `${t.name}から ${it ? it.name : entry.item}を 盗んだ！`, se: 'confirm' };
+        yield { text: `${t.name}から ${it ? it.name : entry.item}を 盗んだ！`, se: 'steal' };
       } else {
         yield { text: `${t.name}からの ぬすみは 失敗した。` };
       }
@@ -289,7 +289,7 @@ export class BattleSystem {
         + (vuln ? ' （ための 隙を ついた！）' : '');
       yield {
         text: `${t.name}に ${dmg}の ダメージ！${res.crit ? ' 会心の一撃！' : ''}${tag}`,
-        se: res.crit ? 'hit' : 'damage', flash: t,
+        se: res.crit ? 'crit' : 'damage', flash: t,
         popup: { who: t, value: dmg, kind: res.crit ? 'crit' : (res.mult > 1 ? 'weak' : 'damage') },
       };
       for (const w of wake) yield { text: w };

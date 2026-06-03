@@ -267,7 +267,7 @@ export class BattleScene extends Scene {
 
   afterRound() {
     if (this.system.isWin()) return this.beginResult();
-    if (this.system.isLose()) return this.showThen('ぜんめつ してしまった……', () => this.finish('lose'));
+    if (this.system.isLose()) { this.game.audio.defeat(); return this.showThen('ぜんめつ してしまった……', () => this.finish('lose')); }
     if (this.system.escaped) return this.finish('escape');
     // 次ラウンド
     this.players.forEach((p) => p.invalidate?.());
@@ -310,8 +310,7 @@ export class BattleScene extends Scene {
     }
     // 図鑑コンプ報酬（撃破登録のあとで判定）
     for (const msg of checkDexRewards(this.game)) this.resultQueue.push(`★ ${msg}`);
-    this.game.audio.playBgm('field');
-    if (this.levelups.length) this.game.audio.se('levelup');
+    this.game.audio.victory(); // 勝利ファンファーレ（フィールドBGMは復帰時に再生）
     this.phase = 'result'; this.resultIdx = 0; this.log = this.resultQueue[0]; this.msgTimer = 60;
   }
   updateResult() {

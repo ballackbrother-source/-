@@ -55,8 +55,30 @@ export class AudioManager {
       levelup: () => { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this._tone(f, 0.16, { type: 'triangle' }), i * 90)); },
       open:    () => this._tone(440, 0.1, { type: 'sine' }),
       damage:  () => this._tone(140, 0.12, { type: 'square', gain: 0.16 }),
+      crit:    () => { this._tone(220, 0.08, { type: 'sawtooth', gain: 0.2 }); this._tone(1568, 0.12, { type: 'square', gain: 0.14 }); },
+      steal:   () => { this._tone(1046, 0.06, { type: 'square', gain: 0.12 }); this._tone(1318, 0.08, { type: 'square', gain: 0.12 }); },
     };
     (map[name] || map.cursor)();
+  }
+
+  /** 一発もの（ループしない）。seq=[[freq,durMs], ...]、freq=0で休符 */
+  jingle(seq, { gain = 0.12, type = 'triangle' } = {}) {
+    if (!this.ctx) return;
+    let t = 0;
+    for (const [freq, dur] of seq) {
+      if (freq) setTimeout(() => this._tone(freq, (dur / 1000) * 0.9, { type, gain, dest: this.bgmGain }), t);
+      t += dur;
+    }
+  }
+  /** 勝利ファンファーレ（BGMを止めて一発再生） */
+  victory() {
+    this.stopBgm();
+    this.jingle([[523, 110], [523, 110], [523, 110], [659, 340], [0, 60], [587, 120], [659, 130], [784, 520]]);
+  }
+  /** 全滅ジングル */
+  defeat() {
+    this.stopBgm();
+    this.jingle([[392, 300], [349, 300], [330, 320], [294, 640]], { gain: 0.1 });
   }
 
   // --- BGM（簡易ループ。melody=[freq or null, ...]） ---
