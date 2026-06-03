@@ -51,8 +51,23 @@ export class Party {
    * メンバーレコード（Lv/装備）は保持し、再加入時に進行を引き継げるようにする。
    */
   removeMember(id) {
+    const wasFront = this.state.party.order.includes(id);
     this.state.party.order = this.state.party.order.filter((x) => x !== id);
     this.state.party.reserve = this.state.party.reserve.filter((x) => x !== id);
+    // 前衛が抜けたら、控えから自動で繰り上げる（離脱後も戦力を保つ）
+    if (wasFront && this.state.party.reserve.length && this.state.party.order.length < 4) {
+      this.state.party.order.push(this.state.party.reserve.shift());
+    }
+  }
+
+  /** 前衛(order)/控え(reserve)を結合した並びで、2つの位置を入れ替える（編成変更） */
+  swapPositions(i, j) {
+    const flat = [...this.state.party.order, ...this.state.party.reserve];
+    if (i < 0 || j < 0 || i >= flat.length || j >= flat.length) return;
+    [flat[i], flat[j]] = [flat[j], flat[i]];
+    const frontCount = this.state.party.order.length; // 前衛枠数は維持
+    this.state.party.order = flat.slice(0, frontCount);
+    this.state.party.reserve = flat.slice(frontCount);
   }
 
   /** 全回復（宿屋/教会） */

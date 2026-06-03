@@ -23,6 +23,7 @@ export class MenuScene extends Scene {
       { value: 'item', label: 'どうぐ' },
       { value: 'equip', label: 'そうび' },
       { value: 'skill', label: 'じゅもん' },
+      { value: 'formation', label: 'メンバー' },
       { value: 'save', label: 'セーブ' },
       { value: 'config', label: 'せってい' },
       { value: 'close', label: 'とじる' },
@@ -47,6 +48,7 @@ export class MenuScene extends Scene {
       case 'equip_item': return this.updEquipItem(a);
       case 'skill_char': return this.updSkillChar(a);
       case 'skill_view': return this.updSkillView(a);
+      case 'formation': return this.updFormation(a);
       case 'save': return this.updSave(a);
     }
   }
@@ -60,6 +62,7 @@ export class MenuScene extends Scene {
       case 'item': this.openItem(); break;
       case 'equip': this.openCharSelect('equip_char'); break;
       case 'skill': this.openCharSelect('skill_char'); break;
+      case 'formation': this.openFormation(); break;
       case 'save': this.openSave(); break;
       case 'config': this.game.scenes.push(new SettingsScene(this.game)); break;
       case 'close': this.close();
@@ -183,6 +186,36 @@ export class MenuScene extends Scene {
     if (this.game.input.isPressed('cancel')) { a.se('cancel'); this.state = 'skill_char'; }
   }
 
+  // --- メンバー編成（前衛↔控え 入れ替え） ---
+  openFormation() { this.fmIdx = 0; this.fmGrab = -1; this.state = 'formation'; }
+  get fmFlat() { return [...this.game.state.party.order, ...this.game.state.party.reserve]; }
+  get fmFront() { return this.game.state.party.order.length; }
+  refreshParty() {
+    this.party = this.game.party.frontline().concat(
+      this.game.state.party.reserve.map((id) => this.game.party.char(id)).filter(Boolean));
+  }
+  updFormation(a) {
+    const input = this.game.input;
+    const n = this.fmFlat.length;
+    if (input.isPressed('up'))   { this.fmIdx = (this.fmIdx - 1 + n) % n; a.se('cursor'); }
+    if (input.isPressed('down')) { this.fmIdx = (this.fmIdx + 1) % n; a.se('cursor'); }
+    if (input.isPressed('cancel')) {
+      if (this.fmGrab >= 0) { this.fmGrab = -1; a.se('cancel'); }
+      else { a.se('cancel'); this.state = 'root'; }
+      return;
+    }
+    if (input.isPressed('confirm')) {
+      if (this.fmGrab < 0) { this.fmGrab = this.fmIdx; a.se('confirm'); }
+      else {
+        if (this.fmGrab !== this.fmIdx) {
+          this.game.party.swapPositions(this.fmGrab, this.fmIdx);
+          a.se('confirm'); this.setToast('へんせいを 変えた。'); this.refreshParty();
+        } else a.se('cancel');
+        this.fmGrab = -1;
+      }
+    }
+  }
+
   // --- セーブ ---
   openSave() {
     const list = SaveManager.list();
@@ -239,6 +272,8 @@ export class MenuScene extends Scene {
         this.renderEquip(r, px); break;
       case 'skill_view':
         this.renderSkills(r, px); break;
+      case 'formation':
+        this.renderFormation(r, px); break;
       case 'save':
         r.window(px, 16, 340, 220); r.text('どこに きろくする？', px + 14, 24, { size: 15, color: COLORS.textDim });
         this.saveMenu.render(r, px + 14, 54, 310); break;
@@ -277,6 +312,28 @@ export class MenuScene extends Scene {
       r.text(sk.desc || '', px + 210, y, { size: 13, color: COLORS.textDim });
     });
     r.text('キャンセルで もどる', px + 14, VIEW_H - 30, { size: 12, color: COLORS.textDim });
+  }
+  renderFormation(r, px) {
+    r.window(px, 16, VIEW_W - px - 16, 440);
+    r.text('メンバー編成', px + 14, 24, { size: 16, color: COLORS.selected });
+    r.text('決定で つかむ → もう一度 決定で 入れ替え', px + 14, 48, { size: 12, color: COLORS.textDim });
+    const flat = this.fmFlat, front = this.fmFront;
+    flat.forEach((id, i) => {
+      const c = this.game.party.char(id);
+      const y = 78 + i * 44;
+      const sel = i === this.fmIdx, grab = i === this.fmGrab;
+      const zone = i < front ? '前衛' : '控え';
+      const zc = i < front ? COLORS.hp : COLORS.textDim;
+      if (sel) r.text(grab ? '◆' : '▶', px + 14, y, { size: 18, color: COLORS.selected });
+      r.text(`[${zone}]`, px + 36, y, { size: 13, color: zc });
+      r.text(c ? c.name : id, px + 96, y, { size: 17, color: grab ? COLORS.selected : COLORS.text });
+      if (c) {
+        r.text(`Lv${c.lv}`, px + 220, y, { size: 14, color: COLORS.textDim });
+        r.gauge(px + 270, y + 4, 120, 8, c.curHp / c.maxHp, COLORS.hp);
+        r.text(`${c.curHp}/${c.maxHp}`, px + 270, y + 14, { size: 11, color: COLORS.textDim });
+      }
+    });
+    r.text('前衛(上から4人)が 戦闘に 参加。控えにも 経験値が 入る。', px + 14, VIEW_H - 30, { size: 12, color: COLORS.textDim });
   }
 }
 
