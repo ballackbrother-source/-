@@ -45,6 +45,7 @@ export class BattleScene extends Scene {
     this.special = this.enemies.some((e) => e.def.regenUntilBroken); // 神（不死）戦
     this.system = new BattleSystem(this.players, this.enemies, this.game.db, rng, {
       canEscape: params.opts?.canEscape !== false, isBoss: this.isBoss,
+      difficulty: this.game.state.settings.difficulty,
     });
 
     this.game.audio.playBgm(this.isBoss ? 'boss' : 'battle');
@@ -285,7 +286,10 @@ export class BattleScene extends Scene {
   beginResult() {
     const res = this.system.result();
     this.result = res;
-    // 経験値・ゴールド配分
+    // 経験値・ゴールド配分（難易度でEXP補正：易+20%／難-10%）
+    const diff = this.game.state.settings.difficulty;
+    const expMul = diff === 'easy' ? 1.2 : (diff === 'hard' ? 0.9 : 1.0);
+    res.exp = Math.floor(res.exp * expMul);
     this.levelups = [];
     const front = this.game.party.frontline();
     const reserve = this.game.state.party.reserve.map((id) => this.game.party.char(id)).filter(Boolean);

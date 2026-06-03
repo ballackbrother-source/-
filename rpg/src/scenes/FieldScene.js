@@ -137,6 +137,7 @@ export class FieldScene extends Scene {
   async usePortal(p) {
     await this.fade('out', '#000', 250);
     this.loadMap(p.toMap, p.toX, p.toY, p.dir || this.player.dir);
+    this.autosave(); // マップ移動ごとにオートセーブ（slot0）
     await this.fade('in', '#000', 250);
     this.runAutoruns();
   }

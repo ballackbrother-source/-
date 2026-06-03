@@ -22,6 +22,8 @@ export class BattleSystem {
     this.isBoss = opts.isBoss || false;
     this.escaped = false;
     this.turnCount = 0;
+    // 難易度：プレイヤーが受けるダメージ倍率
+    this.playerDmgMul = opts.difficulty === 'easy' ? 0.7 : (opts.difficulty === 'hard' ? 1.3 : 1.0);
   }
 
   livePlayers() { return this.players.filter((p) => !p.isDead); }
@@ -289,6 +291,7 @@ export class BattleSystem {
       if (t._defending) dmg = Math.max(1, Math.floor(dmg * 0.5));
       let vuln = false;
       if (t._charging) { dmg = Math.floor(dmg * 1.25); vuln = true; } // 溜め中は隙だらけ
+      if (t.isPlayer) dmg = Math.max(1, Math.floor(dmg * this.playerDmgMul)); // 難易度補正
       t.curHp -= dmg;
       const tag = res.mult > 1 ? ' 弱点を ついた！' : (res.mult > 0 && res.mult < 1 ? ' （半減）' : '')
         + (vuln ? ' （ための 隙を ついた！）' : '');
