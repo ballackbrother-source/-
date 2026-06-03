@@ -6,7 +6,8 @@
       { "lv": 5, "skill": "shine" },
       { "lv": 8, "skill": "power_strike" },
       { "lv": 12, "skill": "star_read" },
-      { "lv": 16, "skill": "holy" }
+      { "lv": 16, "skill": "holy" },
+      { "lv": 24, "skill": "meteor_slash" }
     ]
   },
   "gladiator": {
@@ -14,7 +15,8 @@
     "learn": [
       { "lv": 6, "skill": "guard_stance" },
       { "lv": 10, "skill": "reckless" },
-      { "lv": 14, "skill": "earth_cleave" }
+      { "lv": 14, "skill": "earth_cleave" },
+      { "lv": 24, "skill": "giga_slash" }
     ]
   },
   "priestess": {
@@ -24,14 +26,16 @@
       { "lv": 9, "skill": "spark" },
       { "lv": 8, "skill": "area_heal" },
       { "lv": 11, "skill": "holy" },
-      { "lv": 14, "skill": "revive" }
+      { "lv": 14, "skill": "revive" },
+      { "lv": 24, "skill": "mega_heal" }
     ]
   },
   "thief": {
     "name": "盗賊",
     "learn": [
       { "lv": 13, "skill": "sleep_dust" },
-      { "lv": 16, "skill": "double_slash" }
+      { "lv": 16, "skill": "double_slash" },
+      { "lv": 24, "skill": "assassinate" }
     ]
   }
 }

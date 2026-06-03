@@ -44,7 +44,7 @@
         { "type": "message", "text": ["神域へ 続く 回廊。星核の 気配を 追って、ルゥたちは ここへ たどり着いた。", "——だが、行く手を 阻むように、あの男が 立っていた。"] },
         { "type": "message", "name": "シオン", "text": "よく 来たな、弟。…ここから先へは、行かせない。" },
         { "type": "empower", "level": 44 },
-        { "type": "message", "text": "幾多の 死闘を 越え、ルゥたちは 大きく 力を つけていた。" },
+        { "type": "message", "text": ["幾多の 死闘を 越え、ルゥたちは 限界を 越えた力に 目覚めていた。", "——ジョブ覚醒。各自が 固有の 奥義を 会得した！"] },
         { "type": "battle", "troopId": "shion_boss", "isBoss": true, "canEscape": false,
           "onWin": [
             { "type": "message", "name": "シオン", "text": "…強く なったな。少しだけ、誇らしいよ。" },

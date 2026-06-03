@@ -26,6 +26,11 @@
 
   "last_requiem": { "name": "ラスト・レクイエム", "type": "physical", "element": "dark", "target": "oneEnemy", "mp": 0, "power": 4.0, "breaksRegen": true, "desc": "赦しの 連携技。神の 不死を 打ち砕く唯一の 一撃" },
 
+  "meteor_slash":  { "name": "流星斬", "type": "physical", "element": "light", "target": "oneEnemy", "mp": 8, "power": 3.2, "desc": "ルゥの 覚醒奥義。光を まとう 一閃" },
+  "giga_slash":    { "name": "ギガスラッシュ", "type": "physical", "target": "allEnemies", "mp": 10, "power": 2.0, "desc": "ガロードの 覚醒奥義。全体に 渾身の 一撃" },
+  "mega_heal":     { "name": "メガヒール", "type": "heal", "target": "allAllies", "mp": 18, "power": 70, "desc": "フィーナの 覚醒奥義。みかた全員を 大回復" },
+  "assassinate":   { "name": "アサシネイト", "type": "physical", "target": "oneEnemy", "mp": 8, "power": 3.6, "inflict": { "status": "poison", "rate": 0.5 }, "desc": "シノの 覚醒奥義。急所を えぐる 暗殺の一撃" },
+
   "tsunami":     { "name": "ツナミ", "type": "magic", "element": "ice", "target": "allEnemies", "mp": 0, "power": 1.7, "desc": "" },
   "enemy_fang":  { "name": "かみつき", "type": "physical", "target": "oneEnemy", "mp": 0, "power": 1.5, "desc": "" },
 
