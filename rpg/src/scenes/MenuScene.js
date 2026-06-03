@@ -104,7 +104,7 @@ export class MenuScene extends Scene {
     const id = this.itemMenu.current.value;
     const it = this.game.db.getItem(id);
     const ef = it.effect || {};
-    if (it.usableInField && (ef.hp || ef.mp || ef.cure || ef.revive)) {
+    if (it.usableInField && (ef.hp || ef.mp || ef.cure || ef.revive || ef.raise)) {
       this.pendingItem = id; this.targetIdx = 0; this.state = 'item_target';
     } else {
       this.setToast('ここでは つかえない。');
@@ -125,7 +125,12 @@ export class MenuScene extends Scene {
       if (ef.hp) target.curHp += ef.hp;
       if (ef.mp) target.curMp += ef.mp;
       if (ef.cure) ef.cure.forEach((s) => { target.member.statusEffects = target.member.statusEffects.filter((x) => x.id !== s); });
-      a.se('heal');
+      if (ef.raise) { // 永続ステータスアップ
+        const bs = (target.member.bonusStats ||= {});
+        for (const [k, v] of Object.entries(ef.raise)) bs[k] = (bs[k] || 0) + v;
+        target.invalidate();
+      }
+      a.se(ef.raise ? 'levelup' : 'heal');
       this.setToast(`${target.name}に ${it.name}を つかった。`);
       if (!this.game.inventory.has(this.pendingItem)) { this.openItem(); }
       else { this.itemMenu.setItems(this.game.inventory.list().map((e) => ({ value: e.id, label: e.item.name, sub: `×${e.count}` }))); this.state = 'item'; }

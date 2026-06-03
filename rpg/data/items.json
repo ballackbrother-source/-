@@ -32,6 +32,13 @@
   "flash_bomb":    { "name": "閃光弾", "type": "consumable", "price": 80, "rarity": 2, "effect": { "inflict": { "status": "blind", "rate": 0.85 } }, "usableInBattle": true, "usableInField": false, "desc": "敵1体を くらやみに し、命中を 下げる。" },
   "revive_feather":{ "name": "復活のはね", "type": "consumable", "price": 150, "rarity": 2, "effect": { "revive": 0.5 }, "usableInBattle": true, "usableInField": true, "desc": "せんとうふのうを HP半分で 復活。" },
 
+  "power_seed":  { "name": "ちからのたね", "type": "consumable", "price": 0, "rarity": 3, "effect": { "raise": { "str": 2 } }, "usableInField": true, "desc": "使うと ちからが 永久に +2。" },
+  "guard_seed":  { "name": "まもりのたね", "type": "consumable", "price": 0, "rarity": 3, "effect": { "raise": { "vit": 2 } }, "usableInField": true, "desc": "使うと みのまもりが 永久に +2。" },
+  "speed_seed":  { "name": "すばやさのたね", "type": "consumable", "price": 0, "rarity": 3, "effect": { "raise": { "agi": 2 } }, "usableInField": true, "desc": "使うと すばやさが 永久に +2。" },
+  "magic_seed":  { "name": "まりょくのたね", "type": "consumable", "price": 0, "rarity": 3, "effect": { "raise": { "int": 2 } }, "usableInField": true, "desc": "使うと かしこさが 永久に +2。" },
+  "spirit_seed": { "name": "せいしんのたね", "type": "consumable", "price": 0, "rarity": 3, "effect": { "raise": { "spi": 2 } }, "usableInField": true, "desc": "使うと せいしんが 永久に +2。" },
+  "life_seed":   { "name": "いのちのきのみ", "type": "consumable", "price": 0, "rarity": 3, "effect": { "raise": { "hp": 25 } }, "usableInField": true, "desc": "使うと さいだいHPが 永久に +25。" },
+
   "star_core":     { "name": "星核", "type": "key", "price": 0, "rarity": 5, "desc": "古代遺跡に眠る 七つの結晶のひとつ。世界の核に つながる 鍵だという。" },
   "star_pendant":  { "name": "星のかけらのペンダント", "type": "key", "price": 0, "rarity": 5, "desc": "ミルカ婆から託された 古いペンダント。かすかに 星のように 光っている。" },
   "herb_bundle":   { "name": "やくそうの たば", "type": "key", "price": 0, "rarity": 1, "desc": "森で つんだ やくそうの たば。" }

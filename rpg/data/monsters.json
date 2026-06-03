@@ -116,6 +116,10 @@
         {
           "item": "leather_armor",
           "rate": 0.03
+        },
+        {
+          "item": "magic_seed",
+          "rate": 0.04
         }
       ],
       "skills": [
@@ -283,6 +287,10 @@
         {
           "item": "hi_herb",
           "rate": 1.0
+        },
+        {
+          "item": "guard_seed",
+          "rate": 1.0
         }
       ],
       "skills": [
@@ -374,7 +382,12 @@
       "attackElement": "none",
       "exp": 0,
       "gold": 0,
-      "drops": [],
+      "drops": [
+        {
+          "item": "speed_seed",
+          "rate": 1.0
+        }
+      ],
       "skills": [
         "power_strike",
         "enemy_fang"
@@ -459,6 +472,10 @@
         {
           "item": "hi_herb",
           "rate": 0.5
+        },
+        {
+          "item": "power_seed",
+          "rate": 1.0
         }
       ],
       "skills": [

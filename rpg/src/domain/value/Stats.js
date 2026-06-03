@@ -33,18 +33,19 @@ export function computeStats(member, db) {
   const def = db.getCharacter(member.id);
   const lv = member.lv;
   const { acc, affinity, weaponElement } = aggregateEquip(member, db);
+  const bonus = member.bonusStats || {}; // 種などによる永続ボーナス
 
-  // 一次ステ：基礎 + 成長*(lv-1) + 装備補正
+  // 一次ステ：基礎 + 成長*(lv-1) + 装備補正 + 永続ボーナス
   const p = {};
   for (const k of PRIMARY) {
-    p[k] = Math.round((def.base[k] || 0) + (def.growth[k] || 0) * (lv - 1) + acc[k]);
+    p[k] = Math.round((def.base[k] || 0) + (def.growth[k] || 0) * (lv - 1) + acc[k] + (bonus[k] || 0));
   }
 
   const baseHp = def.base.hp || 0, baseMp = def.base.mp || 0;
   const grHp = (def.growth.hp || 0) * (lv - 1), grMp = (def.growth.mp || 0) * (lv - 1);
 
-  const maxHp = Math.round(baseHp + grHp + p.vit * 4 + lv * 3 + acc.hpc);
-  const maxMp = Math.round(baseMp + grMp + p.spi * 3 + lv * 2 + acc.mpc);
+  const maxHp = Math.round(baseHp + grHp + p.vit * 4 + lv * 3 + acc.hpc + (bonus.hp || 0));
+  const maxMp = Math.round(baseMp + grMp + p.spi * 3 + lv * 2 + acc.mpc + (bonus.mp || 0));
 
   return {
     ...p,

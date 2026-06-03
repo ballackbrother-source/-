@@ -57,6 +57,7 @@ export class GameState {
       jobId: def.jobId,
       learnedSkills: [...(def.startSkills ?? [])],
       equip: { ...(def.startEquip ?? {}) },
+      bonusStats: {}, // 種などの永続ステータスボーナス
       statusEffects: [],
       bond: 0,
     };
