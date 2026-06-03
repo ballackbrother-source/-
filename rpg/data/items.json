@@ -23,6 +23,7 @@
   "power_ring":    { "name": "ちからのゆびわ", "type": "accessory", "price": 800, "rarity": 3, "bonus": { "str": 5, "atk": 4 }, "desc": "力がみなぎる指輪。" },
   "guard_ring":    { "name": "まもりのゆびわ", "type": "accessory", "price": 800, "rarity": 3, "bonus": { "vit": 5, "def": 4 }, "desc": "守りを固める指輪。" },
   "feather_charm": { "name": "はやての羽かざり", "type": "accessory", "price": 600, "rarity": 2, "bonus": { "agi": 6 }, "desc": "すばやさが 上がる。" },
+  "heros_proof":   { "name": "勇者の証", "type": "accessory", "price": 0, "rarity": 5, "bonus": { "str": 5, "vit": 5, "agi": 5, "int": 5, "spi": 5, "atk": 5 }, "desc": "闘技場を 制した 者の 証。全能力が 上がる。" },
 
   "herb":          { "name": "やくそう", "type": "consumable", "price": 15, "rarity": 1, "effect": { "hp": 60 }, "usableInBattle": true, "usableInField": true, "desc": "HPを 60 かいふくする。" },
   "hi_herb":       { "name": "じょうやくそう", "type": "consumable", "price": 80, "rarity": 1, "effect": { "hp": 200 }, "usableInBattle": true, "usableInField": true, "desc": "HPを 200 かいふくする。" },

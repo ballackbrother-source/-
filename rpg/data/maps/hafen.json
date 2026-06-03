@@ -143,6 +143,41 @@
       ]
     },
     {
+      "id": "arena", "x": 4, "y": 11, "dir": "down", "color": "#c8b04a",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "闘技場の 主", "text": "腕試しは どうだ? 3連戦、間に 回復は してやる。勝てば 賞金だ。" },
+        { "type": "choice", "options": [
+          { "text": "挑戦する", "commands": [
+            { "type": "heal" },
+            { "type": "battle", "troopId": "wolf_pack", "canEscape": false, "isBoss": true,
+              "onLose": [ { "type": "message", "text": "1回戦 敗退… また 挑戦しよう。" } ],
+              "onWin": [
+                { "type": "message", "text": "1回戦 突破！ 回復して 次へ。" },
+                { "type": "heal" },
+                { "type": "battle", "troopId": "cave_pack", "canEscape": false, "isBoss": true,
+                  "onLose": [ { "type": "message", "text": "2回戦 敗退… また 挑戦しよう。" } ],
+                  "onWin": [
+                    { "type": "message", "text": "2回戦 突破！ 最終戦だ。" },
+                    { "type": "heal" },
+                    { "type": "battle", "troopId": "golem", "canEscape": false, "isBoss": true,
+                      "onLose": [ { "type": "message", "text": "最終戦 敗退… 惜しい！" } ],
+                      "onWin": [
+                        { "type": "message", "text": "闘技場 制覇！ 賞金 500ギル！" },
+                        { "type": "giveGold", "amount": 500, "notify": false },
+                        { "type": "heal" },
+                        { "type": "if", "cond": { "notFlag": "arena_clear" }, "then": [
+                          { "type": "giveItem", "id": "heros_proof", "count": 1 },
+                          { "type": "setFlag", "key": "arena_clear" }
+                        ] }
+                      ] }
+                  ] }
+              ] }
+          ] },
+          { "text": "やめる", "commands": [ { "type": "message", "name": "闘技場の 主", "text": "気が 向いたら いつでも 来な。" } ] }
+        ] }
+      ] } ]
+    },
+    {
       "id": "forge_master", "x": 7, "y": 6, "dir": "down", "color": "#9a5a3a",
       "pages": [ { "conditions": {}, "commands": [
         { "type": "message", "name": "改造屋", "text": "装備を 鍛えて やろうか? ゴールドぶん、強くしてやるぜ。" },
