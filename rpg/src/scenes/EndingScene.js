@@ -6,6 +6,7 @@
  */
 import { Scene } from '../core/Scene.js';
 import { VIEW_W, VIEW_H, COLORS } from '../config/constants.js';
+import { SaveManager } from '../core/SaveManager.js';
 
 const END_INFO = {
   true:   { tag: 'TRUE END', tagColor: '#ffd23f', line: '——星は、巡る。今度は、ずっと 一緒に。', bgm: 'theme' },
@@ -30,7 +31,9 @@ const CREDITS = [
 
 export class EndingScene extends Scene {
   onEnter(params = {}) {
-    this.info = END_INFO[params.type] || END_INFO.normal;
+    this.type = params.type || 'normal';
+    this.info = END_INFO[this.type] || END_INFO.normal;
+    SaveManager.recordClear(this.type); // クリア記録
     this.scroll = VIEW_H + 20;
     this.t = 0;
     this.done = false;

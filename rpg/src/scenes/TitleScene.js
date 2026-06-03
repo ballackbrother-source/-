@@ -103,6 +103,15 @@ export class TitleScene extends Scene {
     r.text('ETERNIA', VIEW_W / 2, 90, { size: 54, align: 'center', color: COLORS.windowBorder });
     r.text('～ 星を継ぐ者 ～', VIEW_W / 2, 150, { size: 22, align: 'center', color: COLORS.textDim });
 
+    // クリア記録バッジ
+    const clears = SaveManager.getClears();
+    const badges = [['true', 'TRUE', '#ffd23f'], ['normal', 'NORMAL', '#aee0ff'], ['bad', 'BAD', '#e06666']];
+    const got = badges.filter(([k]) => clears[k]);
+    if (got.length) {
+      r.text('CLEAR:', VIEW_W / 2 - 130, 190, { size: 13, color: COLORS.textDim });
+      got.forEach(([, label, col], i) => r.text(label, VIEW_W / 2 - 70 + i * 90, 190, { size: 14, color: col }));
+    }
+
     if (this.mode === 'main') {
       r.window(VIEW_W / 2 - 130, 248, 260, 156);
       this.menu.render(r, VIEW_W / 2 - 100, 264, 220);

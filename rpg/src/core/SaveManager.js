@@ -10,6 +10,7 @@ import { formatPlaytime } from './util.js';
 
 const key = (slot) => `${SAVE_PREFIX}.save.slot${slot}`;
 const CONFIG_KEY = `${SAVE_PREFIX}.config`;
+const CLEARS_KEY = `${SAVE_PREFIX}.clears`;
 
 // 旧バージョン→新バージョンの変換関数を積む（今は無し）
 const MIGRATIONS = {
@@ -79,6 +80,15 @@ export const SaveManager = {
 
   exists(slot) { return localStorage.getItem(key(slot)) != null; },
   delete(slot) { localStorage.removeItem(key(slot)); },
+
+  // クリア記録（到達したエンディング。セーブとは独立して永続）
+  getClears() {
+    try { return JSON.parse(localStorage.getItem(CLEARS_KEY)) || {}; } catch { return {}; }
+  },
+  recordClear(type) {
+    const c = this.getClears(); c[type] = true;
+    try { localStorage.setItem(CLEARS_KEY, JSON.stringify(c)); } catch {}
+  },
 
   // 設定はセーブと独立して常時保存（起動時即適用）
   loadConfig() {
