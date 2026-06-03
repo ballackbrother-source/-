@@ -110,6 +110,39 @@
       ] } ]
     },
     {
+      "id": "campfire", "x": 16, "y": 7, "dir": "down", "color": "#e0703f",
+      "pages": [
+        { "conditions": {}, "commands": [
+          { "type": "message", "text": "小さな 焚き火が ゆれている。…まだ、語り合う 仲間は いない。" } ] },
+        { "conditions": { "flag": "ch1_join", "notFlag": "ch2_intro" }, "commands": [
+          { "type": "message", "text": "焚き火を 囲んで、ひと休み。" },
+          { "type": "message", "name": "ガロード", "text": "ルゥ、お前 細っこいのに よく 食うな。…いいことだ。たくさん 食え。" },
+          { "type": "message", "name": "フィーナ", "text": "ふふ。こうして 火を 囲むと、家族みたいですね。" },
+          { "type": "message", "name": "シオン", "text": "おう。…俺は 兄貴分だからな。弟は 任せとけ。" },
+          { "type": "message", "name": "ルゥ", "text": "（あたたかいな。…ずっと、こうだったら いいのに）" } ] },
+        { "conditions": { "flag": "ch2_intro", "notFlag": "betrayed" }, "commands": [
+          { "type": "message", "name": "シノ", "text": "あたしの 故郷? スラムさ。腹を すかせた チビどもを 食わせるのに 必死だった。" },
+          { "type": "message", "name": "ガロード", "text": "…俺は 守れなかった 弟分が いた。だから、二度と 見捨てない。それだけだ。" },
+          { "type": "message", "name": "シオン", "text": "…俺にも、守りたかった 奴が いたよ。" },
+          { "type": "message", "name": "シオン", "text": "（シオンは そう言って、星空を 見上げた）" } ] },
+        { "conditions": { "flag": "betrayed" }, "commands": [
+          { "type": "message", "text": "焚き火の そばに、ひとつ 多く 食器が 並んでいる。…シオンの ぶんだ。" },
+          { "type": "choice", "prompt": "どうする?", "options": [
+            { "text": "シオンの 話を する", "commands": [
+              { "type": "if", "cond": { "notFlag": "fire_shion" }, "then": [
+                { "type": "message", "name": "フィーナ", "text": "…シオンさんにも、きっと 事情が あったはず。わたしは、まだ 信じたい。" },
+                { "type": "message", "name": "ルゥ", "text": "兄さん……。（胸の おくが、少しだけ あたたかくなる）" },
+                { "type": "addVar", "key": "forgiveness", "delta": 5 },
+                { "type": "setFlag", "key": "fire_shion" }
+              ], "else": [
+                { "type": "message", "name": "ルゥ", "text": "……兄さん。今、どこに いるんだろう。" }
+              ] } ] },
+            { "text": "黙って 火を 見る", "commands": [
+              { "type": "message", "text": "誰も 何も 言わない。薪の はぜる 音だけが ひびく。" } ] }
+          ] } ] }
+      ]
+    },
+    {
       "id": "forge_master", "x": 7, "y": 6, "dir": "down", "color": "#9a5a3a",
       "pages": [ { "conditions": {}, "commands": [
         { "type": "message", "name": "改造屋", "text": "装備を 鍛えて やろうか? ゴールドぶん、強くしてやるぜ。" },
