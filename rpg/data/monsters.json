@@ -299,6 +299,10 @@
         {
           "item": "ice_crystal",
           "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.4
         }
       ],
       "skills": [
@@ -393,6 +397,10 @@
       "drops": [
         {
           "item": "speed_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
           "rate": 1.0
         }
       ],
@@ -763,6 +771,10 @@
         {
           "item": "thunder_crystal",
           "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.5
         }
       ],
       "skills": [
@@ -863,6 +875,10 @@
         {
           "item": "power_seed",
           "rate": 0.5
+        },
+        {
+          "item": "mei_stone",
+          "rate": 1.0
         }
       ],
       "skills": [

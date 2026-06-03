@@ -98,6 +98,21 @@ export class InventorySystem {
     return { ok: true, element: crystal.imbueElement };
   }
 
+  // ── 銘（武器の特殊効果） ──
+  static INSCRIBE_COST = 500;
+  weaponMei(member) { const w = member.equip.weapon; return (w && member.meiById) ? member.meiById[w] : null; }
+  /** 武器に銘を刻む（銘石1個＋ゴールド消費）。{ok, reason, mei} */
+  inscribe(member, meiId) {
+    const id = member.equip.weapon;
+    if (!id) return { ok: false, reason: 'no_weapon' };
+    if (!this.has('mei_stone')) return { ok: false, reason: 'no_stone' };
+    if (this.state.party.gold < InventorySystem.INSCRIBE_COST) return { ok: false, reason: 'gold', cost: InventorySystem.INSCRIBE_COST };
+    this.state.party.gold -= InventorySystem.INSCRIBE_COST;
+    this.remove('mei_stone', 1);
+    (member.meiById ||= {})[id] = meiId;
+    return { ok: true, mei: meiId };
+  }
+
   /** 指定キャラのスロットの装備を +1 強化。{ok, lv, cost, reason} を返す */
   upgrade(member, slot) {
     const id = member.equip[slot];

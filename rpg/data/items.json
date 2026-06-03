@@ -46,6 +46,7 @@
   "wind_crystal":    { "name": "風の結晶", "type": "material", "price": 300, "rarity": 2, "imbueElement": "wind", "desc": "改造屋で 武器に 風属性を 付与できる。" },
   "light_crystal":   { "name": "光の結晶", "type": "material", "price": 400, "rarity": 3, "imbueElement": "light", "desc": "改造屋で 武器に 光属性を 付与できる。" },
   "dark_crystal":    { "name": "闇の結晶", "type": "material", "price": 400, "rarity": 3, "imbueElement": "dark", "desc": "改造屋で 武器に 闇属性を 付与できる。" },
+  "mei_stone":       { "name": "銘石", "type": "material", "price": 0, "rarity": 4, "desc": "改造屋で 武器に『銘』（特殊効果）を 刻める レア素材。" },
 
   "star_core":     { "name": "星核", "type": "key", "price": 0, "rarity": 5, "desc": "古代遺跡に眠る 七つの結晶のひとつ。世界の核に つながる 鍵だという。" },
   "star_pendant":  { "name": "星のかけらのペンダント", "type": "key", "price": 0, "rarity": 5, "desc": "ミルカ婆から託された 古いペンダント。かすかに 星のように 光っている。" },

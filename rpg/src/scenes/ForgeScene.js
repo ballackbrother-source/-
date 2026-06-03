@@ -8,7 +8,7 @@ import { Scene } from '../core/Scene.js';
 import { VIEW_W, VIEW_H, COLORS, EQUIP_SLOTS } from '../config/constants.js';
 import { CommandWindow } from '../ui/CommandWindow.js';
 import { enhIncrement } from '../domain/value/Stats.js';
-import { ELEMENT_LABEL } from '../config/constants.js';
+import { ELEMENT_LABEL, MEI } from '../config/constants.js';
 
 const SLOT_LABEL = { weapon: 'ぶき', shield: 'たて', head: 'あたま', body: 'からだ', acc1: 'アクセ1', acc2: 'アクセ2' };
 
@@ -43,12 +43,17 @@ export class ForgeScene extends Scene {
         const v = this.actionMenu.current.value;
         if (v === 'upgrade') { this.doUpgrade(a); this.state = 'slot'; }
         else if (v === 'imbue') this.openImbue(a);
+        else if (v === 'mei') this.openMei(a);
         else this.state = 'slot';
       }
     } else if (this.state === 'element') {
       const res = this.elemMenu.update(input, a);
       if (res === 'cancel') { this.state = 'action'; return; }
       if (res === 'confirm') this.doImbue(a, this.elemMenu.current.value);
+    } else if (this.state === 'mei') {
+      const res = this.meiMenu.update(input, a);
+      if (res === 'cancel') { this.state = 'action'; return; }
+      if (res === 'confirm') this.doInscribe(a, this.meiMenu.current.value);
     }
   }
 
@@ -60,6 +65,7 @@ export class ForgeScene extends Scene {
       this.actionMenu = new CommandWindow([
         { value: 'upgrade', label: '強化する (+N)' },
         { value: 'imbue', label: '属性を つける' },
+        { value: 'mei', label: '銘を きざむ' },
         { value: 'back', label: 'やめる' },
       ]);
       this.state = 'action';
@@ -73,6 +79,23 @@ export class ForgeScene extends Scene {
       value: e.id, label: `${e.item.name}（${ELEMENT_LABEL[e.item.imbueElement]}）`, sub: `×${e.count}`,
     })));
     this.state = 'element';
+  }
+
+  openMei(a) {
+    if (!this.game.inventory.has('mei_stone')) { a.se('cancel'); this.setToast('銘石を 持っていない（強敵が 落とす）。'); return; }
+    this.meiMenu = new CommandWindow(Object.entries(MEI).map(([id, d]) => ({ value: id, label: d.name, sub: d.desc })), { lineH: 30 });
+    this.state = 'mei';
+  }
+  doInscribe(a, meiId) {
+    const res = this.game.inventory.inscribe(this.char.member, meiId);
+    if (res.ok) {
+      this.char.invalidate(); a.se('magic');
+      const w = this.game.db.getItem(this.char.member.equip.weapon);
+      this.setToast(`${w.name} に 銘『${MEI[meiId].name}』を 刻んだ！`);
+      this.state = 'slot';
+    } else if (res.reason === 'gold') { a.se('cancel'); this.setToast(`お金が たりない（${res.cost}ギル）。`); }
+    else if (res.reason === 'no_stone') { a.se('cancel'); this.setToast('銘石が ない。'); }
+    else { a.se('cancel'); this.setToast('刻めなかった。'); }
   }
 
   doImbue(a, crystalId) {
@@ -124,7 +147,9 @@ export class ForgeScene extends Scene {
       const imbue = id ? this.game.inventory.imbuedElement(c.member, id) : null;
       const elem = it && slot === 'weapon' ? (imbue || it.element) : null;
       const elemTag = elem && elem !== 'none' ? ` [${ELEMENT_LABEL[elem]}]` : '';
-      r.text(it ? `${it.name}${lv ? ` +${lv}` : ''}${elemTag}` : '—', px + 120, y, { size: 15, color: it ? COLORS.text : '#5a6488' });
+      const mei = (it && slot === 'weapon' && c.member.meiById) ? c.member.meiById[id] : null;
+      const meiTag = mei && MEI[mei] ? ` 銘:${MEI[mei].name}` : '';
+      r.text(it ? `${it.name}${lv ? ` +${lv}` : ''}${elemTag}${meiTag}` : '—', px + 120, y, { size: 15, color: it ? COLORS.text : '#5a6488' });
       if (it) {
         const b = it.bonus || {};
         const main = it.type === 'weapon' ? `攻+${(b.atk || 0) + enhIncrement(b.atk) * lv}` : `守+${(b.def || 0) + enhIncrement(b.def) * lv}`;
@@ -146,6 +171,10 @@ export class ForgeScene extends Scene {
       r.window(px + 180, 60, 230, 240);
       r.text('どの 結晶を 使う?', px + 194, 70, { size: 13, color: COLORS.textDim });
       this.elemMenu.render(r, px + 194, 96, 210);
+    } else if (this.state === 'mei') {
+      r.window(px + 120, 60, 290, 200);
+      r.text('銘石1個＋500G で 刻む', px + 134, 70, { size: 12, color: COLORS.textDim });
+      this.meiMenu.render(r, px + 134, 96, 270);
     }
 
     if (this.toastT > 0) {

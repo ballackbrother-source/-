@@ -39,6 +39,11 @@ export class Character {
   get crit()  { return this.stats.crit; }
   get affinity() { return this.stats.affinity; }
   get weaponElement() { return this.stats.weaponElement; }
+  /** 装備中の武器に刻まれた銘（吸血/会心/連撃）。無ければnull */
+  get weaponMei() {
+    const w = this.member.equip?.weapon;
+    return (w && this.member.meiById) ? (this.member.meiById[w] || null) : null;
+  }
 
   // 生存値（curHp/curMp が -1 なら満タンに補正）
   ensureVitals() {

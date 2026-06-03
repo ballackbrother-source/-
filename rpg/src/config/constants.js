@@ -48,6 +48,13 @@ export const STATUS = Object.freeze({
 // 装備スロット（§04-5）
 export const EQUIP_SLOTS = Object.freeze(['weapon', 'shield', 'head', 'body', 'acc1', 'acc2']);
 
+// 銘（武器の特殊効果。改造屋でレア素材＋ゴールドで付与）
+export const MEI = Object.freeze({
+  vampire: { name: '吸血', desc: '物理ダメージの 25%を 吸収' },
+  crit:    { name: '会心', desc: '会心率 +15%' },
+  double:  { name: '連撃', desc: '通常こうげきが 35%で 2回' },
+});
+
 // 配色（プレースホルダ・手続き生成アート用パレット）
 export const COLORS = Object.freeze({
   window: '#10183a', windowBorder: '#aee0ff', windowBorder2: '#3a6ea5',

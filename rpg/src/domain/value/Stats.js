@@ -8,7 +8,7 @@ const PRIMARY = ['str', 'vit', 'agi', 'dex', 'int', 'spi', 'luk'];
 
 /** 装備の合計補正を集計（武器/防具/装飾の bonus を加算、属性耐性を統合） */
 function aggregateEquip(member, db) {
-  const acc = { atk: 0, def: 0, mat: 0, mdf: 0, hpc: 0, mpc: 0 };
+  const acc = { atk: 0, def: 0, mat: 0, mdf: 0, hpc: 0, mpc: 0, critBonus: 0 };
   for (const k of PRIMARY) acc[k] = 0;
   const affinity = { weak: [], resist: [], absorb: [], null: [] };
   let weaponElement = 'none';
@@ -22,7 +22,11 @@ function aggregateEquip(member, db) {
     acc.mat += b.mat || 0; acc.mdf += b.mdf || 0;
     acc.hpc += b.hp || 0;  acc.mpc += b.mp || 0;
     for (const k of PRIMARY) acc[k] += b[k] || 0;
-    if (slot === 'weapon') weaponElement = (member.imbueById && member.imbueById[itemId]) || it.element || 'none';
+    if (slot === 'weapon') {
+      weaponElement = (member.imbueById && member.imbueById[itemId]) || it.element || 'none';
+      const mei = member.meiById && member.meiById[itemId];
+      if (mei === 'crit') acc.critBonus += 15; // 銘・会心
+    }
     if (it.resist) affinity.resist.push(...it.resist);
     // 装備強化（+N）：武器は攻/魔攻、防具は守/魔守を1レベルごとに加算
     const enh = (member.enhById && member.enhById[itemId]) || 0;
@@ -65,7 +69,7 @@ export function computeStats(member, db) {
     mat: Math.round(p.int * 2 + acc.mat),
     mdf: Math.round(p.spi * 1.5 + acc.mdf),
     eva: Math.min(60, p.agi * 0.4 + p.luk * 0.1),
-    crit: 3 + p.dex * 0.1 + p.luk * 0.2,
+    crit: 3 + p.dex * 0.1 + p.luk * 0.2 + (acc.critBonus || 0),
     weaponElement,
     affinity,
   };

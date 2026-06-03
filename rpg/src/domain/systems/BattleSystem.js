@@ -207,6 +207,11 @@ export class BattleSystem {
       if (!t) continue;
       yield* this._applyToTarget(actor, skill, t);
     }
+    // 銘・連撃：通常こうげきが 35%で もう一度
+    if (cmd.skillId === 'attack' && actor.weaponMei === 'double' && this.rng.chance(0.35)) {
+      const t = targets.find((x) => x && !x.isDead) || pick(this.players.includes(actor) ? this.enemies.filter((e) => !e.isDead) : this.players.filter((p) => !p.isDead), () => this.rng.next());
+      if (t) { yield { text: '連撃！', se: 'hit' }; yield* this._applyToTarget(actor, skill, t); }
+    }
   }
 
   _resolveTargets(actor, skill, chosen) {
@@ -293,6 +298,12 @@ export class BattleSystem {
         popup: { who: t, value: dmg, kind: res.crit ? 'crit' : (res.mult > 1 ? 'weak' : 'damage') },
       };
       for (const w of wake) yield { text: w };
+      // 銘・吸血：物理ダメージの一部を 回復
+      if (actor.weaponMei === 'vampire' && skill.type === 'physical' && !actor.isDead) {
+        const drain = Math.max(1, Math.floor(dmg * 0.25));
+        actor.curHp += drain;
+        yield { text: `${actor.name}は ${drain} 吸収した。`, se: 'heal', popup: { who: actor, value: drain, kind: 'heal' } };
+      }
     }
     // 連携技「ラスト・レクイエム」：神の不死性を打ち砕く
     if (skill.breaksRegen && t.def && t.def.regenUntilBroken && !t._broken) {
