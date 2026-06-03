@@ -41,11 +41,12 @@
       "element": { "weak": ["dark"], "resist": [], "absorb": ["light"], "null": [] },
       "attackElement": "light", "exp": 0, "gold": 0,
       "drops": [],
-      "skills": ["holy", "enemy_fang"],
+      "skills": ["holy", "genesis", "enemy_fang"],
       "ai": [
         { "type": "attack", "weight": 2 },
         { "type": "skill", "skillId": "holy", "weight": 2 },
-        { "type": "skill", "skillId": "holy", "weight": 2, "cond": "low" }
+        { "type": "skill", "skillId": "genesis", "weight": 1 },
+        { "type": "skill", "skillId": "genesis", "weight": 2, "cond": "low" }
       ]
     },
     "NEREID": {
@@ -54,11 +55,12 @@
       "element": { "weak": ["thunder"], "resist": [], "absorb": ["ice"], "null": [] },
       "attackElement": "none", "exp": 200, "gold": 150,
       "drops": [{ "item": "hi_herb", "rate": 1.0 }],
-      "skills": ["tsunami", "enemy_fang"],
+      "skills": ["tsunami", "great_tsunami", "enemy_fang"],
       "ai": [
         { "type": "attack", "weight": 2 },
         { "type": "skill", "skillId": "tsunami", "weight": 2 },
-        { "type": "skill", "skillId": "tsunami", "weight": 2, "cond": "low" },
+        { "type": "skill", "skillId": "great_tsunami", "weight": 1 },
+        { "type": "skill", "skillId": "great_tsunami", "weight": 3, "cond": "low" },
         { "type": "skill", "skillId": "enemy_fang", "weight": 1 }
       ]
     },
@@ -81,11 +83,13 @@
       "element": { "weak": ["fire"], "resist": ["earth"], "absorb": [], "null": [] },
       "attackElement": "none", "exp": 140, "gold": 90,
       "drops": [{ "item": "power_ring", "rate": 1.0 }, { "item": "hi_herb", "rate": 0.5 }],
-      "skills": ["root_slam", "poison_spore", "enemy_fang"],
+      "skills": ["root_slam", "poison_spore", "enemy_fang", "great_slam"],
       "ai": [
         { "type": "attack", "weight": 2 },
         { "type": "skill", "skillId": "root_slam", "weight": 2 },
         { "type": "skill", "skillId": "poison_spore", "weight": 1 },
+        { "type": "skill", "skillId": "great_slam", "weight": 1 },
+        { "type": "skill", "skillId": "great_slam", "weight": 2, "cond": "low" },
         { "type": "skill", "skillId": "enemy_fang", "weight": 2, "cond": "low" }
       ]
     }

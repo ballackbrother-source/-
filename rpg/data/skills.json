@@ -27,6 +27,10 @@
 
   "tsunami":     { "name": "ツナミ", "type": "magic", "element": "ice", "target": "allEnemies", "mp": 0, "power": 1.7, "desc": "" },
   "enemy_fang":  { "name": "かみつき", "type": "physical", "target": "oneEnemy", "mp": 0, "power": 1.5, "desc": "" },
+
+  "great_slam":    { "name": "なぎ払い", "type": "physical", "element": "earth", "target": "allEnemies", "mp": 0, "power": 1.7, "charge": true, "desc": "" },
+  "great_tsunami": { "name": "大津波", "type": "magic", "element": "ice", "target": "allEnemies", "mp": 0, "power": 2.6, "charge": true, "desc": "" },
+  "genesis":       { "name": "ジェネシス", "type": "magic", "element": "light", "target": "allEnemies", "mp": 0, "power": 2.5, "charge": true, "desc": "" },
   "root_slam":   { "name": "ねっこの一撃", "type": "physical", "element": "earth", "target": "allEnemies", "mp": 0, "power": 0.9, "desc": "" },
   "poison_spore":{ "name": "どくの ほうし", "type": "status", "target": "allEnemies", "mp": 0, "inflict": { "status": "poison", "rate": 0.5 }, "desc": "" }
 }

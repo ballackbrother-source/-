@@ -105,22 +105,39 @@ export class BattleSystem {
     return Math.max(-0.3, Math.min(0.3, (pa - ea) * 0.01));
   }
 
-  _enemyCommand(enemy) {
-    const a = EnemyAI.decide(enemy, this.rng);
-    const skill = a.type === 'skill' ? this.db.getSkill(a.skillId) : null;
-    let target;
+  _enemyTargetFor(skill) {
     if (skill && (skill.target === 'oneAlly' || skill.type === 'heal')) {
-      target = pick(this.liveEnemies(), () => this.rng.next());
-    } else {
-      target = pick(this.livePlayers(), () => this.rng.next());
+      return pick(this.liveEnemies(), () => this.rng.next());
     }
-    return a.type === 'attack'
-      ? { type: 'attack', skillId: 'attack', target }
-      : { type: 'skill', skillId: a.skillId, target };
+    return pick(this.livePlayers(), () => this.rng.next());
+  }
+
+  _enemyCommand(enemy) {
+    // 溜め解放：前ターンに予兆を出した大技を、今ターン発動する
+    if (enemy._charging) {
+      const skillId = enemy._charging.skillId;
+      enemy._charging = null;
+      return { type: 'skill', skillId, target: this._enemyTargetFor(this.db.getSkill(skillId)), released: true };
+    }
+    const a = EnemyAI.decide(enemy, this.rng);
+    if (a.type === 'skill') {
+      const skill = this.db.getSkill(a.skillId);
+      // charge技：このターンは予兆のみ（行動を消費）、次ターンに解放
+      if (skill && skill.charge) {
+        enemy._charging = { skillId: a.skillId };
+        return { type: 'chargeWarn', skillName: skill.name };
+      }
+      return { type: 'skill', skillId: a.skillId, target: this._enemyTargetFor(skill) };
+    }
+    return { type: 'attack', skillId: 'attack', target: pick(this.livePlayers(), () => this.rng.next()) };
   }
 
   *_execute(actor, cmd, inventory) {
     switch (cmd.type) {
+      case 'chargeWarn':
+        actor._defending = false;
+        yield { text: `${actor.name}は ${cmd.skillName}の 力を ためている……！ （今のうちに 守りを！）`, se: 'magic', flash: actor };
+        return;
       case 'defend':
         actor._defending = true;
         yield { text: `${actor.name}は 身を まもっている。` };
@@ -217,8 +234,11 @@ export class BattleSystem {
       SES.wakeOnHit(t, wake);
       let dmg = res.value;
       if (t._defending) dmg = Math.max(1, Math.floor(dmg * 0.5));
+      let vuln = false;
+      if (t._charging) { dmg = Math.floor(dmg * 1.25); vuln = true; } // 溜め中は隙だらけ
       t.curHp -= dmg;
-      const tag = res.mult > 1 ? ' 弱点を ついた！' : (res.mult > 0 && res.mult < 1 ? ' （半減）' : '');
+      const tag = res.mult > 1 ? ' 弱点を ついた！' : (res.mult > 0 && res.mult < 1 ? ' （半減）' : '')
+        + (vuln ? ' （ための 隙を ついた！）' : '');
       yield {
         text: `${t.name}に ${dmg}の ダメージ！${res.crit ? ' 会心の一撃！' : ''}${tag}`,
         se: res.crit ? 'hit' : 'damage', flash: t,
