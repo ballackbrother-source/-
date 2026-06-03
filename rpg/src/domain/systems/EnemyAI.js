@@ -11,7 +11,7 @@ import { weightedPick } from '../../core/util.js';
  */
 export function decideEnemyAction(enemy, rng) {
   const hpRatio = enemy.curHp / enemy.maxHp;
-  const table = enemy.def.ai || [{ type: 'attack', weight: 1 }];
+  const table = enemy.ai || enemy.def.ai || [{ type: 'attack', weight: 1 }]; // フェーズ変化後のAIを優先
   // ピンチ時(HP<=33%)は cond:'low' の行動を優先採用
   const pool = table.filter((a) => !a.cond || (a.cond === 'low' && hpRatio <= 0.33) || a.cond === 'always');
   const usable = (pool.length ? pool : table).map((a) => ({ value: a, weight: a.weight ?? 1 }));

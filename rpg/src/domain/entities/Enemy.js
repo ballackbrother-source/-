@@ -15,19 +15,25 @@ export class Enemy {
     this.maxHp = s.hp; this.curHp = s.hp;
     this.maxMp = s.mp ?? 99; this.curMp = this.maxMp;
     this.statusEffects = [];
+    // フェーズ変化（HP閾値）用の実行時オーバーライド
+    this._appliedPhases = new Set();
+    this._elementOverride = null;
+    this._aiOverride = null;
+    this._atkMul = 1;
   }
 
   get name() { return this.def.name + (this.indexLabel ? this.indexLabel : ''); }
   get family() { return this.def.family; }
-  get atk() { return this.def.stats.atk; }
+  get atk() { return Math.round(this.def.stats.atk * (this._atkMul || 1)); }
   get def_() { return this.def.stats.def; }
-  get mat() { return this.def.stats.mat ?? 0; }
+  get mat() { return Math.round((this.def.stats.mat ?? 0) * (this._atkMul || 1)); }
   get mdf() { return this.def.stats.mdf ?? 0; }
   get agi() { return this.def.stats.agi; }
   get luk() { return this.def.stats.luk ?? 5; }
   get eva() { return Math.min(40, this.agi * 0.3); }
   get crit() { return 2 + this.luk * 0.1; }
-  get affinity() { return this.def.element || {}; }
+  get affinity() { return this._elementOverride || this.def.element || {}; }
+  get ai() { return this._aiOverride || this.def.ai || [{ type: 'attack', weight: 1 }]; }
   get weaponElement() { return this.def.attackElement || 'none'; }
   get isDead() { return this.curHp <= 0; }
   get skills() { return this.def.skills || []; }

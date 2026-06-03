@@ -321,7 +321,35 @@
       "steal": {
         "item": "guard_ring",
         "rate": 0.4
-      }
+      },
+      "phases": [
+        {
+          "hp": 0.5,
+          "message": "水将ネレイドは 海の怒りを 解き放った！",
+          "atkMul": 1.25,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "tsunami",
+              "weight": 1
+            },
+            {
+              "type": "skill",
+              "skillId": "great_tsunami",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "enemy_fang",
+              "weight": 1
+            }
+          ]
+        }
+      ]
     },
     "SHION_BOSS": {
       "name": "白銀の執行者シオン",
@@ -371,7 +399,30 @@
       "steal": {
         "item": "feather_charm",
         "rate": 0.5
-      }
+      },
+      "phases": [
+        {
+          "hp": 0.5,
+          "message": "シオンは 銀の 本気を 見せた！",
+          "atkMul": 1.3,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "power_strike",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "enemy_fang",
+              "weight": 2
+            }
+          ]
+        }
+      ]
     },
     "B2": {
       "name": "森獣ヴェルダンテ",
@@ -453,7 +504,44 @@
       "steal": {
         "item": "power_ring",
         "rate": 0.35
-      }
+      },
+      "phases": [
+        {
+          "hp": 0.4,
+          "message": "森獣の 核が むき出しに なった！ （炎と 光が 弱点に！）",
+          "element": {
+            "weak": [
+              "fire",
+              "light"
+            ],
+            "resist": [],
+            "absorb": [],
+            "null": []
+          },
+          "atkMul": 1.15,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "root_slam",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "great_slam",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "poison_spore",
+              "weight": 1
+            }
+          ]
+        }
+      ]
     }
   },
   "troops": {

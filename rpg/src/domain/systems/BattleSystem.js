@@ -78,6 +78,9 @@ export class BattleSystem {
         ? (playerCommands.get(actor) || { type: 'defend' })
         : this._enemyCommand(actor);
       yield* this._execute(actor, cmd, inventory);
+      // 攻撃直後にHP閾値フェーズを判定（被弾の瞬間に変化が起きると劇的）
+      yield* this._checkPhases();
+      if (this.isOver()) break;
     }
 
     // ラウンド終了時：状態異常の経過処理
@@ -109,6 +112,23 @@ export class BattleSystem {
     const pa = this.livePlayers().reduce((s, p) => s + p.agi, 0) / Math.max(1, this.livePlayers().length);
     const ea = this.liveEnemies().reduce((s, e) => s + e.agi, 0) / Math.max(1, this.liveEnemies().length);
     return Math.max(-0.3, Math.min(0.3, (pa - ea) * 0.01));
+  }
+
+  /** HP閾値フェーズ変化（属性/AI/攻撃力の切り替え）。被弾直後に呼ぶ */
+  *_checkPhases() {
+    for (const e of this.enemies) {
+      if (e.isDead || !e.def.phases) continue;
+      const ratio = e.curHp / e.maxHp;
+      for (const ph of e.def.phases) {
+        if (e._appliedPhases.has(ph) || ratio > ph.hp) continue;
+        e._appliedPhases.add(ph);
+        if (ph.element) e._elementOverride = ph.element;
+        if (ph.ai) e._aiOverride = ph.ai;
+        if (ph.atkMul) e._atkMul = ph.atkMul;
+        if (ph.healRatio) e.curHp = Math.min(e.maxHp, e.curHp + Math.floor(e.maxHp * ph.healRatio));
+        if (ph.message) yield { text: ph.message, se: 'magic', flash: e };
+      }
+    }
   }
 
   _enemyTargetFor(skill) {
