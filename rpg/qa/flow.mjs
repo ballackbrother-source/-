@@ -207,7 +207,8 @@ async function backhalfSetup(evaluate) {
 async function driveBackhalf({ press, info, killEnemies }, pickIndex, winAldia) {
   for (let g = 0; g < 320; g++) {
     const st = await info();
-    if (st.scene === 'TitleScene') return st;
+    // s_final（エンディング確定）／エンディング画面に達したら成功として停止（連打で突き抜けない）
+    if ((st.flags && st.flags.includes('s_final')) || st.scene === 'EndingScene' || st.scene === 'TitleScene') return st;
     if (st.scene === 'BattleScene') {
       if (st.boss === 'SHION_BOSS') { await killEnemies(false); await press('Enter'); }
       else if (st.boss === 'ALDIA') {
@@ -228,16 +229,18 @@ async function testBackhalfTrue(h) {
   await h.newGameAbortPrologue();
   await backhalfSetup(h.evaluate);
   const st = await driveBackhalf(h, 2, true);   // 理由を聞く＋連携
-  const ok = st.scene === 'TitleScene' && st.forgiveness >= 90;
-  return { ok, msg: ok ? '' : `scene=${st.scene} f=${st.forgiveness}` };
+  const reached = (st.flags && st.flags.includes('s_final')) || st.scene === 'EndingScene' || st.scene === 'TitleScene';
+  const ok = reached && st.forgiveness >= 90;
+  return { ok, msg: ok ? '' : `scene=${st.scene} f=${st.forgiveness} final=${st.flags && st.flags.includes('s_final')}` };
 }
 
 async function testBackhalfBad(h) {
   await h.newGameAbortPrologue();
   await backhalfSetup(h.evaluate);
   const st = await driveBackhalf(h, 0, false);  // 許さない＋連携なし
-  const ok = st.scene === 'TitleScene' && st.forgiveness < 60;
-  return { ok, msg: ok ? '' : `scene=${st.scene} f=${st.forgiveness}` };
+  const reached = (st.flags && st.flags.includes('s_final')) || st.scene === 'EndingScene' || st.scene === 'TitleScene';
+  const ok = reached && st.forgiveness < 60;
+  return { ok, msg: ok ? '' : `scene=${st.scene} f=${st.forgiveness} final=${st.flags && st.flags.includes('s_final')}` };
 }
 
 async function testSaveLoad({ press, burst, evaluate, page }) {

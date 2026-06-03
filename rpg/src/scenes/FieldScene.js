@@ -210,6 +210,7 @@ export class FieldScene extends Scene {
       moveActor: (who, path) => this.moveActor(who, path),
       battle: (troopId, opts) => this.startBattle(troopId, opts),
       openForge: () => this.game.scenes.push(new ForgeScene(this.game)),
+      openEnding: (type) => { import('./EndingScene.js').then(({ EndingScene }) => this.game.scenes.reset(new EndingScene(this.game), { type })); },
       autosave: () => this.autosave(),
       gameOver: () => this.gameOver(),
       returnTitle: () => this.returnTitle(),

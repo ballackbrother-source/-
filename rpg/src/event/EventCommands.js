@@ -135,6 +135,7 @@ export const COMMANDS = {
 
   // システム
   async autosave(_c, _i, ctx) { ctx.autosave?.(); },
+  async ending(cmd, _i, ctx) { ctx.openEnding(cmd.type || 'normal'); return { jump: 'break' }; },
   async gameOver(_c, _i, ctx) { ctx.gameOver(); return { jump: 'break' }; },
   async returnTitle(_c, _i, ctx) { ctx.returnTitle(); return { jump: 'break' }; },
 };

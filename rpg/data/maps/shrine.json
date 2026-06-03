@@ -112,23 +112,24 @@
               "then": [
                 { "type": "playBgm", "id": "theme" },
                 { "type": "message", "text": ["「ラスト・レクイエム」が、神を 討った。", "奪われた すべてが、還ってくる——故郷も、仲間も、そして 兄も。"] },
-                { "type": "message", "name": "TRUE END", "text": "——星は、巡る。今度は、ずっと 一緒に。" }
+                { "type": "message", "name": "TRUE END", "text": "——星は、巡る。今度は、ずっと 一緒に。" },
+                { "type": "setFlag", "key": "s_final" },
+                { "type": "ending", "type": "true" }
               ],
               "else": [
                 { "type": "playBgm", "id": "town" },
                 { "type": "message", "text": ["神は 倒れ、世界は 救われた。", "だが——連携の 代償に、シオンは 静かに 微笑んで 消えていった。"] },
-                { "type": "message", "name": "NORMAL END", "text": "兄さん……ありがとう。さよなら。" }
-              ] },
-            { "type": "setFlag", "key": "s_final" },
-            { "type": "message", "text": "（ご清聴 ありがとう ございました。タイトルへ もどります）" },
-            { "type": "returnTitle" }
+                { "type": "message", "name": "NORMAL END", "text": "兄さん……ありがとう。さよなら。" },
+                { "type": "setFlag", "key": "s_final" },
+                { "type": "ending", "type": "normal" }
+              ] }
           ],
           "onLose": [
             { "type": "playBgm", "id": "boss" },
             { "type": "message", "text": ["シオンを 拒んだ ルゥは、神の 不死を 砕けなかった。", "世界は 白く 塗りつぶされ、すべてが リセットされた。"] },
             { "type": "message", "name": "BAD END", "text": "——次の 世界で、誰も ルゥを 覚えていない。" },
             { "type": "setFlag", "key": "s_final" },
-            { "type": "returnTitle" }
+            { "type": "ending", "type": "bad" }
           ] }
       ]
     }
