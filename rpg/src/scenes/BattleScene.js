@@ -55,7 +55,41 @@ export class BattleScene extends Scene {
     this.log = `${this.enemyNames()} が あらわれた！`;
     this.commands = new Map();
     this.flash = null; this.tick = 0;
+    this.popups = []; this.shakeT = 0; this.shakeMag = 0;
     this._buildCmdMenu();
+  }
+
+  // 戦闘演出：浮き上がるダメージ/回復数字
+  spawnPopup(popup) {
+    if (!popup) return;
+    const pos = this._targetPos(popup.who);
+    if (!pos) return;
+    const styles = {
+      damage: { color: '#ffffff', size: 22, txt: `${popup.value}` },
+      crit:   { color: '#ffd23f', size: 30, txt: `${popup.value}!` },
+      weak:   { color: '#ff8a5a', size: 26, txt: `${popup.value}` },
+      heal:   { color: '#7bf08a', size: 22, txt: `+${popup.value}` },
+    };
+    const s = styles[popup.kind] || styles.damage;
+    this.popups.push({ x: pos.x + (Math.random() * 24 - 12), y: pos.y, vy: -1.1, life: 46, max: 46, ...s });
+    if (popup.kind === 'crit' || popup.kind === 'weak') { this.shakeT = 12; this.shakeMag = popup.kind === 'crit' ? 7 : 4; }
+  }
+  _targetPos(who) {
+    if (!who) return null;
+    if (!who.isPlayer) {
+      const i = this.enemies.indexOf(who);
+      if (i < 0) return null;
+      return { x: (VIEW_W / (this.enemies.length + 1)) * (i + 1), y: 130 };
+    }
+    const i = this.players.indexOf(who);
+    if (i < 0) return null;
+    const w = VIEW_W / this.players.length;
+    return { x: i * w + w / 2, y: VIEW_H - 100 };
+  }
+  _updatePopups() {
+    for (const p of this.popups) { p.y += p.vy; p.life--; }
+    this.popups = this.popups.filter((p) => p.life > 0);
+    if (this.shakeT > 0) this.shakeT--;
   }
 
   markSeen() {
@@ -81,6 +115,7 @@ export class BattleScene extends Scene {
   // =================== UPDATE ===================
   update() {
     this.tick++;
+    this._updatePopups();
     const a = this.game.audio;
     switch (this.phase) {
       case 'intro':
@@ -220,6 +255,7 @@ export class BattleScene extends Scene {
     const m = n.value;
     this.log = m.text || this.log;
     this.flash = m.flash || null; this.flashT = 12;
+    if (m.popup) this.spawnPopup(m.popup);
     if (m.se) this.game.audio.se(m.se);
     this.msgTimer = m.text ? 40 : 1;
     this.phase = 'exec';
@@ -301,7 +337,12 @@ export class BattleScene extends Scene {
     for (let i = 0; i < 40; i++) r.rect((i * 97) % VIEW_W, (i * 53) % 140, 2, 2, 'rgba(255,255,255,0.25)');
     r.rect(0, 220, VIEW_W, VIEW_H - 220, this.isBoss ? '#241020' : '#13203a');
 
+    // 画面シェイク（会心/弱点ヒット時、敵の描画をゆらす）
+    let sx = 0, sy = 0;
+    if (this.shakeT > 0) { const m = this.shakeMag * (this.shakeT / 12); sx = (Math.random() - 0.5) * m * 2; sy = (Math.random() - 0.5) * m * 2; }
+    r.save(); r.translate(sx, sy);
     this.ui.drawEnemies(r, this.enemies, this.flashT > 0 ? this.flash : null, this.tick);
+    r.restore();
 
     // 対象カーソル
     if (this.phase === 'target') {
@@ -343,6 +384,14 @@ export class BattleScene extends Scene {
       const i = this.players.indexOf(t);
       const w = VIEW_W / this.players.length;
       r.strokeRect(i * w + 4, VIEW_H - 92, w - 8, 84, COLORS.selected, 3);
+    }
+
+    // 浮き上がるダメージ/回復数字（最前面）
+    for (const p of this.popups) {
+      const alpha = Math.min(1, p.life / 16);
+      r.save(); r.alpha(alpha);
+      r.text(p.text, p.x, p.y, { size: p.size, align: 'center', color: p.color });
+      r.restore();
     }
   }
 }

@@ -251,7 +251,7 @@ export class BattleSystem {
     if (skill.type === 'heal') {
       const amt = DamageFormula.heal(actor, skill.power, this.rng);
       t.curHp += amt;
-      yield { text: `${t.name}の HPが ${amt} かいふくした。`, se: 'heal' };
+      yield { text: `${t.name}の HPが ${amt} かいふくした。`, se: 'heal', popup: { who: t, value: amt, kind: 'heal' } };
       return;
     }
     if (skill.type === 'revive') {
@@ -275,7 +275,7 @@ export class BattleSystem {
       if (res.nullified) { yield { text: `${t.name}には 効かない！` }; return; }
       if (res.absorbed) {
         t.curHp += res.value;
-        yield { text: `${t.name}は ${res.value} ぶんの 力を 吸収した！`, se: 'heal' };
+        yield { text: `${t.name}は ${res.value} ぶんの 力を 吸収した！`, se: 'heal', popup: { who: t, value: res.value, kind: 'heal' } };
         return;
       }
       const wake = [];
@@ -290,6 +290,7 @@ export class BattleSystem {
       yield {
         text: `${t.name}に ${dmg}の ダメージ！${res.crit ? ' 会心の一撃！' : ''}${tag}`,
         se: res.crit ? 'hit' : 'damage', flash: t,
+        popup: { who: t, value: dmg, kind: res.crit ? 'crit' : (res.mult > 1 ? 'weak' : 'damage') },
       };
       for (const w of wake) yield { text: w };
     }
