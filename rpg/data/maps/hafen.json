@@ -69,6 +69,8 @@
           { "text": "やくそう 15G", "commands": [ { "type": "buyItem", "id": "herb" } ] },
           { "text": "まほうの水 60G", "commands": [ { "type": "buyItem", "id": "magic_water" } ] },
           { "text": "復活のはね 150G", "commands": [ { "type": "buyItem", "id": "revive_feather" } ] },
+          { "text": "ねむり香 120G", "commands": [ { "type": "buyItem", "id": "sleep_incense" } ] },
+          { "text": "閃光弾 80G", "commands": [ { "type": "buyItem", "id": "flash_bomb" } ] },
           { "text": "やめる", "commands": [ { "type": "message", "name": "道具屋", "text": "まいど！" } ] }
         ] }
       ] } ]

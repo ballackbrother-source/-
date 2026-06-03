@@ -28,6 +28,8 @@
   "magic_water":   { "name": "まほうの水", "type": "consumable", "price": 60, "rarity": 1, "effect": { "mp": 40 }, "usableInBattle": true, "usableInField": true, "desc": "MPを 40 かいふくする。" },
   "antidote":      { "name": "どくけし草", "type": "consumable", "price": 12, "rarity": 1, "effect": { "cure": ["poison"] }, "usableInBattle": true, "usableInField": true, "desc": "どくを なおす。" },
   "panacea":       { "name": "まんびょう薬", "type": "consumable", "price": 120, "rarity": 2, "effect": { "cure": ["poison", "sleep", "paralyze", "silence", "confuse", "blind"] }, "usableInBattle": true, "usableInField": true, "desc": "すべての 状態異常を なおす。" },
+  "sleep_incense": { "name": "ねむり香", "type": "consumable", "price": 120, "rarity": 2, "effect": { "inflict": { "status": "sleep", "rate": 0.75 } }, "usableInBattle": true, "usableInField": false, "desc": "敵1体を ねむらせる。溜め技を 止められる（ボスは 効きにくい）。" },
+  "flash_bomb":    { "name": "閃光弾", "type": "consumable", "price": 80, "rarity": 2, "effect": { "inflict": { "status": "blind", "rate": 0.85 } }, "usableInBattle": true, "usableInField": false, "desc": "敵1体を くらやみに し、命中を 下げる。" },
   "revive_feather":{ "name": "復活のはね", "type": "consumable", "price": 150, "rarity": 2, "effect": { "revive": 0.5 }, "usableInBattle": true, "usableInField": true, "desc": "せんとうふのうを HP半分で 復活。" },
 
   "star_core":     { "name": "星核", "type": "key", "price": 0, "rarity": 5, "desc": "古代遺跡に眠る 七つの結晶のひとつ。世界の核に つながる 鍵だという。" },

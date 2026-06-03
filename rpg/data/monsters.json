@@ -1,112 +1,503 @@
 {
   "monsters": {
     "M01": {
-      "name": "野ネズミ", "family": "beast",
-      "stats": { "hp": 18, "mp": 0, "atk": 6, "def": 3, "mat": 0, "mdf": 1, "agi": 8, "luk": 4 },
-      "element": { "weak": ["wind"], "resist": [], "absorb": [], "null": [] },
-      "attackElement": "none", "exp": 6, "gold": 3,
-      "drops": [{ "item": "herb", "rate": 0.12 }],
-      "skills": [], "ai": [{ "type": "attack", "weight": 1 }]
+      "name": "野ネズミ",
+      "family": "beast",
+      "stats": {
+        "hp": 18,
+        "mp": 0,
+        "atk": 6,
+        "def": 3,
+        "mat": 0,
+        "mdf": 1,
+        "agi": 8,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "wind"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 6,
+      "gold": 3,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.12
+        }
+      ],
+      "skills": [],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        }
+      ]
     },
     "M02": {
-      "name": "グリーンスライム", "family": "slime",
-      "stats": { "hp": 26, "mp": 0, "atk": 7, "def": 5, "mat": 2, "mdf": 3, "agi": 5, "luk": 4 },
-      "element": { "weak": ["fire"], "resist": [], "absorb": [], "null": [] },
-      "attackElement": "none", "exp": 9, "gold": 5,
-      "drops": [{ "item": "herb", "rate": 0.1 }, { "item": "antidote", "rate": 0.05 }],
-      "skills": [], "ai": [{ "type": "attack", "weight": 1 }]
+      "name": "グリーンスライム",
+      "family": "slime",
+      "stats": {
+        "hp": 26,
+        "mp": 0,
+        "atk": 7,
+        "def": 5,
+        "mat": 2,
+        "mdf": 3,
+        "agi": 5,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 9,
+      "gold": 5,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.1
+        },
+        {
+          "item": "antidote",
+          "rate": 0.05
+        }
+      ],
+      "skills": [],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        }
+      ]
     },
     "M04": {
-      "name": "森オオカミ", "family": "beast",
-      "stats": { "hp": 44, "mp": 0, "atk": 12, "def": 7, "mat": 0, "mdf": 3, "agi": 14, "luk": 5 },
-      "element": { "weak": ["ice"], "resist": [], "absorb": [], "null": [] },
-      "attackElement": "none", "exp": 16, "gold": 11,
-      "drops": [{ "item": "herb", "rate": 0.1 }, { "item": "leather_armor", "rate": 0.03 }],
-      "skills": ["enemy_fang"],
-      "ai": [{ "type": "attack", "weight": 3 }, { "type": "skill", "skillId": "enemy_fang", "weight": 1 }]
+      "name": "森オオカミ",
+      "family": "beast",
+      "stats": {
+        "hp": 44,
+        "mp": 0,
+        "atk": 12,
+        "def": 7,
+        "mat": 0,
+        "mdf": 3,
+        "agi": 14,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "ice"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 16,
+      "gold": 11,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.1
+        },
+        {
+          "item": "leather_armor",
+          "rate": 0.03
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 3
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ]
     },
     "M05": {
-      "name": "毒蛾", "family": "insect",
-      "stats": { "hp": 30, "mp": 0, "atk": 10, "def": 5, "mat": 6, "mdf": 6, "agi": 16, "luk": 6 },
-      "element": { "weak": ["fire", "wind"], "resist": [], "absorb": [], "null": [] },
-      "attackElement": "none", "exp": 18, "gold": 9,
-      "drops": [{ "item": "antidote", "rate": 0.15 }],
-      "skills": ["poison_spore"],
-      "ai": [{ "type": "attack", "weight": 2 }, { "type": "skill", "skillId": "poison_spore", "weight": 1 }]
+      "name": "毒蛾",
+      "family": "insect",
+      "stats": {
+        "hp": 30,
+        "mp": 0,
+        "atk": 10,
+        "def": 5,
+        "mat": 6,
+        "mdf": 6,
+        "agi": 16,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "fire",
+          "wind"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 18,
+      "gold": 9,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.15
+        }
+      ],
+      "skills": [
+        "poison_spore"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "poison_spore",
+          "weight": 1
+        }
+      ]
     },
     "ALDIA": {
-      "name": "創世神アルディア", "family": "demon", "boss": true,
-      "regenUntilBroken": true, "doomTurn": 14,
-      "stats": { "hp": 5200, "mp": 999, "atk": 84, "def": 22, "mat": 88, "mdf": 26, "agi": 16, "luk": 12 },
-      "element": { "weak": ["dark"], "resist": [], "absorb": ["light"], "null": [] },
-      "attackElement": "light", "exp": 0, "gold": 0,
+      "name": "創世神アルディア",
+      "family": "demon",
+      "boss": true,
+      "regenUntilBroken": true,
+      "doomTurn": 14,
+      "stats": {
+        "hp": 5200,
+        "mp": 999,
+        "atk": 84,
+        "def": 22,
+        "mat": 88,
+        "mdf": 26,
+        "agi": 16,
+        "luk": 12
+      },
+      "element": {
+        "weak": [
+          "dark"
+        ],
+        "resist": [],
+        "absorb": [
+          "light"
+        ],
+        "null": []
+      },
+      "attackElement": "light",
+      "exp": 0,
+      "gold": 0,
       "drops": [],
-      "skills": ["holy", "genesis", "enemy_fang"],
+      "skills": [
+        "holy",
+        "genesis",
+        "enemy_fang"
+      ],
       "ai": [
-        { "type": "attack", "weight": 2 },
-        { "type": "skill", "skillId": "holy", "weight": 2 },
-        { "type": "skill", "skillId": "genesis", "weight": 1 },
-        { "type": "skill", "skillId": "genesis", "weight": 2, "cond": "low" }
-      ]
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "holy",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "genesis",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "genesis",
+          "weight": 2,
+          "cond": "low"
+        }
+      ],
+      "statusResist": 0.6
     },
     "NEREID": {
-      "name": "水将ネレイド", "family": "aqua", "boss": true,
-      "stats": { "hp": 3400, "mp": 200, "atk": 35, "def": 15, "mat": 38, "mdf": 17, "agi": 15, "luk": 6 },
-      "element": { "weak": ["thunder"], "resist": [], "absorb": ["ice"], "null": [] },
-      "attackElement": "none", "exp": 200, "gold": 150,
-      "drops": [{ "item": "hi_herb", "rate": 1.0 }],
-      "skills": ["tsunami", "great_tsunami", "enemy_fang"],
+      "name": "水将ネレイド",
+      "family": "aqua",
+      "boss": true,
+      "stats": {
+        "hp": 3400,
+        "mp": 200,
+        "atk": 35,
+        "def": 15,
+        "mat": 38,
+        "mdf": 17,
+        "agi": 15,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "thunder"
+        ],
+        "resist": [],
+        "absorb": [
+          "ice"
+        ],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 200,
+      "gold": 150,
+      "drops": [
+        {
+          "item": "hi_herb",
+          "rate": 1.0
+        }
+      ],
+      "skills": [
+        "tsunami",
+        "great_tsunami",
+        "enemy_fang"
+      ],
       "ai": [
-        { "type": "attack", "weight": 2 },
-        { "type": "skill", "skillId": "tsunami", "weight": 2 },
-        { "type": "skill", "skillId": "great_tsunami", "weight": 1 },
-        { "type": "skill", "skillId": "great_tsunami", "weight": 3, "cond": "low" },
-        { "type": "skill", "skillId": "enemy_fang", "weight": 1 }
-      ]
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "tsunami",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "great_tsunami",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_tsunami",
+          "weight": 3,
+          "cond": "low"
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "statusResist": 0.45
     },
     "SHION_BOSS": {
-      "name": "白銀の執行者シオン", "family": "demon", "boss": true,
-      "stats": { "hp": 7500, "mp": 200, "atk": 66, "def": 24, "mat": 30, "mdf": 22, "agi": 24, "luk": 12 },
-      "element": { "weak": [], "resist": [], "absorb": [], "null": [] },
-      "attackElement": "none", "exp": 0, "gold": 0,
+      "name": "白銀の執行者シオン",
+      "family": "demon",
+      "boss": true,
+      "stats": {
+        "hp": 7500,
+        "mp": 200,
+        "atk": 66,
+        "def": 24,
+        "mat": 30,
+        "mdf": 22,
+        "agi": 24,
+        "luk": 12
+      },
+      "element": {
+        "weak": [],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 0,
+      "gold": 0,
       "drops": [],
-      "skills": ["power_strike", "enemy_fang"],
+      "skills": [
+        "power_strike",
+        "enemy_fang"
+      ],
       "ai": [
-        { "type": "attack", "weight": 2 },
-        { "type": "skill", "skillId": "power_strike", "weight": 2 },
-        { "type": "skill", "skillId": "enemy_fang", "weight": 1 }
-      ]
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "power_strike",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "statusResist": 0.55
     },
     "B2": {
-      "name": "森獣ヴェルダンテ", "family": "plant", "boss": true,
-      "stats": { "hp": 1100, "mp": 40, "atk": 21, "def": 13, "mat": 12, "mdf": 9, "agi": 7, "luk": 5 },
-      "element": { "weak": ["fire"], "resist": ["earth"], "absorb": [], "null": [] },
-      "attackElement": "none", "exp": 140, "gold": 90,
-      "drops": [{ "item": "power_ring", "rate": 1.0 }, { "item": "hi_herb", "rate": 0.5 }],
-      "skills": ["root_slam", "poison_spore", "enemy_fang", "great_slam"],
+      "name": "森獣ヴェルダンテ",
+      "family": "plant",
+      "boss": true,
+      "stats": {
+        "hp": 1100,
+        "mp": 40,
+        "atk": 21,
+        "def": 13,
+        "mat": 12,
+        "mdf": 9,
+        "agi": 7,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "earth"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 140,
+      "gold": 90,
+      "drops": [
+        {
+          "item": "power_ring",
+          "rate": 1.0
+        },
+        {
+          "item": "hi_herb",
+          "rate": 0.5
+        }
+      ],
+      "skills": [
+        "root_slam",
+        "poison_spore",
+        "enemy_fang",
+        "great_slam"
+      ],
       "ai": [
-        { "type": "attack", "weight": 2 },
-        { "type": "skill", "skillId": "root_slam", "weight": 2 },
-        { "type": "skill", "skillId": "poison_spore", "weight": 1 },
-        { "type": "skill", "skillId": "great_slam", "weight": 1 },
-        { "type": "skill", "skillId": "great_slam", "weight": 2, "cond": "low" },
-        { "type": "skill", "skillId": "enemy_fang", "weight": 2, "cond": "low" }
-      ]
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "root_slam",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "poison_spore",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 2,
+          "cond": "low"
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 2,
+          "cond": "low"
+        }
+      ],
+      "statusResist": 0.25
     }
   },
   "troops": {
-    "tutorial_rat": { "members": ["M01"] },
-    "rat":        { "members": ["M01"] },
-    "rats":       { "members": ["M01", "M01"] },
-    "rat_slime":  { "members": ["M01", "M02"] },
-    "slimes":     { "members": ["M02", "M02"] },
-    "slime_trio": { "members": ["M02", "M02", "M01"] },
-    "wolf":       { "members": ["M04"] },
-    "wolf_pack":  { "members": ["M04", "M01"] },
-    "moth":       { "members": ["M05", "M01"] },
-    "verdante":   { "members": ["B2"] },
-    "nereid":     { "members": ["NEREID"] },
-    "shion_boss": { "members": ["SHION_BOSS"] },
-    "aldia":      { "members": ["ALDIA"] }
+    "tutorial_rat": {
+      "members": [
+        "M01"
+      ]
+    },
+    "rat": {
+      "members": [
+        "M01"
+      ]
+    },
+    "rats": {
+      "members": [
+        "M01",
+        "M01"
+      ]
+    },
+    "rat_slime": {
+      "members": [
+        "M01",
+        "M02"
+      ]
+    },
+    "slimes": {
+      "members": [
+        "M02",
+        "M02"
+      ]
+    },
+    "slime_trio": {
+      "members": [
+        "M02",
+        "M02",
+        "M01"
+      ]
+    },
+    "wolf": {
+      "members": [
+        "M04"
+      ]
+    },
+    "wolf_pack": {
+      "members": [
+        "M04",
+        "M01"
+      ]
+    },
+    "moth": {
+      "members": [
+        "M05",
+        "M01"
+      ]
+    },
+    "verdante": {
+      "members": [
+        "B2"
+      ]
+    },
+    "nereid": {
+      "members": [
+        "NEREID"
+      ]
+    },
+    "shion_boss": {
+      "members": [
+        "SHION_BOSS"
+      ]
+    },
+    "aldia": {
+      "members": [
+        "ALDIA"
+      ]
+    }
   }
 }

@@ -63,6 +63,11 @@ export class BattleSystem {
 
       // 行動可能判定（まひ/ねむり）
       if (!SES.canAct(actor, this.rng)) {
+        // 溜め中に行動不能 → 大技が崩れる（睡眠/麻痺による妨害成功）
+        if (actor._charging) {
+          actor._charging = null;
+          yield { text: `${actor.name}の ためが くずれた！`, se: 'cancel' };
+        }
         if (SES.has(actor, STATUS.SLEEP)) yield { text: `${actor.name}は ねむっている。` };
         else yield { text: `${actor.name}は からだが しびれて うごけない！` };
         continue;
@@ -252,14 +257,22 @@ export class BattleSystem {
     }
     // 状態異常付与
     if (skill.inflict && !t.isDead) {
-      const rate = skill.inflict.rate + ((actor.luk - (t.luk || 5)) * 0.005);
-      if (this.rng.chance(Math.max(0.05, Math.min(0.95, rate)))) {
-        if (SES.apply(t, skill.inflict.status)) {
-          yield { text: `${t.name}は ${SES.label(skill.inflict.status)}に なった！` };
-        }
-      }
+      yield* this._tryInflict(actor, t, skill.inflict);
     }
     if (t.isDead) yield { text: `${t.name}を たおした！`, se: 'cancel' };
+  }
+
+  /** 状態異常の付与判定（命中側LUK・対象の statusResist を加味）。ボスは耐性が高い */
+  *_tryInflict(actor, t, inflict) {
+    const resist = (!t.isPlayer && t.def && t.def.statusResist) ? t.def.statusResist : 0;
+    const rate = inflict.rate + (((actor.luk || 5) - (t.luk || 5)) * 0.005) - resist;
+    if (this.rng.chance(Math.max(0.02, Math.min(0.95, rate)))) {
+      if (SES.apply(t, inflict.status)) {
+        yield { text: `${t.name}は ${SES.label(inflict.status)}に なった！`, se: 'magic' };
+      }
+    } else {
+      yield { text: `しかし ${t.name}には 効かなかった。` };
+    }
   }
 
   *_useItem(actor, cmd, inventory) {
@@ -273,6 +286,7 @@ export class BattleSystem {
     if (ef.hp) { t.curHp += ef.hp; yield { text: `${t.name}の HPが ${ef.hp} かいふくした。`, se: 'heal' }; }
     if (ef.mp) { t.curMp += ef.mp; yield { text: `${t.name}の MPが ${ef.mp} かいふくした。`, se: 'heal' }; }
     if (ef.cure) { for (const s of ef.cure) SES.cure(t, s); yield { text: `${t.name}の 状態が もとに もどった。` }; }
+    if (ef.inflict && !t.isDead) { yield* this._tryInflict(actor, t, ef.inflict); }
   }
 
   /** 戦闘結果（勝利時のEXP/Gold/ドロップ） */
