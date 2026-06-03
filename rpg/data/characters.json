@@ -44,7 +44,7 @@
     "shino": {
       "name": "シノ", "title": "スラムの盗賊", "jobId": "thief",
       "weaponType": "dagger", "color": "#b07cd6", "startLv": 11,
-      "startSkills": ["attack", "poison_edge"],
+      "startSkills": ["attack", "poison_edge", "steal"],
       "startEquip": { "weapon": "iron_dagger", "body": "leather_armor" },
       "base":   { "hp": 16, "mp": 8,  "str": 6, "vit": 5, "agi": 10, "dex": 9, "int": 5, "spi": 4, "luk": 8 },
       "growth": { "hp": 4,  "mp": 1.5,"str": 2.0, "vit": 1.4, "agi": 2.8, "dex": 2.4, "int": 1.2, "spi": 1.0, "luk": 2.0 }

@@ -39,6 +39,7 @@ export class BattleSystem {
    */
   *resolveRound(playerCommands, inventory) {
     this.turnCount++;
+    this._inv = inventory; // ぬすむ等でアイテムを増やすのに使う
     const all = [...this.players, ...this.enemies];
     for (const a of all) a._defending = false;
 
@@ -175,7 +176,11 @@ export class BattleSystem {
 
     // 行動メッセージ
     if (cmd.skillId === 'attack') yield { text: `${actor.name}の こうげき！` };
-    else yield { text: `${actor.name}は ${skill.name}を となえた！`, se: skill.type === 'heal' ? 'heal' : 'magic' };
+    else if (['magic', 'heal', 'revive', 'status'].includes(skill.type)) {
+      yield { text: `${actor.name}は ${skill.name}を となえた！`, se: skill.type === 'heal' ? 'heal' : 'magic' };
+    } else {
+      yield { text: `${actor.name}の ${skill.name}！`, se: skill.type === 'steal' ? 'open' : undefined };
+    }
 
     const targets = this._resolveTargets(actor, skill, cmd.target);
     for (const t of targets) {
@@ -204,6 +209,24 @@ export class BattleSystem {
   }
 
   *_applyToTarget(actor, skill, t) {
+    // ぬすむ
+    if (skill.type === 'steal') {
+      if (t.isPlayer) return;
+      if (t._stolen) { yield { text: `${t.name}からは もう 何も 盗めない。` }; return; }
+      const list = (t.def && t.def.steal) ? (Array.isArray(t.def.steal) ? t.def.steal : [t.def.steal]) : null;
+      if (!list || !list.length) { yield { text: `${t.name}は 何も 持っていない。` }; return; }
+      const entry = list[Math.floor(this.rng.next() * list.length)];
+      const rate = Math.min(0.95, (entry.rate ?? 0.4) + (((actor.dex || 5) + (actor.luk || 5)) * 0.005));
+      if (this.rng.chance(rate)) {
+        t._stolen = true;
+        if (this._inv) this._inv.add(entry.item, 1);
+        const it = this.db.getItem(entry.item);
+        yield { text: `${t.name}から ${it ? it.name : entry.item}を 盗んだ！`, se: 'confirm' };
+      } else {
+        yield { text: `${t.name}からの ぬすみは 失敗した。` };
+      }
+      return;
+    }
     // 回復
     if (skill.type === 'heal') {
       const amt = DamageFormula.heal(actor, skill.power, this.rng);

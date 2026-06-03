@@ -78,7 +78,11 @@
           "type": "attack",
           "weight": 1
         }
-      ]
+      ],
+      "steal": {
+        "item": "herb",
+        "rate": 0.5
+      }
     },
     "M04": {
       "name": "森オオカミ",
@@ -127,6 +131,16 @@
           "skillId": "enemy_fang",
           "weight": 1
         }
+      ],
+      "steal": [
+        {
+          "item": "herb",
+          "rate": 0.5
+        },
+        {
+          "item": "leather_armor",
+          "rate": 0.15
+        }
       ]
     },
     "M05": {
@@ -173,7 +187,11 @@
           "skillId": "poison_spore",
           "weight": 1
         }
-      ]
+      ],
+      "steal": {
+        "item": "antidote",
+        "rate": 0.5
+      }
     },
     "ALDIA": {
       "name": "創世神アルディア",
@@ -299,7 +317,11 @@
           "weight": 1
         }
       ],
-      "statusResist": 0.45
+      "statusResist": 0.45,
+      "steal": {
+        "item": "guard_ring",
+        "rate": 0.4
+      }
     },
     "SHION_BOSS": {
       "name": "白銀の執行者シオン",
@@ -345,7 +367,11 @@
           "weight": 1
         }
       ],
-      "statusResist": 0.55
+      "statusResist": 0.55,
+      "steal": {
+        "item": "feather_charm",
+        "rate": 0.5
+      }
     },
     "B2": {
       "name": "森獣ヴェルダンテ",
@@ -423,7 +449,11 @@
           "cond": "low"
         }
       ],
-      "statusResist": 0.25
+      "statusResist": 0.25,
+      "steal": {
+        "item": "power_ring",
+        "rate": 0.35
+      }
     }
   },
   "troops": {
