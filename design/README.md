@@ -33,6 +33,7 @@
 | [`10_roadmap.md`](10_roadmap.md) | 10. 開発ロードマップ | MVP／β／製品版のスコープと工数・チーム構成 |
 | [`11_implementation_architecture.md`](11_implementation_architecture.md) | 11. 実装アーキテクチャ | 技術設計（ディレクトリ/クラス/状態/イベント/セーブ） |
 | [`12_story_emotional_design.md`](12_story_emotional_design.md) | 12. 感情設計 | 7つの柱の演出当て先・愛着マトリクス・動機の梯子・泣けるED譜面 |
+| [`13_implementation_status.md`](13_implementation_status.md) | 13. 実装状況 | **実際に動くビルドの正本**：実装済み機能と実数値・QA・差分 |
 
 > 各章は単体で読めるように書いてあるが、**数値の正本（マスターデータ）は `04`〜`08`** に置く。
 > ストーリー上の固有名詞・地名・人物名は `01`〜`03` を正とする。
