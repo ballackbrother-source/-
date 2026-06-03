@@ -11,12 +11,14 @@ import { MessageWindow } from '../ui/MessageWindow.js';
 import { ChoiceWindow } from '../ui/ChoiceWindow.js';
 import { GameState } from '../core/GameState.js';
 import { LevelSystem, totalExpFor } from '../domain/systems/LevelSystem.js';
+import { SaveManager } from '../core/SaveManager.js';
 import { BattleScene } from './BattleScene.js';
 
 const TRIAL_LV = 38;
 
 export class TrialScene extends Scene {
-  onEnter() {
+  onEnter(params = {}) {
+    this.mode = params.mode || 'aldia';
     // 体験用の一時GameStateを構築（本編セーブには影響しない）
     const state = GameState.newGame(this.game.db);
     this.game.bindState(state);
@@ -24,8 +26,8 @@ export class TrialScene extends Scene {
     this.choiceWin = new ChoiceWindow();
     this.t = 0;
     this.game.audio.init();
-    this.game.audio.playBgm('theme');
-    this.run();
+    this.game.audio.playBgm(this.mode === 'asterion' ? 'boss' : 'theme');
+    if (this.mode === 'asterion') this.runAsterion(); else this.run();
   }
   onResume() {
     if (this._battleResolve) { const r = this._battleResolve; this._battleResolve = null; r(this._battleResult); }
@@ -47,6 +49,34 @@ export class TrialScene extends Scene {
         troopId, opts, onComplete: (r) => { this._battleResult = r; },
       });
     });
+  }
+
+  async runAsterion() {
+    const g = this.game;
+    g.party.addMember('garrod'); g.party.addMember('fina'); g.party.addMember('shion');
+    for (const c of g.party.all()) {
+      LevelSystem.gainExp(c, Math.max(0, totalExpFor(70) - c.exp), g.db);
+      c.invalidate(); c.curHp = c.maxHp; c.curMp = c.maxMp;
+    }
+    // 支給品（武器は無属性のまま＝吸収されない。弱点はフィーナの属性魔法で突く）
+    g.inventory.add('hi_herb', 9); g.inventory.add('revive_feather', 5);
+
+    await this.message(['——これは、神の その先の 物語。', '神に 幾度も 作り直され、捨てられてきた 無数の 世界の 残響——', '「ありえざる初期化体 アステリオン」が 牙を むく。'], { name: '極・裏ボス' });
+    await this.message(['アステリオンは HPが 減るごとに 弱点属性を 変える。', '炎 → 氷 → 雷 → 光 と、適した 攻撃で 押し切れ！'], { name: 'ヒント' });
+
+    const result = await this.battle('asterion', { isBoss: true, canEscape: true });
+    this.game.audio.stopBgm();
+    if (result.outcome === 'win') {
+      SaveManager.recordClear('asterion');
+      this.game.audio.playBgm('theme');
+      await this.message(['捨てられた 世界たちの 悲鳴が、しずかに 鎮まっていく。', '——もう、誰も 作り直されない。', '【極・裏ボス 撃破！】 称号「神を超えし者」を 得た。'], { name: '極・裏ボス' });
+    } else {
+      await this.message('アステリオンに 飲み込まれた…。また 挑もう。', { name: '極・裏ボス' });
+    }
+    await this.message('（タイトルへ もどります）');
+    const { TitleScene } = await import('./TitleScene.js');
+    this.game.audio.stopBgm();
+    this.game.scenes.reset(new TitleScene(this.game));
   }
 
   async run() {
@@ -113,8 +143,9 @@ export class TrialScene extends Scene {
       r.rect(x, y, 2, 2, `rgba(255,255,255,${0.15 + tw * 0.5})`);
     }
     if (!this.msgWin.active && !this.choiceWin.active) {
-      r.text('最終決戦 体験版', VIEW_W / 2, VIEW_H / 2 - 16, { size: 26, align: 'center', color: COLORS.windowBorder });
-      r.text('創世神アルディア', VIEW_W / 2, VIEW_H / 2 + 20, { size: 16, align: 'center', color: COLORS.textDim });
+      const asterion = this.mode === 'asterion';
+      r.text(asterion ? '極・裏ボス' : '最終決戦 体験版', VIEW_W / 2, VIEW_H / 2 - 16, { size: 26, align: 'center', color: COLORS.windowBorder });
+      r.text(asterion ? 'ありえざる初期化体 アステリオン' : '創世神アルディア', VIEW_W / 2, VIEW_H / 2 + 20, { size: 16, align: 'center', color: COLORS.textDim });
     }
     this.msgWin.render(r);
     this.choiceWin.render(r);

@@ -930,6 +930,154 @@
           ]
         }
       ]
+    },
+    "ASTERION": {
+      "name": "ありえざる初期化体 アステリオン",
+      "family": "demon",
+      "boss": true,
+      "stats": {
+        "hp": 34000,
+        "mp": 999,
+        "atk": 78,
+        "def": 34,
+        "mat": 82,
+        "mdf": 36,
+        "agi": 18,
+        "luk": 15
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "light",
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "dark",
+      "exp": 0,
+      "gold": 0,
+      "drops": [],
+      "skills": [
+        "genesis",
+        "hellflame",
+        "great_tsunami",
+        "holy",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "holy",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "genesis",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "genesis",
+          "weight": 2,
+          "cond": "low"
+        }
+      ],
+      "statusResist": 0.8,
+      "doomTurn": 40,
+      "phases": [
+        {
+          "hp": 0.75,
+          "message": "アステリオン：弱点が 氷へ 移ろう…",
+          "element": {
+            "weak": [
+              "ice"
+            ],
+            "resist": [
+              "light",
+              "dark"
+            ],
+            "absorb": [
+              "fire"
+            ],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "great_tsunami",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "hp": 0.5,
+          "message": "アステリオン：弱点が 雷へ 移ろう…！",
+          "atkMul": 1.2,
+          "element": {
+            "weak": [
+              "thunder"
+            ],
+            "resist": [
+              "light",
+              "dark"
+            ],
+            "absorb": [
+              "ice"
+            ],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "hellflame",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "hp": 0.25,
+          "message": "アステリオン：すべての 世界の 悲鳴が ほとばしる！",
+          "atkMul": 1.45,
+          "element": {
+            "weak": [
+              "light"
+            ],
+            "resist": [
+              "dark"
+            ],
+            "absorb": [
+              "thunder"
+            ],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "genesis",
+              "weight": 3
+            }
+          ]
+        }
+      ]
     }
   },
   "troops": {
@@ -1038,6 +1186,11 @@
     "ignis": {
       "members": [
         "IGNIS"
+      ]
+    },
+    "asterion": {
+      "members": [
+        "ASTERION"
       ]
     }
   }

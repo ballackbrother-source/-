@@ -17,12 +17,15 @@ export class TitleScene extends Scene {
     super(game);
     this.mode = 'main'; // 'main' | 'load'
     this.t = 0;
-    this.menu = new CommandWindow([
+    const items = [
       { label: 'はじめから', value: 'new' },
       { label: 'つづきから', value: 'load' },
       { label: 'せってい', value: 'settings' },
       { label: '★最終決戦 体験版', value: 'trial' },
-    ]);
+    ];
+    // TRUEエンド達成で 裏ボス挑戦を解放
+    if (SaveManager.getClears().true) items.push({ label: '★裏ボス アステリオン', value: 'superboss' });
+    this.menu = new CommandWindow(items);
     this.slots = new CommandWindow([], { title: 'ロードする ぼうけんのしょ' });
   }
 
@@ -66,7 +69,8 @@ export class TitleScene extends Scene {
     if (value === 'new') this.startNewGame();
     else if (value === 'load') { this.refreshSlots(); this.mode = 'load'; }
     else if (value === 'settings') this.game.scenes.push(new SettingsScene(this.game));
-    else if (value === 'trial') this.game.scenes.replace(new TrialScene(this.game));
+    else if (value === 'trial') this.game.scenes.replace(new TrialScene(this.game), { mode: 'aldia' });
+    else if (value === 'superboss') this.game.scenes.replace(new TrialScene(this.game), { mode: 'asterion' });
   }
 
   startNewGame() {
