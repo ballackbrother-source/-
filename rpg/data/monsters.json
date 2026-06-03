@@ -559,6 +559,246 @@
           ]
         }
       ]
+    },
+    "M06": {
+      "name": "ケイブバット",
+      "family": "flying",
+      "stats": {
+        "hp": 48,
+        "mp": 0,
+        "atk": 16,
+        "def": 8,
+        "mat": 0,
+        "mdf": 4,
+        "agi": 24,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "wind",
+          "thunder"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 22,
+      "gold": 12,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.1
+        }
+      ],
+      "skills": [],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "magic_water",
+        "rate": 0.3
+      }
+    },
+    "M07": {
+      "name": "いわトカゲ",
+      "family": "beast",
+      "stats": {
+        "hp": 96,
+        "mp": 0,
+        "atk": 21,
+        "def": 19,
+        "mat": 0,
+        "mdf": 6,
+        "agi": 9,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "ice"
+        ],
+        "resist": [
+          "earth"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 28,
+      "gold": 18,
+      "drops": [
+        {
+          "item": "iron_helm",
+          "rate": 0.04
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 3
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "iron_helm",
+        "rate": 0.1
+      }
+    },
+    "M08": {
+      "name": "スケルトン",
+      "family": "undead",
+      "stats": {
+        "hp": 72,
+        "mp": 0,
+        "atk": 23,
+        "def": 13,
+        "mat": 0,
+        "mdf": 6,
+        "agi": 12,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "light"
+        ],
+        "resist": [
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 30,
+      "gold": 22,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.1
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "steel_sword",
+        "rate": 0.05
+      }
+    },
+    "B_GOLEM": {
+      "name": "鉱石ゴーレム",
+      "family": "machine",
+      "stats": {
+        "hp": 1900,
+        "mp": 40,
+        "atk": 27,
+        "def": 26,
+        "mat": 0,
+        "mdf": 12,
+        "agi": 7,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "thunder"
+        ],
+        "resist": [
+          "earth"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 120,
+      "gold": 110,
+      "drops": [
+        {
+          "item": "life_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "chain_mail",
+          "rate": 0.5
+        }
+      ],
+      "skills": [
+        "great_slam",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 2,
+          "cond": "low"
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "guard_ring",
+        "rate": 0.3
+      },
+      "boss": true,
+      "statusResist": 0.4,
+      "phases": [
+        {
+          "hp": 0.4,
+          "message": "鉱石ゴーレムの 核が 露出した！（雷が さらに 弱点に！）",
+          "element": {
+            "weak": [
+              "thunder"
+            ],
+            "resist": [],
+            "absorb": [],
+            "null": []
+          },
+          "atkMul": 1.2,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "great_slam",
+              "weight": 3
+            }
+          ]
+        }
+      ]
     }
   },
   "troops": {
@@ -632,6 +872,36 @@
     "aldia": {
       "members": [
         "ALDIA"
+      ]
+    },
+    "cave_bats": {
+      "members": [
+        "M06",
+        "M06"
+      ]
+    },
+    "cave_mix": {
+      "members": [
+        "M07",
+        "M06"
+      ]
+    },
+    "cave_undead": {
+      "members": [
+        "M08",
+        "M08"
+      ]
+    },
+    "cave_pack": {
+      "members": [
+        "M07",
+        "M08",
+        "M06"
+      ]
+    },
+    "golem": {
+      "members": [
+        "B_GOLEM"
       ]
     }
   }

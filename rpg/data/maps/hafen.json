@@ -125,10 +125,12 @@
         { "conditions": {}, "commands": [
           { "type": "message", "name": "御者", "text": "馬車で どこへでも 運ぶよ。…今は 行き先が ないかい。" } ] },
         { "conditions": { "flag": "ch2_intro", "notFlag": "betrayed" }, "commands": [
-          { "type": "message", "name": "御者", "text": "東の『古代遺跡』へ 向かうかい? 星核が 眠ってるって 噂だ。" },
+          { "type": "message", "name": "御者", "text": "星核の 在処は ふたつ。どっちへ 行く?" },
           { "type": "choice", "options": [
             { "text": "古代遺跡へ 行く", "commands": [
               { "type": "transfer", "mapId": "ruin", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "水晶洞へ 行く", "commands": [
+              { "type": "transfer", "mapId": "cavern", "x": 9, "y": 14, "dir": "up" } ] },
             { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "気が 向いたら 言ってくれ。" } ] }
           ] } ] },
         { "conditions": { "flag": "betrayed", "notFlag": "regrouped" }, "commands": [

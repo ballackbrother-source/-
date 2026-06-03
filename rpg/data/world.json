@@ -16,9 +16,10 @@
     "lumina_forest": "ルミナの森",
     "hafen": "宿場町ハーフェン",
     "ruin": "古代遺跡",
-    "shrine": "星の祭壇・神域"
+    "shrine": "星の祭壇・神域",
+    "cavern": "水晶洞"
   },
-  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin", "shrine"],
+  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin", "shrine", "cavern"],
   "eventFiles": [],
   "encounters": {
     "forest1": {
@@ -47,6 +48,15 @@
         { "troop": "moth", "weight": 2 },
         { "troop": "slime_trio", "weight": 1 },
         { "troop": "wolf_pack", "weight": 2 }
+      ]
+    },
+    "cavern1": {
+      "steps": [5, 9],
+      "troops": [
+        { "troop": "cave_bats", "weight": 2 },
+        { "troop": "cave_mix", "weight": 2 },
+        { "troop": "cave_undead", "weight": 2 },
+        { "troop": "cave_pack", "weight": 1 }
       ]
     }
   }
