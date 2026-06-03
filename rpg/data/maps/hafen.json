@@ -74,6 +74,32 @@
       ] } ]
     },
     {
+      "id": "smith", "x": 10, "y": 5, "dir": "down", "color": "#b56a4a",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "武器防具屋", "text": "いい 装備が そろってるぜ。武器か? 防具か?" },
+        { "type": "choice", "prompt": "武器防具屋", "options": [
+          { "text": "武器を 見る", "commands": [
+            { "type": "choice", "prompt": "武器", "options": [
+              { "text": "はがねのつるぎ 600G", "commands": [ { "type": "buyItem", "id": "steel_sword" } ] },
+              { "text": "バトルアックス 280G", "commands": [ { "type": "buyItem", "id": "battle_axe" } ] },
+              { "text": "てつのナイフ 150G", "commands": [ { "type": "buyItem", "id": "iron_dagger" } ] },
+              { "text": "いかずちの杖 520G", "commands": [ { "type": "buyItem", "id": "thunder_rod" } ] },
+              { "text": "やめる", "commands": [] }
+            ] } ] },
+          { "text": "防具を 見る", "commands": [
+            { "type": "choice", "prompt": "防具", "options": [
+              { "text": "てつのたて 350G", "commands": [ { "type": "buyItem", "id": "iron_shield" } ] },
+              { "text": "てつのかぶと 320G", "commands": [ { "type": "buyItem", "id": "iron_helm" } ] },
+              { "text": "くさりかたびら 560G", "commands": [ { "type": "buyItem", "id": "chain_mail" } ] },
+              { "text": "ローブ 180G", "commands": [ { "type": "buyItem", "id": "robe" } ] },
+              { "text": "はやての羽かざり 600G", "commands": [ { "type": "buyItem", "id": "feather_charm" } ] },
+              { "text": "やめる", "commands": [] }
+            ] } ] },
+          { "text": "やめる", "commands": [ { "type": "message", "name": "武器防具屋", "text": "まいど！" } ] }
+        ] }
+      ] } ]
+    },
+    {
       "id": "guide", "x": 6, "y": 11, "dir": "down", "color": "#c8a06a", "wander": true,
       "pages": [
         { "conditions": { "notFlag": "verdante_down" }, "commands": [

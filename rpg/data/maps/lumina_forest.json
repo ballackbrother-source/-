@@ -25,7 +25,7 @@
   "objects": [
     "TTTTTTTTT  TTTTTTTTT",
     "T                  T",
-    "T    C             T",
+    "T    C          C  T",
     "T                  T",
     "T                  T",
     "T  TTT      TTT    T",
@@ -97,6 +97,13 @@
       "commands": [
         { "type": "playSe", "id": "open" },
         { "type": "giveItem", "id": "hi_herb", "count": 1 }
+      ]
+    },
+    {
+      "trigger": "action", "x": 16, "y": 2, "once": true,
+      "commands": [
+        { "type": "playSe", "id": "open" },
+        { "type": "giveItem", "id": "iron_shield", "count": 1 }
       ]
     }
   ]

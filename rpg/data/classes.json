@@ -21,6 +21,7 @@
     "name": "星詠みの巫女",
     "learn": [
       { "lv": 6, "skill": "ice" },
+      { "lv": 9, "skill": "spark" },
       { "lv": 8, "skill": "area_heal" },
       { "lv": 11, "skill": "holy" },
       { "lv": 14, "skill": "revive" }

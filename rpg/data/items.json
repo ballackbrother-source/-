@@ -6,6 +6,7 @@
   "iron_dagger":  { "name": "てつのナイフ", "type": "weapon", "weaponType": "dagger", "price": 150, "rarity": 1, "bonus": { "atk": 10, "agi": 2 }, "desc": "軽くて素早い短剣。" },
   "oak_staff":    { "name": "かしのつえ", "type": "weapon", "weaponType": "staff", "price": 100, "rarity": 1, "bonus": { "atk": 5, "mat": 8 }, "desc": "魔力を高める杖。" },
   "holy_staff":   { "name": "聖樹の錫杖", "type": "weapon", "weaponType": "staff", "price": 720, "rarity": 3, "bonus": { "atk": 9, "mat": 20, "spi": 4 }, "desc": "回復を強める聖なる錫杖。" },
+  "thunder_rod":  { "name": "いかずちの杖", "type": "weapon", "weaponType": "staff", "price": 520, "rarity": 2, "element": "thunder", "bonus": { "atk": 8, "mat": 16 }, "desc": "雷を宿す杖。攻撃に雷属性が付く。" },
 
   "leather_shield": { "name": "かわのたて", "type": "shield", "price": 90, "rarity": 1, "bonus": { "def": 6 }, "desc": "なめし革の盾。" },
   "iron_shield":    { "name": "てつのたて", "type": "shield", "price": 350, "rarity": 2, "bonus": { "def": 14 }, "desc": "頑丈な鉄の盾。" },
@@ -20,6 +21,7 @@
 
   "power_ring":    { "name": "ちからのゆびわ", "type": "accessory", "price": 800, "rarity": 3, "bonus": { "str": 5, "atk": 4 }, "desc": "力がみなぎる指輪。" },
   "guard_ring":    { "name": "まもりのゆびわ", "type": "accessory", "price": 800, "rarity": 3, "bonus": { "vit": 5, "def": 4 }, "desc": "守りを固める指輪。" },
+  "feather_charm": { "name": "はやての羽かざり", "type": "accessory", "price": 600, "rarity": 2, "bonus": { "agi": 6 }, "desc": "すばやさが 上がる。" },
 
   "herb":          { "name": "やくそう", "type": "consumable", "price": 15, "rarity": 1, "effect": { "hp": 60 }, "usableInBattle": true, "usableInField": true, "desc": "HPを 60 かいふくする。" },
   "hi_herb":       { "name": "じょうやくそう", "type": "consumable", "price": 80, "rarity": 1, "effect": { "hp": 200 }, "usableInBattle": true, "usableInField": true, "desc": "HPを 200 かいふくする。" },

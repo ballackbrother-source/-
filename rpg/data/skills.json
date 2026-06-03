@@ -13,6 +13,7 @@
   "fire":  { "name": "ファイア", "type": "magic", "element": "fire", "target": "oneEnemy", "mp": 4, "power": 2.6, "desc": "炎の じゅもん" },
   "flame": { "name": "フレイム", "type": "magic", "element": "fire", "target": "allEnemies", "mp": 10, "power": 2.2, "desc": "炎で 全体攻撃" },
   "ice":   { "name": "アイス", "type": "magic", "element": "ice", "target": "oneEnemy", "mp": 4, "power": 2.6, "desc": "氷の じゅもん" },
+  "spark": { "name": "スパーク", "type": "magic", "element": "thunder", "target": "oneEnemy", "mp": 5, "power": 2.6, "desc": "雷の じゅもん" },
   "shine": { "name": "シャイン", "type": "magic", "element": "light", "target": "oneEnemy", "mp": 5, "power": 2.8, "desc": "光の じゅもん" },
   "holy":  { "name": "ホーリー", "type": "magic", "element": "light", "target": "allEnemies", "mp": 14, "power": 2.6, "desc": "聖なる光で 全体攻撃" },
 
