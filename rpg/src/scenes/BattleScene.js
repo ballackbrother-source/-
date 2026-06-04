@@ -67,13 +67,18 @@ export class BattleScene extends Scene {
     const pos = this._targetPos(popup.who);
     if (!pos) return;
     const styles = {
-      damage: { color: '#ffffff', size: 22, txt: `${popup.value}` },
-      crit:   { color: '#ffd23f', size: 30, txt: `${popup.value}!` },
-      weak:   { color: '#ff8a5a', size: 26, txt: `${popup.value}` },
-      heal:   { color: '#7bf08a', size: 22, txt: `+${popup.value}` },
+      damage: { color: '#ffffff', size: 22 },
+      crit:   { color: '#ffe24a', size: 34 },
+      weak:   { color: '#ff8a5a', size: 27 },
+      heal:   { color: '#7bf08a', size: 22 },
     };
     const s = styles[popup.kind] || styles.damage;
-    this.popups.push({ x: pos.x + (Math.random() * 24 - 12), y: pos.y, vy: -1.1, life: 46, max: 46, ...s });
+    const text = popup.kind === 'heal' ? `+${popup.value}` : `${popup.value}${popup.kind === 'crit' ? '!' : ''}`;
+    this.popups.push({
+      x: pos.x + (Math.random() * 20 - 10), y: pos.y - 6,
+      vx: Math.random() * 1.2 - 0.6, vy: -3.0, g: 0.16,
+      life: 52, max: 52, kind: popup.kind, text, ...s,
+    });
     if (popup.kind === 'crit' || popup.kind === 'weak') { this.shakeT = 12; this.shakeMag = popup.kind === 'crit' ? 7 : 4; }
   }
   _targetPos(who) {
@@ -89,7 +94,7 @@ export class BattleScene extends Scene {
     return { x: i * w + w / 2, y: VIEW_H - 100 };
   }
   _updatePopups() {
-    for (const p of this.popups) { p.y += p.vy; p.life--; }
+    for (const p of this.popups) { p.x += p.vx; p.y += p.vy; p.vy += p.g; p.life--; }
     this.popups = this.popups.filter((p) => p.life > 0);
     if (this.shakeT > 0) this.shakeT--;
   }
@@ -391,12 +396,24 @@ export class BattleScene extends Scene {
       r.strokeRect(i * w + 4, VIEW_H - 92, w - 8, 84, COLORS.selected, 3);
     }
 
-    // 浮き上がるダメージ/回復数字（最前面）
+    // 浮き上がるダメージ/回復数字（弾む・縁取り・会心は特大＋光輪）
+    const c = r.ctx;
     for (const p of this.popups) {
-      const alpha = Math.min(1, p.life / 16);
-      r.save(); r.alpha(alpha);
-      r.text(p.text, p.x, p.y, { size: p.size, align: 'center', color: p.color });
-      r.restore();
+      const age = p.max - p.life;
+      const pop = age < 5 ? 0.5 + 0.5 * (age / 5) : (age < 9 ? 1.14 - 0.14 * ((age - 5) / 4) : 1); // 出現時に弾む
+      const alpha = Math.min(1, p.life / 12);
+      if (p.kind === 'crit' && age < 12) { // 会心の光輪
+        c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = (1 - age / 12) * 0.7;
+        c.strokeStyle = '#ffe24a'; c.lineWidth = 3;
+        c.beginPath(); c.arc(p.x, p.y, 8 + age * 4.5, 0, 7); c.stroke(); c.restore();
+      }
+      c.save();
+      c.globalAlpha = alpha;
+      c.translate(p.x, p.y); c.scale(pop, pop);
+      c.font = `bold ${p.size}px sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+      c.lineWidth = Math.max(3, p.size * 0.18); c.strokeStyle = 'rgba(0,0,0,0.85)'; c.strokeText(p.text, 0, 0);
+      c.fillStyle = p.color; c.fillText(p.text, 0, 0);
+      c.restore();
     }
   }
 }
