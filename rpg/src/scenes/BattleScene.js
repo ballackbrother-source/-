@@ -257,6 +257,9 @@ export class BattleScene extends Scene {
     const m = n.value;
     this.log = m.text || this.log;
     this.flash = m.flash || null; this.flashT = 12;
+    // 被弾/攻撃モーション用のトリガ（敵のみ。tickを起点に BattleUI が演出）
+    if (m.flash && this.enemies.includes(m.flash)) m.flash._hitTick = this.tick;
+    if (m.actor && this.enemies.includes(m.actor)) m.actor._atkTick = this.tick;
     if (m.popup) this.spawnPopup(m.popup);
     if (m.se) this.game.audio.se(m.se);
     this.msgTimer = m.text ? 40 : 1;

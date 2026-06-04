@@ -23,10 +23,18 @@ export class BattleUI {
       const t = tk * 0.05 + i * 1.7;
       const bob = Math.sin(t) * (e.isBoss ? 2.4 : 1.6);
       const breath = 1 + Math.sin(t * 1.2) * 0.018;
+      // 被弾モーション：上へのけぞり＋横揺れ＋少し縮む
+      let dx = 0, dy = 0, sc = 1;
+      const HIT = 14, ATK = 16;
+      const ha = tk - (e._hitTick ?? -999);
+      if (ha >= 0 && ha < HIT) { const k = 1 - ha / HIT; dx += Math.sin(ha * 1.7) * 7 * k; dy -= 5 * k; sc *= 1 - 0.1 * k; }
+      // 攻撃モーション：パーティ方向（下）へ踏み込み、少し大きく
+      const aa = tk - (e._atkTick ?? -999);
+      if (aa >= 0 && aa < ATK) { const k = Math.sin((aa / ATK) * Math.PI); dy += 12 * k; sc *= 1 + 0.06 * k; }
       r.save();
       if (flashTarget === e && tk % 6 < 3) r.alpha(0.35);
-      r.ctx.translate(cx, cy + bob);
-      r.ctx.scale(breath, breath);
+      r.ctx.translate(cx + dx, cy + bob + dy);
+      r.ctx.scale(breath * sc, breath * sc);
       const col = this._famColor(e.family);
       this.assets.drawMonster(r.ctx, 0, 0, e.family, col, s, tk);
       r.restore();
