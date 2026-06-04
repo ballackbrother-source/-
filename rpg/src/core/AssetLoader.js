@@ -398,6 +398,13 @@ export class AssetLoader {
       g.addColorStop(1, tint(color, sh - 0.24));
       ctx.fillStyle = g; ctx.fill(); ctx.stroke();
     };
+    // 落ち影（パーツ→本体の前後関係を出す、柔らかい楕円の陰）
+    const castShadow = (x, y, rx, ry, a = 0.3, rot = 0) => {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(rx, ry);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+      g.addColorStop(0, rgba('#000000', a)); g.addColorStop(0.55, rgba('#000000', a * 0.5)); g.addColorStop(1, rgba('#000000', 0));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 1, 0, 7); ctx.fill(); ctx.restore();
+    };
 
     // 目の既定値（caseごとに上書き可。slit=縦長瞳）
     let eye = { x: r * 0.34, y: -r * 0.06, r: r * 0.2, slit: false, color: '#b3261e' };
@@ -457,6 +464,11 @@ export class AssetLoader {
         ctx.quadraticCurveTo(-r * 0.9, r * 0.25, -r * 0.86, -r * 0.12);
         ctx.quadraticCurveTo(-r * 0.78, -r * 0.7, 0, -r * 0.95);
         ctx.closePath(); body();
+        // 落ち影：角→額、頭→翼の付け根
+        castShadow(-r * 0.3, -r * 0.52, r * 0.24, r * 0.15, 0.34, 0.5);
+        castShadow(r * 0.3, -r * 0.52, r * 0.24, r * 0.15, 0.34, -0.5);
+        castShadow(-r * 0.74, -r * 0.04, r * 0.26, r * 0.42, 0.26, 0.3);
+        castShadow(r * 0.74, -r * 0.04, r * 0.26, r * 0.42, 0.26, -0.3);
         // 眉骨の影
         ctx.fillStyle = rgba(tint(color, -0.38), 0.55);
         ctx.beginPath(); ctx.ellipse(0, -r * 0.3, r * 0.64, r * 0.2, 0, Math.PI, 0); ctx.fill();
@@ -504,6 +516,8 @@ export class AssetLoader {
           ctx.beginPath(); ctx.moveTo(sx * r * 0.46, -r * 0.6); ctx.lineTo(sx * r * 0.62, -r * 0.95); ctx.lineTo(sx * r * 0.28, -r * 0.68); ctx.closePath(); ctx.fill();
         }
         ctx.beginPath(); ctx.ellipse(0, r * 0.05, r, r * 0.82, 0, 0, 7); body(); // 顔
+        castShadow(-r * 0.34, -r * 0.44, r * 0.22, r * 0.14, 0.32, 0.4); // 耳→額の落ち影
+        castShadow(r * 0.34, -r * 0.44, r * 0.22, r * 0.14, 0.32, -0.4);
         // 口吻
         ctx.beginPath(); ctx.ellipse(0, r * 0.42, r * 0.42, r * 0.3, 0, 0, 7); part(0.16);
         ctx.fillStyle = '#241016'; ctx.beginPath(); ctx.ellipse(0, r * 0.3, r * 0.12, r * 0.09, 0, 0, 7); ctx.fill(); // 鼻
@@ -592,6 +606,8 @@ export class AssetLoader {
           ctx.quadraticCurveTo(sx * r * 1.0, -r * 1.15, sx * r * 0.3, -r * 0.92);
           ctx.closePath(); part(0.05);
         }
+        castShadow(-r * 0.42, -r * 0.55, r * 0.26, r * 0.16, 0.32, 0.55); // 角→額の落ち影
+        castShadow(r * 0.42, -r * 0.55, r * 0.26, r * 0.16, 0.32, -0.55);
         drawEyes = false;
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
         for (const sx of [-1, 1]) {
@@ -605,6 +621,7 @@ export class AssetLoader {
         const head = -r * 0.55;
         roundRect(ctx, -r * 0.9, head, r * 1.8, r * 0.95, 4 * s); part(0); // 頭
         roundRect(ctx, -r, r * 0.0, r * 2, r * 0.95, 5 * s); body(); // 胴
+        castShadow(0, r * 0.44, r * 0.82, r * 0.13, 0.3); // 頭ブロック→胴の落ち影
         roundRect(ctx, -r * 1.15, r * 0.05, r * 0.45, r * 0.7, 3 * s); part(-0.18); // 肩
         roundRect(ctx, r * 0.7, r * 0.05, r * 0.45, r * 0.7, 3 * s); part(-0.18);
         drawEyes = false;
@@ -684,6 +701,7 @@ export class AssetLoader {
         ctx.quadraticCurveTo(-r * 0.45, r * 0.7, -r * 0.95, r * 0.95);
         ctx.quadraticCurveTo(-r * 0.7, -r * 0.4, 0, -r * 0.55);
         ctx.closePath(); body();
+        castShadow(0, -r * 0.16, r * 0.66, r * 0.16, 0.28); // 帽子のつば→ローブの落ち影
         // 前合わせ＋裾の縁取り
         ctx.strokeStyle = rgba(arc, 0.6); ctx.lineWidth = lw * 0.8;
         ctx.beginPath(); ctx.moveTo(0, -r * 0.4); ctx.lineTo(0, r * 0.85); ctx.stroke();
