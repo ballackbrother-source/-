@@ -247,7 +247,7 @@ async function testCampfireBond({ newGameAbortPrologue, evaluate, info, press, p
 async function backhalfSetup(evaluate) {
   await evaluate(() => {
     const g = window.__ETERNIA.game;
-    Object.assign(g.state.flags, { p_intro: 1, ch1_join: 1, verdante_down: 1, ch2_intro: 1, cores4: 1, betrayed: 1, ch3_seen: 1, regrouped: 1 });
+    Object.assign(g.state.flags, { p_intro: 1, ch1_join: 1, verdante_down: 1, ch2_intro: 1, cores4: 1, betrayed: 1, ch3_seen: 1, regrouped: 1, bond_fina: 1, bond_shion: 1 });
     g.state.chapter = { id: 'ch4', step: 0 };
     ['garrod', 'fina'].forEach((id) => g.party.addMember(id));
     g.party.all().forEach((c) => c.ensureVitals());
