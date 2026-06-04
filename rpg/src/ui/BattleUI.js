@@ -13,15 +13,22 @@ export class BattleUI {
   drawEnemies(r, enemies, flashTarget, tick) {
     const live = enemies;
     const n = live.length;
+    const tk = tick || 0;
     live.forEach((e, i) => {
       if (e.isDead) return;
       const cx = (VIEW_W / (n + 1)) * (i + 1);
       const cy = 150 + (i % 2) * 24;
       const s = e.isBoss ? 1.8 : 1.0;
+      // 待機アニメ：ゆっくりした呼吸（上下＋わずかな伸縮）。個体ごとに位相をずらす
+      const t = tk * 0.05 + i * 1.7;
+      const bob = Math.sin(t) * (e.isBoss ? 2.4 : 1.6);
+      const breath = 1 + Math.sin(t * 1.2) * 0.018;
       r.save();
-      if (flashTarget === e && tick % 6 < 3) r.alpha(0.35);
+      if (flashTarget === e && tk % 6 < 3) r.alpha(0.35);
+      r.ctx.translate(cx, cy + bob);
+      r.ctx.scale(breath, breath);
       const col = this._famColor(e.family);
-      this.assets.drawMonster(r.ctx, cx, cy, e.family, col, s);
+      this.assets.drawMonster(r.ctx, 0, 0, e.family, col, s);
       r.restore();
     });
   }
