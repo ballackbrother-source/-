@@ -378,7 +378,7 @@ export class BattleScene extends Scene {
     }
 
     this.ui.drawLog(r, this.log);
-    this.ui.drawPartyStatus(r, this.players, (this.phase === 'cmd' || this.phase === 'skill' || this.phase === 'item' || this.phase === 'target') ? this.curPlayer : null);
+    this.ui.drawPartyStatus(r, this.players, (this.phase === 'cmd' || this.phase === 'skill' || this.phase === 'item' || this.phase === 'target') ? this.curPlayer : null, this.tick);
 
     // コマンド系ウィンドウ
     if (this.phase === 'cmd') { r.window(16, VIEW_H - 92, 150, 84); this.cmdMenu.render(r, 30, VIEW_H - 84, 130); }
