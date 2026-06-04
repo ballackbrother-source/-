@@ -424,20 +424,31 @@ export class AssetLoader {
           ctx.quadraticCurveTo(X(lx - 0.16), Y(1.02), X(lx + 0.18), Y(1.0));
           ctx.lineTo(X(lx + 0.14), Y(0.34)); ctx.closePath(); part(-0.32);
         }
-        // 翼（背後・指骨つき）
+        // 奥側の翼（背後に大きく広げて覗かせる・暗め）
         ctx.beginPath();
-        ctx.moveTo(X(-0.1), Y(-0.58));
-        ctx.quadraticCurveTo(X(0.4), Y(-1.55), X(1.45), Y(-1.48));
-        ctx.quadraticCurveTo(X(1.02), Y(-1.04), X(1.3), Y(-0.76));
-        ctx.quadraticCurveTo(X(0.88), Y(-0.84), X(1.1), Y(-0.48));
-        ctx.quadraticCurveTo(X(0.66), Y(-0.6), X(0.82), Y(-0.22));
-        ctx.quadraticCurveTo(X(0.34), Y(-0.46), X(-0.1), Y(-0.58));
-        ctx.closePath(); part(-0.2);
+        ctx.moveTo(X(0.0), Y(-0.55));
+        ctx.quadraticCurveTo(X(0.35), Y(-1.8), X(1.3), Y(-2.02));
+        ctx.quadraticCurveTo(X(1.05), Y(-1.45), X(1.36), Y(-1.18));
+        ctx.quadraticCurveTo(X(0.86), Y(-1.12), X(0.98), Y(-0.7));
+        ctx.quadraticCurveTo(X(0.46), Y(-0.56), X(0.0), Y(-0.55));
+        ctx.closePath(); part(-0.34);
+        // 手前の翼（指骨4本・大きく広げる）
+        ctx.beginPath();
+        ctx.moveTo(X(-0.06), Y(-0.55));
+        ctx.quadraticCurveTo(X(0.5), Y(-1.72), X(1.78), Y(-1.82));   // 前縁→翼端
+        ctx.quadraticCurveTo(X(1.5), Y(-1.25), X(1.95), Y(-1.02));   // スカラップ1
+        ctx.quadraticCurveTo(X(1.46), Y(-0.96), X(1.78), Y(-0.56));  // スカラップ2
+        ctx.quadraticCurveTo(X(1.24), Y(-0.6), X(1.46), Y(-0.18));   // スカラップ3
+        ctx.quadraticCurveTo(X(0.96), Y(-0.34), X(1.06), Y(0.08));   // スカラップ4
+        ctx.quadraticCurveTo(X(0.5), Y(-0.3), X(-0.06), Y(-0.55));   // 翼の付け根へ
+        ctx.closePath(); part(-0.18);
         ctx.strokeStyle = rgba(tint(color, -0.42), 0.5); ctx.lineWidth = lw * 0.7; // 指骨
         ctx.beginPath();
-        ctx.moveTo(X(0.02), Y(-0.54)); ctx.lineTo(X(1.38), Y(-1.44));
-        ctx.moveTo(X(0.02), Y(-0.54)); ctx.lineTo(X(1.16), Y(-0.76));
-        ctx.moveTo(X(0.02), Y(-0.54)); ctx.lineTo(X(0.76), Y(-0.26));
+        ctx.moveTo(X(0.04), Y(-0.5)); ctx.lineTo(X(1.7), Y(-1.74));
+        ctx.moveTo(X(0.04), Y(-0.5)); ctx.lineTo(X(1.88), Y(-1.02));
+        ctx.moveTo(X(0.04), Y(-0.5)); ctx.lineTo(X(1.7), Y(-0.56));
+        ctx.moveTo(X(0.04), Y(-0.5)); ctx.lineTo(X(1.4), Y(-0.18));
+        ctx.moveTo(X(0.04), Y(-0.5)); ctx.lineTo(X(1.0), Y(0.06));
         ctx.stroke(); ctx.lineWidth = lw;
         // 本体シルエット（立てた首→頭→胴→尾→近い四肢）
         ctx.beginPath();
