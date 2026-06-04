@@ -372,8 +372,32 @@ export class AssetLoader {
     const outline = rgba(tint(color, -0.55), 0.85);
     const lw = Math.max(1.5, 2 * s);
     ctx.lineWidth = lw; ctx.strokeStyle = outline;
-    const body = () => { ctx.fillStyle = grad; ctx.fill(); ctx.stroke(); };
-    const part = (sh) => { ctx.fillStyle = (sh == null) ? grad : tint(color, sh); ctx.fill(); ctx.stroke(); };
+    const sc = hexToRgb(color);
+    const shA = (a) => `rgba(${(sc.r * 0.3) | 0},${(sc.g * 0.3) | 0},${(sc.b * 0.3) | 0},${a})`; // 色付きの陰
+    // 本体：塗り＋クリップして スペキュラ／フォームシャドウ／接地オクルージョンを重ね、球状の立体感を出す
+    const body = () => {
+      ctx.fillStyle = grad; ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.clip();
+      const hl = ctx.createRadialGradient(-r * 0.4, -r * 0.52, r * 0.04, -r * 0.26, -r * 0.38, r * 1.15);
+      hl.addColorStop(0, rgba('#ffffff', 0.36)); hl.addColorStop(0.34, rgba('#ffffff', 0.09)); hl.addColorStop(1, rgba('#ffffff', 0));
+      ctx.fillStyle = hl; ctx.fillRect(-r * 2.2, -r * 2.6, r * 4.4, r * 4.8);
+      const fs = ctx.createLinearGradient(-r * 0.5, -r * 0.5, r * 0.85, r * 0.95);
+      fs.addColorStop(0, shA(0)); fs.addColorStop(0.56, shA(0)); fs.addColorStop(1, shA(0.55));
+      ctx.fillStyle = fs; ctx.fillRect(-r * 2.2, -r * 2.2, r * 4.4, r * 4.4);
+      const ao = ctx.createLinearGradient(0, r * 0.35, 0, r * 1.25);
+      ao.addColorStop(0, rgba('#000000', 0)); ao.addColorStop(1, rgba('#000000', 0.30));
+      ctx.fillStyle = ao; ctx.fillRect(-r * 2.2, r * 0.35, r * 4.4, r * 1.4);
+      ctx.restore();
+      ctx.fillStyle = grad; ctx.strokeStyle = outline; ctx.lineWidth = lw;
+    };
+    // パーツ（角・翼・耳ひれ等）：左上→右下の方向グラデで筒状のボリュームを出す
+    const part = (sh) => {
+      if (sh == null) { ctx.fillStyle = grad; ctx.fill(); ctx.stroke(); return; }
+      const g = ctx.createLinearGradient(-r, -r, r, r);
+      g.addColorStop(0, tint(color, Math.min(0.95, sh + 0.2)));
+      g.addColorStop(1, tint(color, sh - 0.24));
+      ctx.fillStyle = g; ctx.fill(); ctx.stroke();
+    };
 
     // 目の既定値（caseごとに上書き可。slit=縦長瞳）
     let eye = { x: r * 0.34, y: -r * 0.06, r: r * 0.2, slit: false, color: '#b3261e' };
