@@ -121,10 +121,51 @@
           { "type": "message", "name": "シオン", "text": "おう。…俺は 兄貴分だからな。弟は 任せとけ。" },
           { "type": "message", "name": "ルゥ", "text": "（あたたかいな。…ずっと、こうだったら いいのに）" } ] },
         { "conditions": { "flag": "ch2_intro", "notFlag": "betrayed" }, "commands": [
-          { "type": "message", "name": "シノ", "text": "あたしの 故郷? スラムさ。腹を すかせた チビどもを 食わせるのに 必死だった。" },
-          { "type": "message", "name": "ガロード", "text": "…俺は 守れなかった 弟分が いた。だから、二度と 見捨てない。それだけだ。" },
-          { "type": "message", "name": "シオン", "text": "…俺にも、守りたかった 奴が いたよ。" },
-          { "type": "message", "name": "シオン", "text": "（シオンは そう言って、星空を 見上げた）" } ] },
+          { "type": "message", "text": "焚き火を 囲む 夜。…誰かと、ゆっくり 話して みようか。" },
+          { "type": "choice", "prompt": "誰と 話す?", "options": [
+            { "text": "ガロードと 話す", "commands": [
+              { "type": "if", "cond": { "notFlag": "bond_garrod" }, "then": [
+                { "type": "message", "name": "ガロード", "text": ["…昔、俺には 弟分が いた。スラムで 拾った チビでな。","俺が 守れなかった。目の前で——な。"] },
+                { "type": "message", "name": "ガロード", "text": "だから 二度と 見捨てない。ルゥ、お前も だ。…兄貴ぶってる 奴に 任せきりに すんなよ?" },
+                { "type": "message", "name": "ルゥ", "text": "（ガロードの ことばは、いつも 不器用で——あたたかい）" },
+                { "type": "setFlag", "key": "bond_garrod" }
+              ], "else": [
+                { "type": "message", "name": "ガロード", "text": "しっかり 食って 寝ろ。明日も 長いぞ。" }
+              ] } ] },
+            { "text": "フィーナと 話す", "commands": [
+              { "type": "if", "cond": { "notFlag": "bond_fina" }, "then": [
+                { "type": "message", "name": "フィーナ", "text": ["ルゥさん。…あなたに、いつか 話さなければ ならない ことが あります。"] },
+                { "type": "message", "name": "フィーナ", "text": ["わたしは 星詠みの 巫女。星の 記憶を 読む 力が あるのです。","——でも、20年前の 英雄の 記録だけ、なぜか 読めない。まるで、誰かに 消されたように。"] },
+                { "type": "message", "name": "ルゥ", "text": "消された……? それって——" },
+                { "type": "message", "name": "フィーナ", "text": "…ごめんなさい、今は うまく 言えない。でも、覚えて いて ください。" },
+                { "type": "setFlag", "key": "bond_fina" }
+              ], "else": [
+                { "type": "message", "name": "フィーナ", "text": "ふふ。こうして 火を 囲むと、家族みたいですね。" }
+              ] } ] },
+            { "text": "シノと 話す", "commands": [
+              { "type": "if", "cond": { "notFlag": "bond_shino" }, "then": [
+                { "type": "message", "name": "シノ", "text": ["あたしの 故郷? スラムさ。腹を すかせた チビどもを 食わせるのに 必死だった。"] },
+                { "type": "message", "name": "シノ", "text": ["盗みも したさ。…でも、あの子らの 笑った 顔だけは、宝物なんだ。","だから あんたらの『星を 救う』ってのも、まあ……悪かない。"] },
+                { "type": "message", "name": "ルゥ", "text": "（シノは ぶっきらぼうだけど、誰より 仲間思いだ）" },
+                { "type": "setFlag", "key": "bond_shino" }
+              ], "else": [
+                { "type": "message", "name": "シノ", "text": "なんだい、あたしの 顔に 何か ついてるかい?" }
+              ] } ] },
+            { "text": "シオンと 話す", "commands": [
+              { "type": "if", "cond": { "notFlag": "bond_shion" }, "then": [
+                { "type": "message", "name": "シオン", "text": "…俺にも、守りたかった 奴が いたよ。" },
+                { "type": "message", "name": "シオン", "text": ["親父だ。誰よりも 強くて、優しい 人だった。","——なのに、誰も あの人を 覚えていない。記録にも、人の 記憶にも、どこにも 残っていないんだ。"] },
+                { "type": "message", "name": "ルゥ", "text": "そんな……どうして?" },
+                { "type": "message", "name": "シオン", "text": ["さあな。…すまん、湿っぽい 話を した。","ルゥ。何が あっても——お前は、俺の 弟だ。それだけは、忘れるな。"] },
+                { "type": "message", "name": "シオン", "text": "（シオンは そう言って、星空を 見上げた。その横顔が、ひどく 寂しげに 見えた）" },
+                { "type": "addVar", "key": "forgiveness", "delta": 5 },
+                { "type": "setFlag", "key": "bond_shion" }
+              ], "else": [
+                { "type": "message", "name": "シオン", "text": "おう。…俺は 兄貴分だからな。弟は 任せとけ。" }
+              ] } ] },
+            { "text": "火を 見つめる", "commands": [
+              { "type": "message", "name": "ルゥ", "text": "（あたたかいな。…ずっと、こうだったら いいのに）" } ] }
+          ] } ] },
         { "conditions": { "flag": "betrayed" }, "commands": [
           { "type": "message", "text": "焚き火の そばに、ひとつ 多く 食器が 並んでいる。…シオンの ぶんだ。" },
           { "type": "choice", "prompt": "どうする?", "options": [

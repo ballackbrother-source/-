@@ -37,6 +37,7 @@ async function main() {
   await test('第1章 仲間＆シオン加入', testCh1Join);
   await test('第2章 裏切り（シオン離脱・章ch3）', testBetrayal);
   await test('枯れ谷ミニボス撃破（レヴナント）', testValeRevenant);
+  await test('焚き火の絆（シオン語らい→赦し+5）', testCampfireBond);
   await test('後半TRUEルート（赦し95→連携→撃破）', testBackhalfTrue);
   await test('後半BADルート（拒絶→敗北→リセット）', testBackhalfBad);
   await test('セーブ→リロード→ロード', testSaveLoad);
@@ -215,6 +216,32 @@ async function testValeRevenant({ newGameAbortPrologue, evaluate, info, press, k
   const st = await pressUntil((s) => s.flags.includes('vale_clear') || s.scene === 'TitleScene', 12000);
   const ok = st.flags.includes('vale_clear') && st.scene === 'FieldScene';
   return { ok, msg: ok ? '' : `scene=${st.scene} flags=${st.flags}` };
+}
+
+// 焚き火の絆ハブ：シオンと語らうと bond_shion が立ち、赦しゲージ +5（伏線提示）
+async function testCampfireBond({ newGameAbortPrologue, evaluate, info, press, pressUntil }) {
+  await newGameAbortPrologue();
+  await evaluate(() => {
+    const g = window.__ETERNIA.game;
+    Object.assign(g.state.flags, { p_intro: 1, ch1_join: 1, verdante_down: 1, ch2_intro: 1 });
+    g.state.chapter = { id: 'ch2', step: 0 };
+    ['garrod', 'fina', 'shion'].forEach((id) => g.party.addMember(id));
+    g.state.variables.forgiveness = 0;
+    const s = g.scenes.current;
+    s.loadMap('hafen', 16, 8, 'up');
+    const npc = (s.map.data.npcs || []).find((n) => n.id === 'campfire');
+    const page = npc.pages.find((p) => p.conditions && p.conditions.flag === 'ch2_intro' && p.conditions.notFlag === 'betrayed');
+    s.runEvent(page.commands);
+  });
+  await sleep(250);
+  // 導入文を送り「誰と話す?」の選択肢が開くまで待つ
+  for (let i = 0; i < 12; i++) { const s = await info(); if (s.choice) break; await press('Enter'); await sleep(60); }
+  for (let i = 0; i < 3; i++) await press('ArrowDown'); // ガロード→フィーナ→シノ→シオン
+  await press('Enter'); await sleep(120);
+  // シオンの語らい（複数ページ）を送り、bond_shion 成立まで待つ
+  const st = await pressUntil((s) => s.flags.includes('bond_shion'), 10000);
+  const ok = st.flags.includes('bond_shion') && st.forgiveness === 5;
+  return { ok, msg: ok ? '' : `flags=${st.flags} f=${st.forgiveness}` };
 }
 
 async function backhalfSetup(evaluate) {
