@@ -6,6 +6,7 @@
  */
 import { Scene } from '../core/Scene.js';
 import { VIEW_W, VIEW_H, COLORS } from '../config/constants.js';
+import { drawBattleBg } from '../ui/Backdrop.js';
 import { CommandWindow } from '../ui/CommandWindow.js';
 import { BattleUI } from '../ui/BattleUI.js';
 import { BattleSystem } from '../domain/systems/BattleSystem.js';
@@ -335,10 +336,8 @@ export class BattleScene extends Scene {
 
   // =================== RENDER ===================
   render(r) {
-    // 背景
-    r.clear(this.isBoss ? '#1a0e18' : '#0e1326');
-    for (let i = 0; i < 40; i++) r.rect((i * 97) % VIEW_W, (i * 53) % 140, 2, 2, 'rgba(255,255,255,0.25)');
-    r.rect(0, 220, VIEW_W, VIEW_H - 220, this.isBoss ? '#241020' : '#13203a');
+    // 背景（雰囲気のある手続き背景）
+    drawBattleBg(r.ctx, { boss: this.isBoss, special: this.special, tick: this.tick });
 
     // 画面シェイク（会心/弱点ヒット時、敵の描画をゆらす）
     let sx = 0, sy = 0;

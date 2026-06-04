@@ -11,6 +11,7 @@ import { GameState } from '../core/GameState.js';
 import { FieldScene } from './FieldScene.js';
 import { SettingsScene } from './SettingsScene.js';
 import { TrialScene } from './TrialScene.js';
+import { drawTitleBg } from '../ui/Backdrop.js';
 
 export class TitleScene extends Scene {
   constructor(game) {
@@ -92,14 +93,8 @@ export class TitleScene extends Scene {
   }
 
   render(r) {
-    r.clear('#070b1a');
-    // 星空背景
-    for (let i = 0; i < 60; i++) {
-      const x = (i * 137) % VIEW_W;
-      const y = (i * 211) % (VIEW_H - 120);
-      const tw = (Math.sin((this.t + i * 20) / 30) + 1) / 2;
-      r.rect(x, y, 2, 2, `rgba(255,255,255,${0.2 + tw * 0.6})`);
-    }
+    // 雰囲気のある夜空＋遠景の城（手続き背景）
+    drawTitleBg(r.ctx, this.t);
     // 第七星（大きく瞬く）
     const bt = (Math.sin(this.t / 50) + 1) / 2;
     r.text('✦', VIEW_W - 90, 60, { size: 40, color: `rgba(174,224,255,${0.5 + bt * 0.5})` });
