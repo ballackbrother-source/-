@@ -259,7 +259,7 @@ export class MenuScene extends Scene {
   // --- 図鑑（モンスター / アイテム タブ切替） ---
   openBestiary() {
     this.bestMode = 'monster';
-    this.monIds = Object.keys(this.game.db.monsters);
+    this.monIds = Object.keys(this.game.db.monsters).filter((id) => !this.game.db.monsters[id].dexExclude);
     this.itemIds = Object.keys(this.game.db.items);
     this.monIdx = 0; this.itemIdx = 0;
     this.state = 'bestiary';

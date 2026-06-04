@@ -15,8 +15,10 @@ const REWARDS = [
 /** @returns {string[]} 付与した報酬の通知メッセージ */
 export function checkDexRewards(game) {
   const st = game.state, db = game.db;
-  const monTotal = Object.keys(db.monsters).length;
-  const monDone = (st.bestiary.defeated || []).length;
+  // 図鑑カウント対象：dexExclude（挑戦モード専用の裏ボス等）を除く
+  const countable = Object.keys(db.monsters).filter((id) => !db.monsters[id].dexExclude);
+  const monTotal = countable.length;
+  const monDone = (st.bestiary.defeated || []).filter((id) => countable.includes(id)).length;
   const itemTotal = Object.keys(db.items).length;
   const itemDone = (st.bestiary.items || []).length;
   const granted = [];
