@@ -45,12 +45,39 @@ export class Renderer {
     this.ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
   }
 
-  /** 角丸ウィンドウ枠（メッセージ/メニュー共通） */
+  /** 基準色を白/黒へ寄せる（amt: -1..1） */
+  _shade(hex, amt) {
+    const n = parseInt(String(hex).replace('#', ''), 16);
+    const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    const t = amt >= 0 ? 255 : 0, p = Math.min(1, Math.abs(amt));
+    const m = (v) => Math.round(v + (t - v) * p);
+    return `rgb(${m(r)},${m(g)},${m(b)})`;
+  }
+
+  /** 角丸ウィンドウ枠（メッセージ/メニュー共通・イラスト調） */
   window(x, y, w, h) {
     const c = this.ctx;
-    c.fillStyle = COLORS.window; this.roundPath(x, y, w, h, 8); c.fill();
+    // 本体（縦グラデ＋落ち影）
+    c.save();
+    c.shadowColor = 'rgba(0,0,0,0.45)'; c.shadowBlur = 8; c.shadowOffsetY = 3;
+    const g = c.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, '#17244f'); g.addColorStop(1, '#0b1230');
+    c.fillStyle = g; this.roundPath(x, y, w, h, 8); c.fill();
+    c.restore();
+    // 内側・上半分のやわらかなハイライト
+    c.save(); this.roundPath(x + 2, y + 2, w - 4, h - 4, 6); c.clip();
+    const hl = c.createLinearGradient(0, y, 0, y + h * 0.55);
+    hl.addColorStop(0, 'rgba(174,224,255,0.16)'); hl.addColorStop(1, 'rgba(174,224,255,0)');
+    c.fillStyle = hl; c.fillRect(x, y, w, h * 0.55);
+    c.restore();
+    // 二重枠
     c.lineWidth = 3; c.strokeStyle = COLORS.windowBorder2; this.roundPath(x, y, w, h, 8); c.stroke();
     c.lineWidth = 1; c.strokeStyle = COLORS.windowBorder;  this.roundPath(x + 2, y + 2, w - 4, h - 4, 6); c.stroke();
+    // 四隅の光点
+    c.fillStyle = COLORS.windowBorder;
+    for (const [px, py] of [[x + 6, y + 6], [x + w - 6, y + 6], [x + 6, y + h - 6], [x + w - 6, y + h - 6]]) {
+      c.beginPath(); c.arc(px, py, 1.3, 0, 7); c.fill();
+    }
   }
   roundPath(x, y, w, h, r) {
     const c = this.ctx;
@@ -72,11 +99,21 @@ export class Renderer {
     c.fillStyle = color; c.fillText(str, x, y);
   }
 
-  /** ラベル付きゲージ（HP/MP/EXP） */
+  /** ラベル付きゲージ（HP/MP/EXP・角丸＋グラデ＋照り） */
   gauge(x, y, w, h, ratio, color, bg = '#22293f') {
-    this.rect(x, y, w, h, bg);
-    this.rect(x, y, Math.max(0, Math.min(1, ratio)) * w, h, color);
-    this.strokeRect(x, y, w, h, '#00000080');
+    const c = this.ctx, rr = Math.min(h / 2, 4);
+    c.save();
+    this.roundPath(x, y, w, h, rr); c.clip();
+    c.fillStyle = bg; c.fillRect(x, y, w, h); // くぼんだ地
+    const fw = Math.max(0, Math.min(1, ratio)) * w;
+    if (fw > 0.5) {
+      const g = c.createLinearGradient(0, y, 0, y + h);
+      g.addColorStop(0, this._shade(color, 0.4)); g.addColorStop(0.5, color); g.addColorStop(1, this._shade(color, -0.22));
+      c.fillStyle = g; c.fillRect(x, y, fw, h);
+      c.fillStyle = 'rgba(255,255,255,0.3)'; c.fillRect(x, y + 1, fw, Math.max(1, h * 0.3)); // 上面の照り
+    }
+    c.restore();
+    this.roundPath(x, y, w, h, rr); c.lineWidth = 1; c.strokeStyle = 'rgba(0,0,0,0.5)'; c.stroke();
   }
 
   /** 既に生成済みのスプライト(canvas/img)を描画 */
