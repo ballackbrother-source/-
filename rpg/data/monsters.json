@@ -1407,6 +1407,341 @@
           ]
         }
       ]
+    },
+    "M13": {
+      "name": "フロストウルフ",
+      "family": "beast",
+      "stats": {
+        "hp": 92,
+        "mp": 0,
+        "atk": 27,
+        "def": 12,
+        "mat": 0,
+        "mdf": 8,
+        "agi": 20,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 38,
+      "gold": 22,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.1
+        },
+        {
+          "item": "fire_crystal",
+          "rate": 0.08
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 3
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "hi_herb",
+        "rate": 0.3
+      }
+    },
+    "M14": {
+      "name": "アイスゴーレム",
+      "family": "machine",
+      "stats": {
+        "hp": 140,
+        "mp": 0,
+        "atk": 26,
+        "def": 24,
+        "mat": 0,
+        "mdf": 12,
+        "agi": 7,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "fire",
+          "thunder"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 52,
+      "gold": 34,
+      "drops": [
+        {
+          "item": "iron_shield",
+          "rate": 0.05
+        },
+        {
+          "item": "guard_seed",
+          "rate": 0.04
+        }
+      ],
+      "skills": [
+        "great_slam"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "guard_ring",
+        "rate": 0.1
+      }
+    },
+    "M15": {
+      "name": "ブリザード妖精",
+      "family": "spirit",
+      "stats": {
+        "hp": 80,
+        "mp": 40,
+        "atk": 16,
+        "def": 10,
+        "mat": 32,
+        "mdf": 14,
+        "agi": 18,
+        "luk": 7
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 46,
+      "gold": 30,
+      "drops": [
+        {
+          "item": "magic_water",
+          "rate": 0.15
+        },
+        {
+          "item": "ice_crystal",
+          "rate": 0.12
+        }
+      ],
+      "skills": [
+        "ice"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "ice",
+          "weight": 2
+        }
+      ],
+      "steal": {
+        "item": "magic_seed",
+        "rate": 0.08
+      }
+    },
+    "M16": {
+      "name": "クリスタルリザード",
+      "family": "beast",
+      "stats": {
+        "hp": 104,
+        "mp": 0,
+        "atk": 29,
+        "def": 18,
+        "mat": 0,
+        "mdf": 7,
+        "agi": 12,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "thunder",
+          "fire"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 44,
+      "gold": 28,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.1
+        },
+        {
+          "item": "thunder_crystal",
+          "rate": 0.1
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "ice_crystal",
+        "rate": 0.3
+      }
+    },
+    "B_FROSTKING": {
+      "name": "氷皇フリーゲル",
+      "family": "aqua",
+      "stats": {
+        "hp": 4600,
+        "mp": 160,
+        "atk": 44,
+        "def": 22,
+        "mat": 52,
+        "mdf": 20,
+        "agi": 17,
+        "luk": 9
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 280,
+      "gold": 220,
+      "drops": [
+        {
+          "item": "frost_ring",
+          "rate": 1.0
+        },
+        {
+          "item": "ice_crystal",
+          "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.6
+        },
+        {
+          "item": "life_seed",
+          "rate": 0.5
+        }
+      ],
+      "skills": [
+        "ice",
+        "tsunami",
+        "great_tsunami",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "ice",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "tsunami",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_tsunami",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "frost_ring",
+        "rate": 0.25
+      },
+      "boss": true,
+      "statusResist": 0.45,
+      "phases": [
+        {
+          "hp": 0.5,
+          "message": "氷皇フリーゲルが 氷の 衣を 張り替えた！ （弱点が 雷へ 移り、炎を 吸収する！）",
+          "atkMul": 1.25,
+          "element": {
+            "weak": [
+              "thunder"
+            ],
+            "resist": [
+              "ice"
+            ],
+            "absorb": [
+              "fire"
+            ],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "great_tsunami",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "enemy_fang",
+              "weight": 1
+            }
+          ]
+        }
+      ]
     }
   },
   "troops": {
@@ -1557,6 +1892,42 @@
     "revenant": {
       "members": [
         "B_REVENANT"
+      ]
+    },
+    "frost_wolves": {
+      "members": [
+        "M13",
+        "M13"
+      ]
+    },
+    "frost_mix": {
+      "members": [
+        "M14",
+        "M15"
+      ]
+    },
+    "frost_lizards": {
+      "members": [
+        "M16",
+        "M13"
+      ]
+    },
+    "frost_pack": {
+      "members": [
+        "M14",
+        "M15",
+        "M16"
+      ]
+    },
+    "frost_spirits": {
+      "members": [
+        "M15",
+        "M15"
+      ]
+    },
+    "frostking": {
+      "members": [
+        "B_FROSTKING"
       ]
     }
   }

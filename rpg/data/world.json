@@ -18,9 +18,10 @@
     "ruin": "古代遺跡",
     "shrine": "星の祭壇・神域",
     "cavern": "水晶洞",
-    "vale": "枯れ谷"
+    "vale": "枯れ谷",
+    "frost": "霜結の祠"
   },
-  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin", "shrine", "cavern", "vale"],
+  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin", "shrine", "cavern", "vale", "frost"],
   "eventFiles": [],
   "encounters": {
     "forest1": {
@@ -68,6 +69,16 @@
         { "troop": "vale_worms", "weight": 2 },
         { "troop": "vale_dolls", "weight": 1 },
         { "troop": "vale_pack", "weight": 1 }
+      ]
+    },
+    "frost1": {
+      "steps": [5, 9],
+      "troops": [
+        { "troop": "frost_wolves", "weight": 2 },
+        { "troop": "frost_mix", "weight": 2 },
+        { "troop": "frost_lizards", "weight": 2 },
+        { "troop": "frost_spirits", "weight": 1 },
+        { "troop": "frost_pack", "weight": 1 }
       ]
     }
   }

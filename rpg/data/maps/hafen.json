@@ -250,6 +250,8 @@
               { "type": "transfer", "mapId": "cavern", "x": 9, "y": 14, "dir": "up" } ] },
             { "text": "枯れ谷へ 行く（腕試し）", "commands": [
               { "type": "transfer", "mapId": "vale", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "霜結の祠へ 行く（腕試し）", "commands": [
+              { "type": "transfer", "mapId": "frost", "x": 9, "y": 14, "dir": "up" } ] },
             { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "気が 向いたら 言ってくれ。" } ] }
           ] } ] },
         { "conditions": { "flag": "betrayed", "notFlag": "regrouped" }, "commands": [
@@ -261,6 +263,8 @@
               { "type": "transfer", "mapId": "shrine", "x": 9, "y": 10, "dir": "up" } ] },
             { "text": "枯れ谷へ 行く（腕試し）", "commands": [
               { "type": "transfer", "mapId": "vale", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "霜結の祠へ 行く（腕試し）", "commands": [
+              { "type": "transfer", "mapId": "frost", "x": 9, "y": 14, "dir": "up" } ] },
             { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "覚悟が できたら 言ってくれ。" } ] }
           ] } ] }
       ]

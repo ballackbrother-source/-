@@ -38,6 +38,7 @@ async function main() {
   await test('第2章 裏切り（シオン離脱・章ch3）', testBetrayal);
   await test('枯れ谷ミニボス撃破（レヴナント）', testValeRevenant);
   await test('焚き火の絆（シオン語らい→赦し+5）', testCampfireBond);
+  await test('霜結の祠ミニボス撃破（氷皇フリーゲル）', testFrostKing);
   await test('後半TRUEルート（赦し95→連携→撃破）', testBackhalfTrue);
   await test('後半BADルート（拒絶→敗北→リセット）', testBackhalfBad);
   await test('セーブ→リロード→ロード', testSaveLoad);
@@ -215,6 +216,34 @@ async function testValeRevenant({ newGameAbortPrologue, evaluate, info, press, k
   }
   const st = await pressUntil((s) => s.flags.includes('vale_clear') || s.scene === 'TitleScene', 12000);
   const ok = st.flags.includes('vale_clear') && st.scene === 'FieldScene';
+  return { ok, msg: ok ? '' : `scene=${st.scene} flags=${st.flags}` };
+}
+
+// 霜結の祠（任意ダンジョン）：弱点巡回ミニボス「氷皇フリーゲル」を撃破し frost_clear が立つ
+async function testFrostKing({ newGameAbortPrologue, evaluate, info, press, killEnemies, pressUntil }) {
+  await newGameAbortPrologue();
+  await evaluate(() => {
+    const g = window.__ETERNIA.game;
+    Object.assign(g.state.flags, { p_intro: 1, ch1_join: 1, verdante_down: 1, ch2_intro: 1 });
+    g.state.chapter = { id: 'ch2', step: 0 };
+    ['garrod', 'fina', 'shino'].forEach((id) => g.party.addMember(id));
+    g.state.party.members.forEach((m) => { m.lv = 24; m.curHp = -1; m.curMp = -1; });
+    g.party.all().forEach((c) => { c.invalidate(); c.ensureVitals(); });
+    const s = g.scenes.current;
+    s.loadMap('frost', 9, 14, 'up');
+    const ev = (s.map.data.events || []).find((e) => e.trigger === 'action' && e.x === 9 && e.y === 1 && e.cond && e.cond.notFlag === 'frost_clear');
+    s.runEvent(ev.commands);
+  });
+  await sleep(300);
+  for (let i = 0; i < 8; i++) await press('Enter');
+  for (let i = 0; i < 40; i++) {
+    const s = await info();
+    if (s.scene !== 'BattleScene') break;
+    await killEnemies(false);
+    await press('Enter');
+  }
+  const st = await pressUntil((s) => s.flags.includes('frost_clear') || s.scene === 'TitleScene', 12000);
+  const ok = st.flags.includes('frost_clear') && st.scene === 'FieldScene';
   return { ok, msg: ok ? '' : `scene=${st.scene} flags=${st.flags}` };
 }
 
