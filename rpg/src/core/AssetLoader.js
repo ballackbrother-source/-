@@ -367,6 +367,15 @@ export class AssetLoader {
     ctx.fillStyle = rgba('#000000', 0.32);
     ctx.beginPath(); ctx.ellipse(0, r * 0.95, r * 0.95, r * 0.28, 0, 0, 7); ctx.fill();
 
+    // 部品アニメ：本体＋目をまとめて変形（接地影は固定のまま）
+    ctx.save();
+    if (family === 'slime' || family === 'elemental') {
+      const j = Math.sin(t * 0.18) * 0.06; // ぷるんと伸縮（接地点を軸に）
+      ctx.translate(0, r * 0.84); ctx.scale(1 + j, 1 - j); ctx.translate(0, -r * 0.84);
+    } else if (family === 'undead') {
+      ctx.translate(0, Math.sin(t * 0.07) * r * 0.07); // ふわふわ浮遊
+    }
+
     // ボディ用グラデ（左上から光）
     const grad = ctx.createRadialGradient(-r * 0.32, -r * 0.4, r * 0.15, 0, r * 0.1, r * 1.25);
     grad.addColorStop(0, tint(color, 0.4)); grad.addColorStop(0.55, color); grad.addColorStop(1, tint(color, -0.4));
@@ -598,7 +607,10 @@ export class AssetLoader {
       }
       case 'flying': { // 飛行：コウモリ（広げた翼・とがり耳・牙）
         rim = false;
+        const wf = Math.sin(t * 0.25) * 0.22; // はばたき
         for (const sx of [-1, 1]) { // 翼
+          ctx.save();
+          ctx.translate(sx * r * 0.2, -r * 0.15); ctx.rotate(-sx * wf); ctx.translate(-sx * r * 0.2, r * 0.15);
           ctx.beginPath();
           ctx.moveTo(sx * r * 0.2, -r * 0.15);
           ctx.quadraticCurveTo(sx * r * 1.0, -r * 0.9, sx * r * 1.5, -r * 0.5);
@@ -606,6 +618,7 @@ export class AssetLoader {
           ctx.lineTo(sx * r * 0.85, -r * 0.05); ctx.lineTo(sx * r * 1.0, r * 0.45);
           ctx.quadraticCurveTo(sx * r * 0.5, r * 0.1, sx * r * 0.2, -r * 0.15);
           ctx.closePath(); part(-0.18);
+          ctx.restore();
         }
         for (const sx of [-1, 1]) { ctx.beginPath(); ctx.moveTo(sx * r * 0.35, -r * 0.35); ctx.lineTo(sx * r * 0.6, -r * 0.95); ctx.lineTo(sx * r * 0.05, -r * 0.5); ctx.closePath(); part(0); }
         ctx.beginPath(); ctx.ellipse(0, r * 0.1, r * 0.55, r * 0.6, 0, 0, 7); body(); // 胴
@@ -617,16 +630,19 @@ export class AssetLoader {
       }
       case 'insect': { // 蟲：触角・羽・節のある胴
         rim = false;
+        const iwf = Math.sin(t * 0.3) * 0.14; // 羽ばたき
         for (const [yy, rr] of [[-r * 0.2, 0.62], [r * 0.45, 0.46]]) { // 上下の羽
-          for (const sx of [-1, 1]) { ctx.beginPath(); ctx.ellipse(sx * r * 0.7, yy, r * rr, r * (rr * 0.82), sx * 0.3, 0, 7); part(0.12); }
+          for (const sx of [-1, 1]) { ctx.save(); ctx.rotate(sx * iwf); ctx.beginPath(); ctx.ellipse(sx * r * 0.7, yy, r * rr, r * (rr * 0.82), sx * 0.3, 0, 7); part(0.12); ctx.restore(); }
         }
         ctx.fillStyle = rgba('#000', 0.12);
         for (const sx of [-1, 1]) { ctx.beginPath(); ctx.arc(sx * r * 0.85, -r * 0.2, r * 0.12, 0, 7); ctx.fill(); } // 羽紋
         // 触角
         ctx.strokeStyle = outline; ctx.lineWidth = lw * 0.8;
+        const aw = Math.sin(t * 0.22) * r * 0.1; // 触角の揺れ
         for (const sx of [-1, 1]) {
-          ctx.beginPath(); ctx.moveTo(sx * r * 0.12, -r * 0.6); ctx.quadraticCurveTo(sx * r * 0.5, -r * 1.2, sx * r * 0.7, -r * 1.15); ctx.stroke();
-          ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(sx * r * 0.72, -r * 1.15, r * 0.1, 0, 7); ctx.fill();
+          const tipx = sx * r * 0.7 + aw, tipy = -r * 1.15 + Math.abs(aw) * 0.2;
+          ctx.beginPath(); ctx.moveTo(sx * r * 0.12, -r * 0.6); ctx.quadraticCurveTo(sx * r * 0.5, -r * 1.2, tipx, tipy); ctx.stroke();
+          ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(tipx, tipy, r * 0.1, 0, 7); ctx.fill();
         }
         ctx.lineWidth = lw;
         ctx.beginPath(); ctx.ellipse(0, r * 0.1, r * 0.3, r * 0.85, 0, 0, 7); body(); // 胴（縦長）
@@ -656,13 +672,17 @@ export class AssetLoader {
       }
       case 'demon': case 'boss': { // 魔/神格ボス：大きな角＋角張った翼＋光る眼
         rim = false;
+        const dwf = Math.sin(t * 0.12) * 0.1; // 翼のゆれ
         for (const sx of [-1, 1]) { // 角張った翼
+          ctx.save();
+          ctx.translate(sx * r * 0.35, -r * 0.1); ctx.rotate(-sx * dwf); ctx.translate(-sx * r * 0.35, r * 0.1);
           ctx.beginPath();
           ctx.moveTo(sx * r * 0.35, -r * 0.1);
           ctx.lineTo(sx * r * 1.45, -r * 0.85); ctx.lineTo(sx * r * 1.15, -r * 0.35);
           ctx.lineTo(sx * r * 1.5, -r * 0.05); ctx.lineTo(sx * r * 1.1, r * 0.1);
           ctx.lineTo(sx * r * 1.3, r * 0.5); ctx.lineTo(sx * r * 0.5, r * 0.2);
           ctx.closePath(); part(-0.22);
+          ctx.restore();
         }
         ctx.beginPath(); // ローブ状の胴
         ctx.arc(0, 0, r, Math.PI, 0); ctx.lineTo(r, r * 0.5);
@@ -695,7 +715,8 @@ export class AssetLoader {
         roundRect(ctx, r * 0.7, r * 0.05, r * 0.45, r * 0.7, 3 * s); part(-0.18);
         drawEyes = false;
         ctx.fillStyle = '#08111e'; roundRect(ctx, -r * 0.65, head + r * 0.28, r * 1.3, r * 0.34, 3 * s); ctx.fill(); // バイザー溝
-        ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = '#5ad6ff';
+        const vb = (t % 150 < 6) ? 0.22 : (0.78 + 0.22 * Math.sin(t * 0.12)); // ときどき点滅＋微脈動
+        ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = vb; ctx.fillStyle = '#5ad6ff';
         roundRect(ctx, -r * 0.5, head + r * 0.36, r * 1.0, r * 0.16, 2 * s); ctx.fill();
         ctx.fillStyle = rgba('#5ad6ff', 0.4); ctx.fillRect(-r * 0.6, head + r * 0.3, r * 1.2, r * 0.3); ctx.restore();
         ctx.fillStyle = rgba('#ffffff', 0.5); // 鋲
@@ -853,6 +874,7 @@ export class AssetLoader {
         ctx.beginPath(); ctx.arc(sx * eye.x - eye.r * 0.3, eye.y - eye.r * 0.3, eye.r * 0.18, 0, 7); ctx.fill();
       }
     }
+    ctx.restore(); // 部品アニメ変形を閉じる
     ctx.restore();
   }
 }
