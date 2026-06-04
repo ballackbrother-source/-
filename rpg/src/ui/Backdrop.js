@@ -118,14 +118,48 @@ export function drawBattleBg(ctx, { boss = false, special = false, tick = 0 } = 
   ctx.restore();
 }
 
-/** フィールドの空気感：上からのやわらかな光＋四隅のビネット（質感統一） */
-export function drawFieldAmbient(ctx) {
-  const top = ctx.createLinearGradient(0, 0, 0, VIEW_H);
-  top.addColorStop(0, rgba('#fff4d8', 0.07)); top.addColorStop(0.38, rgba('#fff4d8', 0));
-  ctx.fillStyle = top; ctx.fillRect(0, 0, VIEW_W, VIEW_H);
-  const vg = ctx.createRadialGradient(VIEW_W / 2, VIEW_H / 2, VIEW_H * 0.36, VIEW_W / 2, VIEW_H / 2, VIEW_H * 0.8);
-  vg.addColorStop(0, rgba('#000814', 0)); vg.addColorStop(1, rgba('#000814', 0.3));
+// 場所/時間帯ごとの空気感プリセット
+const MOODS = {
+  day:    { top: '#fff4d8', topA: 0.07, vig: 0.30, vigCol: '#000814' },
+  town:   { top: '#fff0c8', topA: 0.09, vig: 0.26, vigCol: '#1a0e06' },
+  forest: { tint: '#103a1c', tintA: 0.16, top: '#dfffe0', topA: 0.06, vig: 0.34, vigCol: '#02160a' },
+  cave:   { tint: '#0a1024', tintA: 0.5, top: '#3a5fa0', topA: 0, vig: 0.55, vigCol: '#000208', torch: true },
+  snow:   { tint: '#cfe6ff', tintA: 0.13, top: '#ffffff', topA: 0.1, vig: 0.22, vigCol: '#0a1a30' },
+  shrine: { tint: '#16264a', tintA: 0.2, top: '#bfe8ff', topA: 0.09, vig: 0.36, vigCol: '#020814' },
+  ruin:   { tint: '#3a1e2a', tintA: 0.2, top: '#ffc69a', topA: 0.07, vig: 0.4, vigCol: '#120406' },
+  indoor: { tint: '#2a1c10', tintA: 0.22, top: '#ffd9a0', topA: 0.08, vig: 0.34, vigCol: '#0e0804' },
+};
+
+/** フィールドの空気感：場所/時間帯ごとの色温度＋光＋ビネット（質感統一） */
+export function drawFieldAmbient(ctx, mood = 'day') {
+  const M = MOODS[mood] || MOODS.day;
+  // 全体の色被せ（色温度）
+  if (M.tintA) { ctx.fillStyle = rgba(M.tint, M.tintA); ctx.fillRect(0, 0, VIEW_W, VIEW_H); }
+  // 上からの光
+  if (M.topA) {
+    const top = ctx.createLinearGradient(0, 0, 0, VIEW_H);
+    top.addColorStop(0, rgba(M.top, M.topA)); top.addColorStop(0.4, rgba(M.top, 0));
+    ctx.fillStyle = top; ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+  }
+  // 洞窟の松明グロー（画面中央＝プレイヤー付近）
+  if (M.torch) {
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const g = ctx.createRadialGradient(VIEW_W / 2, VIEW_H / 2, 20, VIEW_W / 2, VIEW_H / 2, VIEW_H * 0.7);
+    g.addColorStop(0, rgba('#ffb24a', 0.24)); g.addColorStop(0.5, rgba('#ff8a3a', 0.08)); g.addColorStop(1, rgba('#ff8a3a', 0));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, VIEW_W, VIEW_H); ctx.restore();
+  }
+  // ビネット
+  const vg = ctx.createRadialGradient(VIEW_W / 2, VIEW_H / 2, VIEW_H * 0.34, VIEW_W / 2, VIEW_H / 2, VIEW_H * 0.82);
+  vg.addColorStop(0, rgba(M.vigCol, 0)); vg.addColorStop(1, rgba(M.vigCol, M.vig));
   ctx.fillStyle = vg; ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+}
+
+/** マップID → 空気感プリセット */
+export function fieldMood(mapId) {
+  return ({
+    hafen: 'town', lumina: 'day', lumina_forest: 'forest', lumina_house: 'indoor',
+    cavern: 'cave', frost: 'snow', shrine: 'shrine', ruin: 'ruin', vale: 'forest',
+  })[mapId] || 'day';
 }
 
 /** タイトル背景。t = フレームカウンタ */
