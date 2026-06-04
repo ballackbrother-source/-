@@ -54,6 +54,6 @@ export class FieldPlayer {
   }
 
   draw(r, assets, camX, camY) {
-    assets.drawActor(r.ctx, this.px - camX, this.py - camY, this.color, this.dir, this.frame);
+    assets.drawActor(r.ctx, this.px - camX, this.py - camY, this.color, this.dir, this.frame, 'hero');
   }
 }
