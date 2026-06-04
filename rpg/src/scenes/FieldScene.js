@@ -9,6 +9,7 @@ import { VIEW_W, VIEW_H, COLORS, TILE } from '../config/constants.js';
 import { TileMap } from '../field/TileMap.js';
 import { Camera } from '../field/Camera.js';
 import { MapRenderer } from '../field/MapRenderer.js';
+import { drawFieldAmbient } from '../ui/Backdrop.js';
 import { FieldPlayer } from '../field/FieldPlayer.js';
 import { NPC } from '../field/NPC.js';
 import { MessageWindow } from '../ui/MessageWindow.js';
@@ -296,6 +297,9 @@ export class FieldScene extends Scene {
     r.save(); r.translate(sx, sy);
     this.renderer.draw(r, this.camera.x, this.camera.y, [this.player, ...this.npcs]);
     r.restore();
+
+    // 空気感（上光＋ビネット）でフィールドの質感を戦闘/タイトルと統一
+    drawFieldAmbient(r.ctx);
 
     // フェード暗幕はマップの上・UIの下（暗転中も会話文は読める）
     if (this.fadeAlpha > 0) {

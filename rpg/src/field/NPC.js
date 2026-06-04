@@ -51,6 +51,6 @@ export class NPC {
 
   draw(r, assets, camX, camY) {
     if (!this.visible) return;
-    assets.drawActor(r.ctx, this.px - camX, this.py - camY, this.color, this.dir, this.frame);
+    assets.drawActor(r.ctx, this.px - camX, this.py - camY, this.color, this.dir, this.frame, 'npc', performance.now() / 220 + this.gx * 0.7 + this.gy * 0.4);
   }
 }

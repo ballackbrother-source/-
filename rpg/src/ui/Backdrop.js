@@ -118,6 +118,16 @@ export function drawBattleBg(ctx, { boss = false, special = false, tick = 0 } = 
   ctx.restore();
 }
 
+/** フィールドの空気感：上からのやわらかな光＋四隅のビネット（質感統一） */
+export function drawFieldAmbient(ctx) {
+  const top = ctx.createLinearGradient(0, 0, 0, VIEW_H);
+  top.addColorStop(0, rgba('#fff4d8', 0.07)); top.addColorStop(0.38, rgba('#fff4d8', 0));
+  ctx.fillStyle = top; ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+  const vg = ctx.createRadialGradient(VIEW_W / 2, VIEW_H / 2, VIEW_H * 0.36, VIEW_W / 2, VIEW_H / 2, VIEW_H * 0.8);
+  vg.addColorStop(0, rgba('#000814', 0)); vg.addColorStop(1, rgba('#000814', 0.3));
+  ctx.fillStyle = vg; ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+}
+
 /** タイトル背景。t = フレームカウンタ */
 export function drawTitleBg(ctx, t = 0) {
   // 空

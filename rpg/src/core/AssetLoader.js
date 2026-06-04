@@ -235,10 +235,11 @@ export class AssetLoader {
   }
 
   // ── フィールド人物：陰影付きのデフォルメ人物（4方向・歩行2フレーム） ──
-  drawActor(ctx, px, py, color, dir = 'down', frame = 0, gear = 'npc') {
+  drawActor(ctx, px, py, color, dir = 'down', frame = 0, gear = 'npc', t = 0) {
     const cx = px + TILE / 2;
     const hero = gear === 'hero';
-    const bob = frame === 1 ? -1 : 0;
+    const idle = frame === 0 ? Math.sin(t) * 0.8 : 0; // 待機時のゆっくりした呼吸（上半身のみ）
+    const bob = (frame === 1 ? -1 : 0) + idle;
     const top = py + 3 + bob;
     const skin = '#f1c79a', skinSh = '#d8a574';
     const hair = hero ? '#6a4528' : '#5a3a26';
