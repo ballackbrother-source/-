@@ -19,6 +19,7 @@ const FAM_COLOR = {
   beast: '#b9783f', plant: '#4caf50', insect: '#9ccc3f', undead: '#c8d0d8',
   machine: '#9aa6b8', aqua: '#3fa9d8', flying: '#d8c23f', dragon: '#c0392b',
   elemental: '#e0533f', demon: '#7e57c2', boss: '#b03060', slime: '#5fd38a',
+  mage: '#6a5acd', spirit: '#6fd0ff',
 };
 
 export class MenuScene extends Scene {

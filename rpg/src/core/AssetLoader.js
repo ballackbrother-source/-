@@ -585,6 +585,60 @@ export class AssetLoader {
         eye = { x: r * 0.28, y: r * 0.0, r: r * 0.18, slit: false, color: '#caa11e' };
         break;
       }
+      case 'mage': { // 魔術師：とんがり帽子・ローブ・杖・足元の魔法陣
+        rim = false;
+        const arc = '#9a7bff'; // 魔力の発光色
+        // 足元の魔法陣（回転する二重リング＋ルーン）
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        ctx.strokeStyle = rgba(arc, 0.7); ctx.lineWidth = lw * 0.9;
+        ctx.beginPath(); ctx.ellipse(0, r * 0.95, r * 1.05, r * 0.34, 0, 0, 7); ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0, r * 0.95, r * 0.72, r * 0.23, 0, 0, 7); ctx.stroke();
+        ctx.fillStyle = rgba(arc, 0.8);
+        for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; ctx.beginPath(); ctx.arc(Math.cos(a) * r * 0.88, r * 0.95 + Math.sin(a) * r * 0.28, 1.6 * s, 0, 7); ctx.fill(); }
+        ctx.restore();
+        // 杖（右手側。柄＋先端の光球）
+        ctx.strokeStyle = '#7a5230'; ctx.lineWidth = lw * 1.3; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(r * 0.78, r * 0.95); ctx.lineTo(r * 0.62, -r * 0.95); ctx.stroke();
+        ctx.lineCap = 'butt';
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = rgba(arc, 0.4); ctx.beginPath(); ctx.arc(r * 0.6, -r * 1.05, r * 0.28, 0, 7); ctx.fill(); ctx.restore();
+        ctx.fillStyle = arc; ctx.strokeStyle = outline; ctx.lineWidth = lw * 0.7;
+        ctx.beginPath(); ctx.arc(r * 0.6, -r * 1.05, r * 0.14, 0, 7); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = rgba('#ffffff', 0.9); ctx.beginPath(); ctx.arc(r * 0.55, -r * 1.1, r * 0.05, 0, 7); ctx.fill();
+        ctx.lineWidth = lw;
+        // ローブ（広がる裾＋袖）
+        ctx.beginPath();
+        ctx.moveTo(0, -r * 0.55);
+        ctx.quadraticCurveTo(r * 0.7, -r * 0.4, r * 0.95, r * 0.95);
+        ctx.quadraticCurveTo(r * 0.45, r * 0.7, 0, r * 0.95);
+        ctx.quadraticCurveTo(-r * 0.45, r * 0.7, -r * 0.95, r * 0.95);
+        ctx.quadraticCurveTo(-r * 0.7, -r * 0.4, 0, -r * 0.55);
+        ctx.closePath(); body();
+        // 前合わせ＋裾の縁取り
+        ctx.strokeStyle = rgba(arc, 0.6); ctx.lineWidth = lw * 0.8;
+        ctx.beginPath(); ctx.moveTo(0, -r * 0.4); ctx.lineTo(0, r * 0.85); ctx.stroke();
+        ctx.lineWidth = lw;
+        // 顔（帽子の影に沈む。光る眼）
+        ctx.fillStyle = '#120a1e';
+        ctx.beginPath(); ctx.ellipse(0, -r * 0.42, r * 0.42, r * 0.34, 0, 0, 7); ctx.fill();
+        // とんがり帽子（つば＋折れた先端）
+        ctx.fillStyle = grad;
+        ctx.beginPath(); ctx.ellipse(0, -r * 0.5, r * 0.72, r * 0.2, 0, 0, 7); ctx.fill(); ctx.stroke(); // つば
+        ctx.beginPath();
+        ctx.moveTo(-r * 0.5, -r * 0.5);
+        ctx.quadraticCurveTo(-r * 0.2, -r * 1.5, r * 0.55, -r * 1.7); // 折れて垂れる先端
+        ctx.quadraticCurveTo(r * 0.2, -r * 1.1, r * 0.5, -r * 0.5);
+        ctx.closePath(); body();
+        ctx.fillStyle = arc; ctx.beginPath(); ctx.arc(r * 0.55, -r * 1.7, r * 0.1, 0, 7); ctx.fill(); // 先端の飾り玉
+        ctx.fillStyle = rgba(arc, 0.7); ctx.fillRect(-r * 0.7, -r * 0.58, r * 1.4, r * 0.1); // 帽子の帯
+        // 光る眼
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        for (const sx of [-1, 1]) { ctx.fillStyle = '#d9c4ff'; ctx.beginPath(); ctx.ellipse(sx * r * 0.16, -r * 0.4, r * 0.07, r * 0.05, 0, 0, 7); ctx.fill();
+          ctx.fillStyle = rgba(arc, 0.6); ctx.beginPath(); ctx.arc(sx * r * 0.16, -r * 0.4, r * 0.16, 0, 7); ctx.fill(); }
+        ctx.restore();
+        drawEyes = false;
+        break;
+      }
       case 'spirit': { // 精霊/妖精：発光する核＋透ける羽＋きらめき
         rim = false;
         ctx.save(); ctx.globalAlpha = 0.55;

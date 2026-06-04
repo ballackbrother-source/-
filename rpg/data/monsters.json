@@ -1247,7 +1247,7 @@
     },
     "M12": {
       "name": "呪詛人形",
-      "family": "undead",
+      "family": "mage",
       "stats": {
         "hp": 96,
         "mp": 40,
