@@ -444,7 +444,7 @@ export class MenuScene extends Scene {
       r.text('まだ 出会っていない', dx + dw / 2, 240, { size: 14, align: 'center', color: COLORS.textDim });
       return;
     }
-    this.game.assets.drawMonster(r.ctx, dx + dw / 2, 96, def.family, FAM_COLOR[def.family] || '#aa6cc8', def.boss ? 1.3 : 1.0);
+    this.game.assets.drawMonster(r.ctx, dx + dw / 2, 96, def.family, FAM_COLOR[def.family] || '#aa6cc8', def.boss ? 1.3 : 1.0, performance.now() / 16);
     r.text(def.name, dx + dw / 2, 150, { size: 20, align: 'center', color: COLORS.selected });
     if (!beat) { r.text('（討伐すると 詳細が 見られる）', dx + dw / 2, 188, { size: 13, align: 'center', color: COLORS.textDim }); return; }
     const s = def.stats, el = def.element || {};

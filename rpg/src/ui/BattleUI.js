@@ -28,7 +28,7 @@ export class BattleUI {
       r.ctx.translate(cx, cy + bob);
       r.ctx.scale(breath, breath);
       const col = this._famColor(e.family);
-      this.assets.drawMonster(r.ctx, 0, 0, e.family, col, s);
+      this.assets.drawMonster(r.ctx, 0, 0, e.family, col, s, tk);
       r.restore();
     });
   }

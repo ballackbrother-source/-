@@ -358,7 +358,7 @@ export class AssetLoader {
   }
 
   // ── 戦闘モンスター：系統が「見て分かる」シルエット＋陰影＋リムライト ──
-  drawMonster(ctx, cx, cy, family, color, s = 1) {
+  drawMonster(ctx, cx, cy, family, color, s = 1, t = 0) {
     ctx.save();
     ctx.translate(cx, cy);
     const r = 26 * s;
@@ -420,7 +420,9 @@ export class AssetLoader {
         ctx.fillStyle = rgba('#000000', 0.26);
         ctx.beginPath(); ctx.ellipse(X(-0.15), Y(1.2), X(1.25), Y(0.2), 0, 0, 7); ctx.fill();
 
-        // === 翼（背後・赤い外枠＋クリームの膜）===
+        // === 翼（背後・赤い外枠＋クリームの膜・はばたき）===
+        ctx.save();
+        ctx.translate(X(0.16), Y(-0.3)); ctx.rotate(Math.sin(t * 0.06) * 0.13); ctx.translate(X(-0.16), Y(0.3)); // 付け根を軸にはばたく
         ctx.beginPath();
         ctx.moveTo(X(0.12), Y(-0.34));
         ctx.quadraticCurveTo(X(0.78), Y(-1.5), X(1.78), Y(-1.5));    // 上端→翼端
@@ -444,6 +446,7 @@ export class AssetLoader {
         ctx.moveTo(X(0.22), Y(-0.3)); ctx.lineTo(X(1.66), Y(-0.72));
         ctx.moveTo(X(0.22), Y(-0.3)); ctx.lineTo(X(1.3), Y(-0.3));
         ctx.stroke(); ctx.lineWidth = lw;
+        ctx.restore();
 
         // === 尾（背後・短い）===
         ctx.beginPath();
@@ -523,9 +526,10 @@ export class AssetLoader {
         ctx.quadraticCurveTo(X(-1.96), Y(0.04), X(-2.02), Y(-0.32));
         ctx.closePath(); ctx.fill();
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
-        const fg = ctx.createRadialGradient(X(-1.05), Y(-0.2), 1, X(-1.05), Y(-0.2), X(0.4));
-        fg.addColorStop(0, rgba('#ffd27a', 0.7)); fg.addColorStop(0.5, rgba('#ff7a2a', 0.4)); fg.addColorStop(1, rgba('#ff3a10', 0));
-        ctx.fillStyle = fg; ctx.beginPath(); ctx.ellipse(X(-1.05), Y(-0.2), X(0.32), Y(0.2), 0, 0, 7); ctx.fill();
+        const fl = 0.7 + 0.3 * Math.sin(t * 0.3); // 炎の明滅
+        const fg = ctx.createRadialGradient(X(-1.05), Y(-0.2), 1, X(-1.05), Y(-0.2), X(0.4) * (0.92 + 0.16 * Math.sin(t * 0.3 + 1)));
+        fg.addColorStop(0, rgba('#ffd27a', 0.7 * fl)); fg.addColorStop(0.5, rgba('#ff7a2a', 0.4 * fl)); fg.addColorStop(1, rgba('#ff3a10', 0));
+        ctx.fillStyle = fg; ctx.beginPath(); ctx.ellipse(X(-1.05), Y(-0.2), X(0.32) * (0.95 + 0.1 * fl), Y(0.2), 0, 0, 7); ctx.fill();
         ctx.restore();
 
         // === 牙（白くぎっしり）===
@@ -545,6 +549,15 @@ export class AssetLoader {
         ctx.fillStyle = '#1a0a08'; ctx.beginPath(); ctx.ellipse(X(-1.55), Y(-0.66), X(0.04), Y(0.07), 0.3, 0, 7); ctx.fill();
         ctx.fillStyle = rgba('#ffffff', 0.85); ctx.beginPath(); ctx.arc(X(-1.6), Y(-0.7), X(0.025), 0, 7); ctx.fill();
         ctx.fillStyle = '#2a0f08'; ctx.beginPath(); ctx.ellipse(X(-1.94), Y(-0.58), X(0.055), Y(0.04), 0.5, 0, 7); ctx.fill();
+        // 口から立ちのぼる火の粉
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        for (let k = 0; k < 3; k++) {
+          const ph = (((t * 0.02 + k / 3) % 1) + 1) % 1;
+          const ex = X(-1.4 - k * 0.16 - ph * 0.12), ey = Y(-0.36 - ph * 0.8);
+          ctx.fillStyle = rgba(k % 2 ? '#ffc24a' : '#ff7a2a', 0.55 * (1 - ph));
+          ctx.beginPath(); ctx.arc(ex, ey, X(0.05 * (1 - ph * 0.4)), 0, 7); ctx.fill();
+        }
+        ctx.restore();
         ctx.restore();
 
         // === 前腕（2本・小・爪）===
