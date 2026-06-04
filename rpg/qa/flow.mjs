@@ -36,6 +36,7 @@ async function main() {
   await test('新規ゲーム→プロローグ', testPrologue);
   await test('第1章 仲間＆シオン加入', testCh1Join);
   await test('第2章 裏切り（シオン離脱・章ch3）', testBetrayal);
+  await test('枯れ谷ミニボス撃破（レヴナント）', testValeRevenant);
   await test('後半TRUEルート（赦し95→連携→撃破）', testBackhalfTrue);
   await test('後半BADルート（拒絶→敗北→リセット）', testBackhalfBad);
   await test('セーブ→リロード→ロード', testSaveLoad);
@@ -185,6 +186,35 @@ async function testBetrayal({ newGameAbortPrologue, press, info, evaluate, burst
   const st = await pressUntil((s) => s.flags.includes('betrayed') || s.scene === 'TitleScene', 14000);
   const ok = !st.order.split(',').includes('shion') && st.flags.includes('betrayed') && st.chapter === 'ch3' && st.cores === 0;
   return { ok, msg: ok ? '' : `order=${st.order} ch=${st.chapter} cores=${st.cores} scene=${st.scene}` };
+}
+
+// 枯れ谷（任意ダンジョン）：奥のミニボス「嘆きの亡霊」を撃破し vale_clear が立つことを検証
+async function testValeRevenant({ newGameAbortPrologue, evaluate, info, press, killEnemies, pressUntil }) {
+  await newGameAbortPrologue();
+  await evaluate(() => {
+    const g = window.__ETERNIA.game;
+    Object.assign(g.state.flags, { p_intro: 1, ch1_join: 1, verdante_down: 1, ch2_intro: 1 });
+    g.state.chapter = { id: 'ch2', step: 0 };
+    ['garrod', 'fina', 'shino'].forEach((id) => g.party.addMember(id));
+    g.state.party.members.forEach((m) => { m.lv = 22; m.curHp = -1; m.curMp = -1; });
+    g.party.all().forEach((c) => { c.invalidate(); c.ensureVitals(); });
+    const s = g.scenes.current;
+    s.loadMap('vale', 9, 14, 'up');
+    // 奥のミニボス行動イベント（vale_clear 未成立分）を直接発火
+    const ev = (s.map.data.events || []).find((e) => e.trigger === 'action' && e.x === 9 && e.y === 1 && e.cond && e.cond.notFlag === 'vale_clear');
+    s.runEvent(ev.commands);
+  });
+  await sleep(300);
+  for (let i = 0; i < 8; i++) await press('Enter'); // 戦闘開始まで会話送り
+  for (let i = 0; i < 40; i++) {
+    const s = await info();
+    if (s.scene !== 'BattleScene') break;
+    await killEnemies(false);
+    await press('Enter');
+  }
+  const st = await pressUntil((s) => s.flags.includes('vale_clear') || s.scene === 'TitleScene', 12000);
+  const ok = st.flags.includes('vale_clear') && st.scene === 'FieldScene';
+  return { ok, msg: ok ? '' : `scene=${st.scene} flags=${st.flags}` };
 }
 
 async function backhalfSetup(evaluate) {

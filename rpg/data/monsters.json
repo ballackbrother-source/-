@@ -1078,6 +1078,335 @@
           ]
         }
       ]
+    },
+    "M09": {
+      "name": "枯れ木の精",
+      "family": "plant",
+      "stats": {
+        "hp": 88,
+        "mp": 0,
+        "atk": 24,
+        "def": 16,
+        "mat": 8,
+        "mdf": 8,
+        "agi": 11,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "fire",
+          "light"
+        ],
+        "resist": [
+          "earth"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 34,
+      "gold": 20,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.12
+        },
+        {
+          "item": "fire_crystal",
+          "rate": 0.08
+        }
+      ],
+      "skills": [
+        "root_slam"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "root_slam",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "hi_herb",
+        "rate": 0.3
+      }
+    },
+    "M10": {
+      "name": "さまよう亡者",
+      "family": "undead",
+      "stats": {
+        "hp": 110,
+        "mp": 0,
+        "atk": 28,
+        "def": 14,
+        "mat": 0,
+        "mdf": 7,
+        "agi": 9,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "light"
+        ],
+        "resist": [
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 40,
+      "gold": 26,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.12
+        },
+        {
+          "item": "dark_crystal",
+          "rate": 0.12
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "life_seed",
+        "rate": 0.05
+      }
+    },
+    "M11": {
+      "name": "砂蟲",
+      "family": "insect",
+      "stats": {
+        "hp": 78,
+        "mp": 0,
+        "atk": 26,
+        "def": 11,
+        "mat": 6,
+        "mdf": 6,
+        "agi": 22,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "ice",
+          "wind"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 36,
+      "gold": 22,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.15
+        },
+        {
+          "item": "wind_crystal",
+          "rate": 0.1
+        }
+      ],
+      "skills": [
+        "poison_spore"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "poison_spore",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "magic_water",
+        "rate": 0.3
+      }
+    },
+    "M12": {
+      "name": "呪詛人形",
+      "family": "undead",
+      "stats": {
+        "hp": 96,
+        "mp": 40,
+        "atk": 18,
+        "def": 15,
+        "mat": 30,
+        "mdf": 14,
+        "agi": 12,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "fire",
+          "light"
+        ],
+        "resist": [
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 46,
+      "gold": 30,
+      "drops": [
+        {
+          "item": "magic_water",
+          "rate": 0.15
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.04
+        }
+      ],
+      "skills": [
+        "wail"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "wail",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "dark_crystal",
+        "rate": 0.35
+      }
+    },
+    "B_REVENANT": {
+      "name": "嘆きの亡霊レヴナント",
+      "family": "undead",
+      "stats": {
+        "hp": 4200,
+        "mp": 120,
+        "atk": 46,
+        "def": 26,
+        "mat": 54,
+        "mdf": 20,
+        "agi": 16,
+        "luk": 7
+      },
+      "element": {
+        "weak": [
+          "light"
+        ],
+        "resist": [
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 260,
+      "gold": 200,
+      "drops": [
+        {
+          "item": "life_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "light_crystal",
+          "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.6
+        },
+        {
+          "item": "hi_herb",
+          "rate": 0.5
+        }
+      ],
+      "skills": [
+        "wail",
+        "enemy_fang",
+        "poison_spore"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "wail",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "poison_spore",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "mei_stone",
+        "rate": 0.4
+      },
+      "boss": true,
+      "statusResist": 0.45,
+      "phases": [
+        {
+          "hp": 0.45,
+          "message": "嘆きの亡霊が 怨念を 撒き散らす！ （光が さらに 効く！）",
+          "atkMul": 1.25,
+          "element": {
+            "weak": [
+              "light"
+            ],
+            "resist": [],
+            "absorb": [],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "wail",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "enemy_fang",
+              "weight": 1
+            }
+          ]
+        }
+      ]
     }
   },
   "troops": {
@@ -1191,6 +1520,43 @@
     "asterion": {
       "members": [
         "ASTERION"
+      ]
+    },
+    "vale_spirits": {
+      "members": [
+        "M09",
+        "M09"
+      ]
+    },
+    "vale_undead": {
+      "members": [
+        "M10",
+        "M12"
+      ]
+    },
+    "vale_worms": {
+      "members": [
+        "M11",
+        "M11",
+        "M09"
+      ]
+    },
+    "vale_pack": {
+      "members": [
+        "M10",
+        "M11",
+        "M12"
+      ]
+    },
+    "vale_dolls": {
+      "members": [
+        "M12",
+        "M12"
+      ]
+    },
+    "revenant": {
+      "members": [
+        "B_REVENANT"
       ]
     }
   }

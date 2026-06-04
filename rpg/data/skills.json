@@ -38,6 +38,7 @@
   "great_tsunami": { "name": "大津波", "type": "magic", "element": "ice", "target": "allEnemies", "mp": 0, "power": 2.6, "charge": true, "desc": "" },
   "genesis":       { "name": "ジェネシス", "type": "magic", "element": "light", "target": "allEnemies", "mp": 0, "power": 2.5, "charge": true, "desc": "" },
   "hellflame":     { "name": "ヘルフレイム", "type": "magic", "element": "fire", "target": "allEnemies", "mp": 0, "power": 2.8, "charge": true, "desc": "" },
+  "wail":          { "name": "怨嗟の慟哭", "type": "magic", "element": "dark", "target": "allEnemies", "mp": 0, "power": 2.4, "charge": true, "desc": "" },
   "root_slam":   { "name": "ねっこの一撃", "type": "physical", "element": "earth", "target": "allEnemies", "mp": 0, "power": 0.9, "desc": "" },
   "poison_spore":{ "name": "どくの ほうし", "type": "status", "target": "allEnemies", "mp": 0, "inflict": { "status": "poison", "rate": 0.5 }, "desc": "" }
 }

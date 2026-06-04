@@ -207,6 +207,8 @@
               { "type": "transfer", "mapId": "ruin", "x": 9, "y": 14, "dir": "up" } ] },
             { "text": "水晶洞へ 行く", "commands": [
               { "type": "transfer", "mapId": "cavern", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "枯れ谷へ 行く（腕試し）", "commands": [
+              { "type": "transfer", "mapId": "vale", "x": 9, "y": 14, "dir": "up" } ] },
             { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "気が 向いたら 言ってくれ。" } ] }
           ] } ] },
         { "conditions": { "flag": "betrayed", "notFlag": "regrouped" }, "commands": [
@@ -216,6 +218,8 @@
           { "type": "choice", "options": [
             { "text": "神域へ 行く", "commands": [
               { "type": "transfer", "mapId": "shrine", "x": 9, "y": 10, "dir": "up" } ] },
+            { "text": "枯れ谷へ 行く（腕試し）", "commands": [
+              { "type": "transfer", "mapId": "vale", "x": 9, "y": 14, "dir": "up" } ] },
             { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "覚悟が できたら 言ってくれ。" } ] }
           ] } ] }
       ]

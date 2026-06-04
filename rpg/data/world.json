@@ -17,9 +17,10 @@
     "hafen": "宿場町ハーフェン",
     "ruin": "古代遺跡",
     "shrine": "星の祭壇・神域",
-    "cavern": "水晶洞"
+    "cavern": "水晶洞",
+    "vale": "枯れ谷"
   },
-  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin", "shrine", "cavern"],
+  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin", "shrine", "cavern", "vale"],
   "eventFiles": [],
   "encounters": {
     "forest1": {
@@ -57,6 +58,16 @@
         { "troop": "cave_mix", "weight": 2 },
         { "troop": "cave_undead", "weight": 2 },
         { "troop": "cave_pack", "weight": 1 }
+      ]
+    },
+    "vale1": {
+      "steps": [5, 9],
+      "troops": [
+        { "troop": "vale_spirits", "weight": 2 },
+        { "troop": "vale_undead", "weight": 2 },
+        { "troop": "vale_worms", "weight": 2 },
+        { "troop": "vale_dolls", "weight": 1 },
+        { "troop": "vale_pack", "weight": 1 }
       ]
     }
   }
