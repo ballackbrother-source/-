@@ -97,11 +97,12 @@ export class SettingsScene extends Scene {
       '【育成】レベル・ジョブ習得・種で 永続強化。「メンバー」で 前衛↔控え 入替。',
       '【改造屋(ハーフェン)】武器を +N強化 / 結晶で 属性付与 / 銘(吸血・会心・連撃)。',
       '【収集】シノの「ぬすむ」でレア入手。「ずかん」で図鑑、コンプで 称号・報酬。',
+      '【腕試し】御者から 任意ダンジョン(枯れ谷/霜結の祠)へ。固有ミニボスが レア装備を 落とす。',
       '【町(ハーフェン)】宿・道具屋・武器防具屋・改造屋・闘技場・焚き火・御者。',
       '【物語】終盤の選択で「赦しゲージ」が変動し、結末(True/Normal/Bad)が分かれる。',
       '【セーブ】メニューのセーブ＋マップ移動で オートセーブ。',
     ];
-    lines.forEach((ln, i) => r.text(ln, 44, 70 + i * 36, { size: 15, color: COLORS.text }));
+    lines.forEach((ln, i) => r.text(ln, 44, 64 + i * 32, { size: 14, color: COLORS.text }));
     r.text('決定・キャンセルで もどる', VIEW_W / 2, VIEW_H - 36, { size: 13, align: 'center', color: COLORS.textDim });
   }
 }
