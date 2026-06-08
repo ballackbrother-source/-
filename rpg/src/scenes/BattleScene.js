@@ -388,6 +388,8 @@ export class BattleScene extends Scene {
 
     this.ui.drawLog(r, this.log);
     this.ui.drawPartyStatus(r, this.players, (this.phase === 'cmd' || this.phase === 'skill' || this.phase === 'item' || this.phase === 'target') ? this.curPlayer : null, this.tick);
+    // 行動順（AGI順の予測）インジケータ
+    if (this.phase === 'cmd' || this.phase === 'target') this._drawTurnOrder(r);
 
     // コマンド系ウィンドウ
     if (this.phase === 'cmd') { r.window(16, VIEW_H - 92, 150, 84); this.cmdMenu.render(r, 30, VIEW_H - 84, 130, this.game.assets); }
@@ -468,6 +470,28 @@ export class BattleScene extends Scene {
 
   _introP() { return Math.max(0, Math.min(1, (this.introMax - this.introT) / this.introMax)); }
   _ease(p) { return p * p * (3 - 2 * p); }
+
+  _drawTurnOrder(r) {
+    const order = [...this.players, ...this.enemies].filter((a) => !a.isDead).sort((x, y) => (y.agi || 0) - (x.agi || 0));
+    if (order.length < 2) return;
+    const c = r.ctx, tw = 30, x0 = 24, y = this.bossEnemy ? 98 : 64;
+    r.text('行動順（予測）', x0, y - 15, { size: 11, color: COLORS.textDim });
+    order.forEach((a, i) => {
+      const tx = x0 + i * tw, cur = a === this.curPlayer;
+      const col = a.isPlayer ? (this.game.db.getCharacter(a.id)?.color || '#4fb2ff') : this.ui._famColor(a.family);
+      c.save();
+      r.roundPath(tx, y, 24, 24, 4); c.fillStyle = col; c.fill();
+      const g = c.createLinearGradient(0, y, 0, y + 24); g.addColorStop(0, 'rgba(255,255,255,0.28)'); g.addColorStop(0.5, 'rgba(255,255,255,0)');
+      r.roundPath(tx, y, 24, 24, 4); c.fillStyle = g; c.fill();
+      c.lineWidth = cur ? 2.5 : 1; c.strokeStyle = cur ? COLORS.selected : 'rgba(0,0,0,0.6)'; r.roundPath(tx, y, 24, 24, 4); c.stroke();
+      c.restore();
+      c.fillStyle = '#fff'; c.font = 'bold 13px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillStyle = 'rgba(0,0,0,0.6)'; c.fillText((a.name || '?').slice(0, 1), tx + 13, y + 13);
+      c.fillStyle = '#fff'; c.fillText((a.name || '?').slice(0, 1), tx + 12, y + 12);
+      if (cur) r.text('▼', tx + 7, y - 13, { size: 12, color: COLORS.selected });
+      if (i < order.length - 1) r.text('›', tx + 25, y + 4, { size: 14, color: COLORS.textDim });
+    });
+  }
 
   _drawBossIntro(r) {
     const c = r.ctx, p = this._introP();
