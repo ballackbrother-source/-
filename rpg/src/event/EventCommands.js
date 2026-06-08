@@ -110,6 +110,9 @@ export const COMMANDS = {
   // 改造屋を開く
   async forge(_c, _i, ctx) { ctx.openForge(); },
 
+  // どうぐ屋を開く（items:[id...], title?）
+  async shop(cmd, _i, ctx) { ctx.openShop(cmd.items || [], cmd.title); },
+
   // 全回復（宿/教会）
   async heal(_c, _i, ctx) { ctx.party.fullHeal(); },
 

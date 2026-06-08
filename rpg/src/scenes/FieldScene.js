@@ -22,6 +22,7 @@ import { sleep } from '../core/util.js';
 import { BattleScene } from './BattleScene.js';
 import { MenuScene } from './MenuScene.js';
 import { ForgeScene } from './ForgeScene.js';
+import { ShopScene } from './ShopScene.js';
 
 export class FieldScene extends Scene {
   constructor(game) {
@@ -292,6 +293,7 @@ export class FieldScene extends Scene {
       moveActor: (who, path) => this.moveActor(who, path),
       battle: (troopId, opts) => this.startBattle(troopId, opts),
       openForge: () => this.game.scenes.push(new ForgeScene(this.game)),
+      openShop: (items, title) => this.game.scenes.push(new ShopScene(this.game, { items, title })),
       openEnding: (type) => { import('./EndingScene.js').then(({ EndingScene }) => this.game.scenes.reset(new EndingScene(this.game), { type })); },
       autosave: () => this.autosave(),
       gameOver: () => this.gameOver(),
