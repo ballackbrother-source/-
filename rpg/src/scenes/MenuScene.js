@@ -491,20 +491,26 @@ export class MenuScene extends Scene {
   }
 
   renderItemDex(r, px) {
-    const db = this.game.db;
+    const db = this.game.db, assets = this.game.assets;
     const dex = this.game.state.bestiary.items || [];
     const ids = this.itemIds, total = ids.length, found = ids.filter((id) => dex.includes(id)).length;
     const listW = 230;
     r.window(px, 16, listW, 440);
-    r.text(`アイテム ${found}/${total}  (←→で切替)`, px + 12, 24, { size: 13, color: COLORS.selected });
+    r.text(`ずかん ${found}/${total}`, px + 12, 22, { size: 13, color: COLORS.selected });
+    r.gauge(px + 12, 40, listW - 24, 7, total ? found / total : 0, COLORS.exp);
     const rows = 11, start = Math.max(0, Math.min(this.itemIdx - 5, Math.max(0, total - rows)));
     for (let k = 0; k < rows && start + k < total; k++) {
       const i = start + k, id = ids[i];
       const has = dex.includes(id), it = db.getItem(id);
-      const y = 54 + k * 33;
-      if (i === this.itemIdx) r.text('▶', px + 10, y, { size: 16, color: COLORS.selected });
+      const y = 58 + k * 33;
+      if (i === this.itemIdx) {
+        r.ctx.save(); r.ctx.globalAlpha = 0.16; r.ctx.fillStyle = COLORS.selected;
+        r.roundPath(px + 6, y - 3, listW - 12, 28, 5); r.ctx.fill(); r.ctx.restore();
+        r.text('▶', px + 10, y, { size: 16, color: COLORS.selected });
+      }
       r.text(`${String(i + 1).padStart(2, '0')}`, px + 28, y, { size: 12, color: COLORS.textDim });
-      r.text(has ? it.name : '？？？？？', px + 56, y, { size: 15, color: has ? COLORS.text : '#5a6488' });
+      if (has) assets.drawIcon(r.ctx, px + 60, y + 8, 6, it.type || 'item');
+      r.text(has ? it.name : '？？？？？', px + 74, y, { size: 15, color: has ? COLORS.text : '#5a6488' });
     }
     const dx = px + listW + 12, dw = VIEW_W - dx - 16;
     r.window(dx, 16, dw, 440);
@@ -515,17 +521,21 @@ export class MenuScene extends Scene {
       return;
     }
     const TYPE = { weapon: 'ぶき', shield: 'たて', head: 'あたま', body: 'からだ', accessory: 'アクセサリ', consumable: 'どうぐ', key: 'だいじなもの', material: 'そざい' };
-    r.text(it.name, dx + 20, 36, { size: 20, color: COLORS.selected });
-    r.text(`種別：${TYPE[it.type] || it.type}`, dx + 20, 72, { size: 14, color: COLORS.textDim });
-    if (it.price) r.text(`売値：${Math.floor(it.price * 0.5)} ギル`, dx + 20, 96, { size: 14, color: COLORS.textDim });
-    let yy = 128;
+    // ポートレート（枠＋大アイコン）
+    r.rect(dx + dw / 2 - 56, 30, 112, 96, 'rgba(8,12,28,0.45)');
+    r.strokeRect(dx + dw / 2 - 56, 30, 112, 96, 'rgba(174,224,255,0.18)', 1);
+    assets.drawIcon(r.ctx, dx + dw / 2, 78, 26, it.type || 'item');
+    r.text(it.name, dx + dw / 2, 134, { size: 20, align: 'center', color: COLORS.selected });
+    r.text(`種別：${TYPE[it.type] || it.type}`, dx + 20, 168, { size: 14, color: COLORS.textDim });
+    if (it.element && it.element !== 'none') { assets.drawIcon(r.ctx, dx + 168, 175, 8, it.element); r.text('属性', dx + 180, 168, { size: 13, color: COLORS.textDim }); }
+    if (it.price) { assets.drawIcon(r.ctx, dx + 24, 200, 6, 'material'); r.text(`売値 ${Math.floor(it.price * 0.5)} ギル`, dx + 36, 192, { size: 14, color: '#ffd23f' }); }
+    let yy = 224;
     const b = it.bonus || {};
     const bparts = [];
     if (b.atk) bparts.push(`攻+${b.atk}`); if (b.def) bparts.push(`守+${b.def}`);
     if (b.mat) bparts.push(`魔攻+${b.mat}`); if (b.mdf) bparts.push(`魔守+${b.mdf}`);
     ['str', 'vit', 'agi', 'dex', 'int', 'spi', 'luk', 'hp', 'mp'].forEach((k) => { if (b[k]) bparts.push(`${k.toUpperCase()}+${b[k]}`); });
-    if (it.element) bparts.push(`${ELEMENT_LABEL[it.element]}属性`);
-    if (bparts.length) { r.text(`効果：${bparts.join(' ')}`, dx + 20, yy, { size: 14, color: COLORS.hp }); yy += 26; }
+    if (bparts.length) { r.text(`性能：${bparts.join(' ')}`, dx + 20, yy, { size: 14, color: COLORS.hp }); yy += 26; }
     const ef = it.effect || {};
     const eparts = [];
     if (ef.hp) eparts.push(`HP+${ef.hp}`); if (ef.mp) eparts.push(`MP+${ef.mp}`);
