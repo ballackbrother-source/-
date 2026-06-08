@@ -48,7 +48,14 @@ export class CommandWindow {
       const ix = x + col * colW, iy = oy + row * this.lineH;
       const sel = i === this.index;
       const color = it.disabled ? '#6b7390' : (sel ? COLORS.selected : COLORS.text);
-      if (sel) r.text('▶', ix, iy, { size: 18, color: COLORS.selected });
+      if (sel) {
+        const c = r.ctx, now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+        const pulse = 0.12 + 0.06 * (0.5 + 0.5 * Math.sin(now / 200)); // 選択ハイライト（脈動）
+        c.save(); c.globalAlpha = pulse; c.fillStyle = COLORS.selected;
+        r.roundPath(ix - 3, iy - 3, colW - 6, this.lineH - 4, 5); c.fill(); c.restore();
+        const cb = 2 + Math.sin(now / 150) * 2; // カーソルが軽く前後に動く
+        r.text('▶', ix + cb, iy, { size: 18, color: COLORS.selected });
+      }
       const hasIcon = it.icon && assets;
       if (hasIcon) assets.drawIcon(r.ctx, ix + 26, iy + 9, 7.5, it.icon);
       r.text(it.label, ix + (hasIcon ? 42 : 22), iy, { size: 18, color });
