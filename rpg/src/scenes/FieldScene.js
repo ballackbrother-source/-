@@ -301,6 +301,8 @@ export class FieldScene extends Scene {
 
     // 場所/時間帯ライティング（色温度＋光＋ビネット）
     drawFieldAmbient(r.ctx, this.ambient);
+    // 点光源演出（宝箱のきらめき・玄関ランタン）はビネットの上に加算
+    this.renderer.drawLights(r, this.camera.x, this.camera.y, performance.now() / 16);
 
     // フェード暗幕はマップの上・UIの下（暗転中も会話文は読める）
     if (this.fadeAlpha > 0) {
