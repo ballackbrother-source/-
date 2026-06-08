@@ -77,6 +77,23 @@ export const MenuUI = {
       r.text(row[0], rx, rowY, { size: 14, color: COLORS.textDim });
       r.text(`${row[1]}`, rx + (w / 2 - 90), rowY, { size: 14, color: COLORS.text });
     });
+    // 装備由来の属性耐性（アイコン）
+    const aff = s.affinity || {};
+    const resist = [...new Set(aff.resist || [])];
+    const nullify = [...new Set(aff.null || [])];
+    const absorb = [...new Set(aff.absorb || [])];
+    const ry = y + h - 64;
+    r.rect(x + 16, ry - 8, w - 32, 1, 'rgba(174,224,255,0.2)');
+    r.text('そうび属性耐性', x + 20, ry, { size: 13, color: COLORS.mp });
+    const drawElems = (arr, ix, col) => { arr.forEach((e, i) => { if (assets) assets.drawIcon(r.ctx, ix + i * 24, ry + 7, 8, e); }); };
+    if (!resist.length && !nullify.length && !absorb.length) {
+      r.text('なし', x + 150, ry, { size: 13, color: COLORS.textDim });
+    } else {
+      let ix = x + 150;
+      if (resist.length) { r.text('半減', ix - 36, ry, { size: 11, color: COLORS.textDim }); drawElems(resist, ix); ix += resist.length * 24 + 30; }
+      if (nullify.length) { r.text('無効', ix - 36, ry, { size: 11, color: COLORS.textDim }); drawElems(nullify, ix); ix += nullify.length * 24 + 30; }
+      if (absorb.length) { r.text('吸収', ix - 36, ry, { size: 11, color: '#9be0a0' }); drawElems(absorb, ix); }
+    }
   },
 };
 
