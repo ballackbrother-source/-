@@ -21,6 +21,10 @@ const FAM_COLOR = {
   elemental: '#e0533f', demon: '#7e57c2', boss: '#b03060', slime: '#5fd38a',
   mage: '#6a5acd', spirit: '#6fd0ff',
 };
+const FAM_LABEL = {
+  beast: '獣', plant: '植物', insect: '蟲', undead: '不死', machine: '機械', aqua: '水',
+  flying: '飛行', dragon: '竜', elemental: '精霊', demon: '魔', boss: '魔王', slime: 'スライム', mage: '魔導', spirit: '精霊',
+};
 
 export class MenuScene extends Scene {
   constructor(game) { super(game); this.opaque = false; this.toast = ''; this.toastT = 0; }
@@ -421,22 +425,28 @@ export class MenuScene extends Scene {
   }
 
   renderMonDex(r, px) {
-    const db = this.game.db, b = this.game.state.bestiary;
+    const db = this.game.db, b = this.game.state.bestiary, assets = this.game.assets;
     const ids = this.monIds, total = ids.length;
     const defeated = ids.filter((id) => b.defeated.includes(id)).length;
     const listW = 210;
     r.window(px, 16, listW, 440);
-    r.text(`モンスター ${defeated}/${total}  (←→で切替)`, px + 12, 24, { size: 13, color: COLORS.selected });
+    r.text(`ずかん ${defeated}/${total}`, px + 12, 22, { size: 13, color: COLORS.selected });
+    r.gauge(px + 12, 40, listW - 24, 7, total ? defeated / total : 0, COLORS.exp);
     const rows = 11, start = Math.max(0, Math.min(this.monIdx - 5, Math.max(0, total - rows)));
     for (let k = 0; k < rows && start + k < total; k++) {
       const i = start + k, id = ids[i];
       const seen = b.seen.includes(id), beat = b.defeated.includes(id);
       const def = db.getMonster(id);
       const label = seen ? def.name : '？？？？？';
-      const y = 54 + k * 33;
-      if (i === this.monIdx) r.text('▶', px + 10, y, { size: 16, color: COLORS.selected });
+      const y = 58 + k * 33;
+      if (i === this.monIdx) {
+        r.ctx.save(); r.ctx.globalAlpha = 0.16; r.ctx.fillStyle = COLORS.selected;
+        r.roundPath(px + 6, y - 3, listW - 12, 28, 5); r.ctx.fill(); r.ctx.restore();
+        r.text('▶', px + 10, y, { size: 16, color: COLORS.selected });
+      }
       r.text(`${String(i + 1).padStart(2, '0')}`, px + 28, y, { size: 12, color: COLORS.textDim });
-      r.text(label, px + 56, y, { size: 15, color: beat ? COLORS.text : (seen ? COLORS.textDim : '#5a6488') });
+      r.text(label, px + 54, y, { size: 15, color: beat ? COLORS.text : (seen ? COLORS.textDim : '#5a6488') });
+      if (beat) r.text('✓', px + listW - 22, y, { size: 13, color: '#7bf08a' });
     }
     const dx = px + listW + 12, dw = VIEW_W - dx - 16;
     r.window(dx, 16, dw, 440);
@@ -447,24 +457,36 @@ export class MenuScene extends Scene {
       r.text('まだ 出会っていない', dx + dw / 2, 240, { size: 14, align: 'center', color: COLORS.textDim });
       return;
     }
-    this.game.assets.drawMonster(r.ctx, dx + dw / 2, 96, def.family, FAM_COLOR[def.family] || '#aa6cc8', def.boss ? 1.3 : 1.0, performance.now() / 16);
-    r.text(def.name, dx + dw / 2, 150, { size: 20, align: 'center', color: COLORS.selected });
-    if (!beat) { r.text('（討伐すると 詳細が 見られる）', dx + dw / 2, 188, { size: 13, align: 'center', color: COLORS.textDim }); return; }
+    // ポートレート（背景パネル＋大きめスプライト）
+    r.rect(dx + dw / 2 - 100, 30, 200, 130, 'rgba(8,12,28,0.45)');
+    r.strokeRect(dx + dw / 2 - 100, 30, 200, 130, 'rgba(174,224,255,0.18)', 1);
+    assets.drawMonster(r.ctx, dx + dw / 2, 116, def.family, FAM_COLOR[def.family] || '#aa6cc8', def.boss ? 1.45 : 1.2, performance.now() / 16);
+    r.text(def.name, dx + dw / 2, 168, { size: 20, align: 'center', color: COLORS.selected });
+    r.text(`系統：${FAM_LABEL[def.family] || def.family}${def.boss ? '　★BOSS' : ''}`, dx + dw / 2, 194, { size: 12, align: 'center', color: COLORS.textDim });
+    if (!beat) { r.text('（討伐すると 詳細が 見られる）', dx + dw / 2, 220, { size: 13, align: 'center', color: COLORS.textDim }); return; }
     const s = def.stats, el = def.element || {};
-    const join = (arr) => (arr && arr.length ? arr.map((e) => ELEMENT_LABEL[e] || e).join('・') : 'なし');
-    [['さいだいHP', s.hp], ['こうげき', s.atk], ['しゅび', s.def], ['まこうげき', s.mat || 0],
-     ['すばやさ', s.agi], ['EXP', def.exp], ['ゴールド', def.gold]].forEach((row, i) => {
-      const y = 196 + i * 24;
-      r.text(row[0], dx + 24, y, { size: 14, color: COLORS.textDim });
-      r.text(`${row[1]}`, dx + 170, y, { size: 14 });
+    // ステータス（2列）
+    const stats = [['HP', s.hp], ['こうげき', s.atk], ['しゅび', s.def], ['まこう', s.mat || 0], ['すばやさ', s.agi], ['EXP', def.exp]];
+    stats.forEach((row, i) => {
+      const col = i % 2, sy = 218 + Math.floor(i / 2) * 24, sx = dx + 28 + col * (dw / 2 - 6);
+      r.text(row[0], sx, sy, { size: 13, color: COLORS.textDim });
+      r.text(`${row[1]}`, sx + 92, sy, { size: 13 });
     });
-    let yy = 196 + 7 * 24 + 6;
-    r.text(`よわ点：${join(el.weak)}`, dx + 24, yy, { size: 13, color: '#ff9a9a' }); yy += 22;
-    r.text(`半減：${join(el.resist)}　吸収：${join(el.absorb)}`, dx + 24, yy, { size: 13, color: COLORS.mp }); yy += 22;
+    // 属性（アイコン行）
+    const elemRow = (label, arr, y, col) => {
+      r.text(label, dx + 28, y, { size: 13, color: col });
+      if (!arr || !arr.length) { r.text('なし', dx + 96, y, { size: 13, color: COLORS.textDim }); return; }
+      arr.forEach((e, i) => assets.drawIcon(r.ctx, dx + 100 + i * 24, y + 7, 8, e));
+    };
+    let yy = 218 + 3 * 24 + 12;
+    elemRow('よわ点', el.weak, yy, '#ff9a9a'); yy += 28;
+    elemRow('耐性', el.resist, yy, COLORS.mp); yy += 28;
+    elemRow('吸収', el.absorb, yy, '#9be0a0'); yy += 30;
+    r.text(`ゴールド ${def.gold}`, dx + 28, yy, { size: 13, color: '#ffd23f' });
     if (def.steal) {
       const sid = Array.isArray(def.steal) ? def.steal[0].item : def.steal.item;
       const it = db.getItem(sid);
-      r.text(`ぬすめる：${it ? it.name : '—'}`, dx + 24, yy, { size: 13, color: '#ffd23f' });
+      r.text(`ぬすめる：${it ? it.name : '—'}`, dx + 170, yy, { size: 13, color: '#ffd23f' });
     }
   }
 
