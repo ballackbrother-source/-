@@ -28,6 +28,8 @@ export const SaveManager = {
       chapter: chapterName,
       leader: leaderName,
       level: leader?.lv ?? 1,
+      gold: state.party.gold ?? 0,
+      members: (state.party.order || []).length,
       playtime: formatPlaytime(state.meta.playtimeSec),
       location: db.mapName(state.location.mapId),
       savedAt: new Date().toISOString(),

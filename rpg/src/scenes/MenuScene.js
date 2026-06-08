@@ -281,10 +281,8 @@ export class MenuScene extends Scene {
 
   // --- セーブ ---
   openSave() {
-    const list = SaveManager.list();
-    this.saveMenu = new CommandWindow(list.filter((s) => s.slot > 0).map((s) => ({
-      value: s.slot, label: `スロット${s.slot}`, sub: s.empty ? '空き' : `${s.chapter} Lv${s.level ?? '-'}`,
-    })), { lineH: 28 });
+    this.saveList = SaveManager.list().filter((s) => s.slot > 0);
+    this.saveMenu = new CommandWindow(this.saveList.map((s) => ({ value: s.slot })), { lineH: 28 });
     this.state = 'save';
   }
   updSave(a) {
@@ -346,8 +344,8 @@ export class MenuScene extends Scene {
         this.quitMenu.render(r, px + 20, 132, 280);
         break;
       case 'save':
-        r.window(px, 16, 340, 220); r.text('どこに きろくする？', px + 14, 24, { size: 15, color: COLORS.textDim });
-        this.saveMenu.render(r, px + 14, 54, 310); break;
+        r.window(px, 16, 360, 40); r.text('どこに きろくする？', px + 16, 24, { size: 15, color: COLORS.textDim });
+        MenuUI.saveSlots(r, px, 62, 360, this.saveList, this.saveMenu.index, this.game.assets); break;
     }
     if (this.toastT > 0) {
       r.window(VIEW_W / 2 - 180, VIEW_H - 56, 360, 40);

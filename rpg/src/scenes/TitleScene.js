@@ -12,6 +12,7 @@ import { FieldScene } from './FieldScene.js';
 import { SettingsScene } from './SettingsScene.js';
 import { TrialScene } from './TrialScene.js';
 import { drawTitleBg } from '../ui/Backdrop.js';
+import { MenuUI } from '../ui/MenuUI.js';
 
 export class TitleScene extends Scene {
   constructor(game) {
@@ -35,12 +36,8 @@ export class TitleScene extends Scene {
 
   refreshSlots() {
     const list = SaveManager.list();
-    const items = list.map((s) => ({
-      value: s.slot,
-      disabled: s.empty,
-      label: `スロット${s.slot}${s.slot === 0 ? '(オート)' : ''}`,
-      sub: s.empty ? '空き' : (s.error ? '破損' : `${s.chapter} Lv${s.level ?? '-'}`),
-    }));
+    this.slotList = list;
+    const items = list.map((s) => ({ value: s.slot, disabled: s.empty }));
     items.push({ label: '← もどる', value: 'back' });
     this.slots.setItems(items);
     this.hasAnySave = list.some((s) => !s.empty && !s.error);
@@ -99,24 +96,29 @@ export class TitleScene extends Scene {
     const bt = (Math.sin(this.t / 50) + 1) / 2;
     r.text('✦', VIEW_W - 90, 60, { size: 40, color: `rgba(174,224,255,${0.5 + bt * 0.5})` });
 
-    r.text('ETERNIA', VIEW_W / 2, 90, { size: 54, align: 'center', color: COLORS.windowBorder });
-    r.text('～ 星を継ぐ者 ～', VIEW_W / 2, 150, { size: 22, align: 'center', color: COLORS.textDim });
-
-    // クリア記録バッジ
-    const clears = SaveManager.getClears();
-    const badges = [['true', 'TRUE', '#ffd23f'], ['normal', 'NORMAL', '#aee0ff'], ['bad', 'BAD', '#e06666']];
-    const got = badges.filter(([k]) => clears[k]);
-    if (got.length) {
-      r.text('CLEAR:', VIEW_W / 2 - 130, 190, { size: 13, color: COLORS.textDim });
-      got.forEach(([, label, col], i) => r.text(label, VIEW_W / 2 - 70 + i * 90, 190, { size: 14, color: col }));
-    }
-
     if (this.mode === 'main') {
+      r.text('ETERNIA', VIEW_W / 2, 90, { size: 54, align: 'center', color: COLORS.windowBorder });
+      r.text('～ 星を継ぐ者 ～', VIEW_W / 2, 150, { size: 22, align: 'center', color: COLORS.textDim });
+      // クリア記録バッジ
+      const clears = SaveManager.getClears();
+      const badges = [['true', 'TRUE', '#ffd23f'], ['normal', 'NORMAL', '#aee0ff'], ['bad', 'BAD', '#e06666']];
+      const got = badges.filter(([k]) => clears[k]);
+      if (got.length) {
+        r.text('CLEAR:', VIEW_W / 2 - 130, 190, { size: 13, color: COLORS.textDim });
+        got.forEach(([, label, col], i) => r.text(label, VIEW_W / 2 - 70 + i * 90, 190, { size: 14, color: col }));
+      }
       r.window(VIEW_W / 2 - 130, 248, 260, 156);
-      this.menu.render(r, VIEW_W / 2 - 100, 264, 220);
+      this.menu.render(r, VIEW_W / 2 - 100, 264, 220, this.game.assets);
     } else {
-      r.window(VIEW_W / 2 - 170, 230, 340, 200);
-      this.slots.render(r, VIEW_W / 2 - 140, 248, 300);
+      // つづきから：スロットカード
+      r.text('つづきから', VIEW_W / 2, 36, { size: 22, align: 'center', color: COLORS.windowBorder });
+      const lw = 440, lx = VIEW_W / 2 - lw / 2, ly = 70;
+      MenuUI.saveSlots(r, lx, ly, lw, this.slotList, this.slots.index, this.game.assets);
+      const backSel = this.slots.index === this.slotList.length;
+      const byy = ly + this.slotList.length * (84 + 8);
+      r.window(lx, byy, lw, 32);
+      if (backSel) r.strokeRect(lx, byy, lw, 32, COLORS.selected, 2);
+      r.text('← もどる', lx + 16, byy + 7, { size: 15, color: backSel ? COLORS.selected : COLORS.text });
     }
     if (this.errorMsg) r.text(this.errorMsg, VIEW_W / 2, VIEW_H - 30, { size: 14, align: 'center', color: '#e06666' });
     r.text('© ETERNIA Project — 設計書 design/ 参照', VIEW_W / 2, VIEW_H - 22, { size: 11, align: 'center', color: '#44506e' });

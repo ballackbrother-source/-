@@ -7,6 +7,29 @@ import { COLORS, ELEMENT_LABEL } from '../config/constants.js';
 import { needExp, totalExpFor } from '../domain/systems/LevelSystem.js';
 
 export const MenuUI = {
+  /** セーブ/ロードのスロットカード（章・場所・主人公Lv・所持金・プレイ時間・日時） */
+  saveSlots(r, x, y, w, slots, index, assets) {
+    const ch = 84, gap = 8;
+    slots.forEach((s, i) => {
+      const cy = y + i * (ch + gap), sel = i === index;
+      r.window(x, cy, w, ch);
+      if (sel) r.strokeRect(x, cy, w, ch, COLORS.selected, 2);
+      const label = s.slot === 0 ? 'オートセーブ' : `スロット ${s.slot}`;
+      r.text(label, x + 14, cy + 10, { size: 15, color: sel ? COLORS.selected : COLORS.text });
+      if (s.empty) { r.text('-- 空き --', x + 14, cy + 44, { size: 14, color: COLORS.textDim }); return; }
+      if (s.error) { r.text('（こわれた ぼうけんのしょ）', x + 14, cy + 44, { size: 14, color: '#e06666' }); return; }
+      r.text(s.chapter || '', x + 130, cy + 10, { size: 13, color: '#aee0ff' });
+      // 2段目：主人公Lv・所持金・プレイ時間
+      r.text(`${s.leader || '—'} Lv${s.level ?? 1}`, x + 14, cy + 36, { size: 15 });
+      if (s.gold != null && assets) { assets.drawIcon(r.ctx, x + 178, cy + 44, 6, 'material'); r.text(`${s.gold}G`, x + 190, cy + 36, { size: 13, color: '#ffd23f' }); }
+      if (s.members) r.text(`${s.members}人`, x + 270, cy + 36, { size: 13, color: COLORS.textDim });
+      r.text(`${s.playtime || ''}`, x + w - 96, cy + 36, { size: 13, color: COLORS.textDim });
+      // 3段目：場所・保存日時
+      r.text(`@${s.location || '—'}`, x + 14, cy + 58, { size: 12, color: COLORS.textDim });
+      if (s.savedAt) r.text(fmtDate(s.savedAt), x + w - 150, cy + 58, { size: 11, color: COLORS.textDim });
+    });
+  },
+
   /** パーティ概要（縦並びの小カード） */
   partyList(r, party, x, y, w, selectedIdx = -1) {
     party.forEach((c, i) => {
@@ -56,3 +79,9 @@ export const MenuUI = {
     });
   },
 };
+
+function fmtDate(iso) {
+  const d = new Date(iso); if (isNaN(d)) return '';
+  const p = (n) => `${n}`.padStart(2, '0');
+  return `${d.getFullYear()}/${p(d.getMonth() + 1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
