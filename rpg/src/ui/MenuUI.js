@@ -3,7 +3,7 @@
  * @layer presentation(ui)
  * メニュー用の描画ヘルパー（キャラ状態パネル等）。
  */
-import { COLORS } from '../config/constants.js';
+import { COLORS, ELEMENT_LABEL } from '../config/constants.js';
 import { needExp, totalExpFor } from '../domain/systems/LevelSystem.js';
 
 export const MenuUI = {
@@ -25,11 +25,18 @@ export const MenuUI = {
   },
 
   /** 1キャラの詳細ステータス */
-  detail(r, c, x, y, w, h) {
+  detail(r, c, x, y, w, h, assets) {
     r.window(x, y, w, h);
     r.text(c.name, x + 16, y + 14, { size: 22, color: COLORS.selected });
     r.text(`${c.db.getCharacter(c.id).title || ''}`, x + 16, y + 42, { size: 13, color: COLORS.textDim });
     r.text(`Lv ${c.lv}`, x + w - 90, y + 16, { size: 18 });
+    // 武器属性アイコン
+    const wpId = c.member?.equip?.weapon;
+    const wEl = wpId ? c.db.getItem(wpId)?.element : null;
+    if (assets && wEl && wEl !== 'none') {
+      assets.drawIcon(r.ctx, x + w - 150, y + 50, 7, wEl);
+      r.text(`武器属性 ${ELEMENT_LABEL[wEl] || ''}`, x + w - 138, y + 44, { size: 12, color: COLORS.textDim });
+    }
 
     const s = c.stats;
     const expNext = totalExpFor(c.lv + 1) - c.exp;

@@ -314,7 +314,7 @@ export class MenuScene extends Scene {
       case 'root':
         MenuUI.partyList(r, this.party, px, 16, pw, -1); break;
       case 'status':
-        MenuUI.detail(r, this.party[this.charIdx], px, 16, VIEW_W - px - 16, 440);
+        MenuUI.detail(r, this.party[this.charIdx], px, 16, VIEW_W - px - 16, 440, this.game.assets);
         r.text('← →で キャラ切替', VIEW_W - 220, VIEW_H - 26, { size: 12, color: COLORS.textDim }); break;
       case 'item': case 'item_target':
         r.window(px, 16, 300, 360); this.itemMenu.render(r, px + 14, 30, 280, this.game.assets);
@@ -359,13 +359,18 @@ export class MenuScene extends Scene {
     const c = this.char;
     r.window(px, 16, 250, 230); r.text(`${c.name} の そうび`, px + 14, 26, { size: 16, color: COLORS.selected });
     EQUIP_SLOTS.forEach((slot, i) => {
+      const yy = 62 + i * 30;
       const sel = (this.state === 'equip_slot') && i === this.slotIdx;
       const itId = c.member.equip[slot];
       const lv = itId ? this.game.inventory.enhLevel(c.member, itId) : 0;
-      const name = itId ? `${this.game.db.getItem(itId)?.name}${lv ? ` +${lv}` : ''}` : '—';
-      if (sel) r.text('▶', px + 14, 62 + i * 30, { size: 16, color: COLORS.selected });
-      r.text(SLOT_LABEL[slot], px + 34, 62 + i * 30, { size: 14, color: COLORS.textDim });
-      r.text(name, px + 110, 62 + i * 30, { size: 14, color: sel ? COLORS.selected : COLORS.text });
+      const def = itId ? this.game.db.getItem(itId) : null;
+      const name = def ? `${def.name}${lv ? ` +${lv}` : ''}` : '—';
+      const slotKind = { weapon: 'weapon', shield: 'shield', head: 'head', body: 'body', acc1: 'accessory', acc2: 'accessory' };
+      if (sel) r.text('▶', px + 12, yy, { size: 16, color: COLORS.selected });
+      this.game.assets.drawIcon(r.ctx, px + 30, yy + 8, 7, slotKind[slot] || 'material');
+      r.text(SLOT_LABEL[slot], px + 44, yy, { size: 14, color: COLORS.textDim });
+      r.text(name, px + 110, yy, { size: 14, color: sel ? COLORS.selected : COLORS.text });
+      if (def && def.element && def.element !== 'none') this.game.assets.drawIcon(r.ctx, px + 234, yy + 8, 7, def.element);
     });
     if (this.state === 'equip_item') {
       r.window(px + 260, 16, 250, 360); r.text(`${SLOT_LABEL[EQUIP_SLOTS[this.slotIdx]]}を えらぶ`, px + 274, 26, { size: 14, color: COLORS.textDim });
