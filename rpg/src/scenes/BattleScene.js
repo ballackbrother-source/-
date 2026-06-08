@@ -304,37 +304,34 @@ export class BattleScene extends Scene {
     this.levelups = [];
     const front = this.game.party.frontline();
     const reserve = this.game.state.party.reserve.map((id) => this.game.party.char(id)).filter(Boolean);
-    for (const c of front) this.levelups.push(...LevelSystem.gainExp(c, res.exp, this.game.db));
+    const ratio = (c) => { const lo = LevelSystem.totalExpFor(c.lv), hi = LevelSystem.totalExpFor(c.lv + 1); return hi > lo ? Math.max(0, Math.min(1, (c.exp - lo) / (hi - lo))) : 1; };
+    const rows = [];
+    for (const c of front) {
+      const lv0 = c.lv, r0 = ratio(c);
+      const lus = LevelSystem.gainExp(c, res.exp, this.game.db);
+      this.levelups.push(...lus);
+      const learned = lus.flatMap((l) => l.learned || []).map((s) => this.game.db.getSkill(s)?.name || s);
+      rows.push({ name: c.name, lv0, r0, lv1: c.lv, r1: ratio(c), up: c.lv > lv0, learned });
+    }
     for (const c of reserve) LevelSystem.gainExp(c, Math.floor(res.exp * 0.5), this.game.db);
     this.game.party.gainGold(res.gold);
     for (const d of res.drops) this.game.inventory.add(d, 1);
     // 図鑑：撃破登録
     for (const e of this.enemies) if (!this.game.state.bestiary.defeated.includes(e.id)) this.game.state.bestiary.defeated.push(e.id);
-
-    // 結果メッセージのキュー
-    this.resultQueue = [];
-    this.resultQueue.push(`たたかいに かった！`);
-    this.resultQueue.push(`けいけんち ${res.exp} と ${res.gold} ギルを 手に入れた！`);
-    for (const d of res.drops) { const it = this.game.db.getItem(d); this.resultQueue.push(`${it ? it.name : d} を 手に入れた！`); }
-    for (const lu of this.levelups) {
-      this.resultQueue.push(`${lu.name} は レベル ${lu.to} に あがった！`);
-      if (lu.learned?.length) {
-        const names = lu.learned.map((s) => this.game.db.getSkill(s)?.name || s).join('・');
-        this.resultQueue.push(`${lu.name} は ${names} を おぼえた！`);
-      }
-    }
-    // 図鑑コンプ報酬（撃破登録のあとで判定）
-    for (const msg of checkDexRewards(this.game)) this.resultQueue.push(`★ ${msg}`);
-    this.game.audio.victory(); // 勝利ファンファーレ（フィールドBGMは復帰時に再生）
-    this.phase = 'result'; this.resultIdx = 0; this.log = this.resultQueue[0]; this.msgTimer = 60;
+    const dex = checkDexRewards(this.game);
+    this.game.audio.victory(); // 勝利ファンファーレ
+    this.resultData = { exp: res.exp, gold: res.gold, drops: res.drops.slice(), rows, dex };
+    this.resultT = 0; this._luSe = false;
+    this.log = '';
+    this.phase = 'result';
   }
-  updateResult() {
-    if (--this.msgTimer <= 0 || this.game.input.isPressed('confirm')) {
-      this.resultIdx++;
-      if (this.resultIdx >= this.resultQueue.length) { this.finish('win'); return; }
-      this.log = this.resultQueue[this.resultIdx];
-      this.msgTimer = this.resultIdx === this.resultQueue.length - 1 ? 60 : 50;
-      if (this.resultQueue[this.resultIdx].includes('レベル')) this.game.audio.se('levelup');
+  updateResult(a) {
+    this.resultT++;
+    const DUR = 70;
+    if (!this._luSe && this.resultT > 42 && this.resultData.rows.some((row) => row.up)) { this._luSe = true; a.se('levelup'); }
+    if (this.game.input.isPressed('confirm')) {
+      if (this.resultT < DUR) { this.resultT = DUR; }
+      else { a.se('confirm'); this.finish('win'); }
     }
   }
 
@@ -425,6 +422,48 @@ export class BattleScene extends Scene {
 
     // ボス登場演出（暗転リビール＋赤フラッシュ＋WARNINGバナー）は最前面
     if (this.isBoss && this.phase === 'intro') this._drawBossIntro(r);
+    // 勝利リザルト演出
+    if (this.phase === 'result') this._drawResult(r);
+  }
+
+  _drawResult(r) {
+    const c = r.ctx, d = this.resultData; if (!d) return;
+    const ap = Math.min(1, this.resultT / 70), ease = ap * ap * (3 - 2 * ap);
+    const x = 60, y = 44, w = VIEW_W - 120, h = 322;
+    r.window(x, y, w, h);
+    // VICTORY タイトル（ポップ）
+    const pop = this.resultT < 12 ? this.resultT / 12 : 1;
+    c.save(); c.translate(x + w / 2, y + 30); c.scale(pop, pop);
+    c.font = 'bold 30px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+    c.lineWidth = 5; c.strokeStyle = 'rgba(0,0,0,0.85)'; c.strokeText('VICTORY!', 0, 0);
+    c.fillStyle = '#ffd23f'; c.fillText('VICTORY!', 0, 0); c.restore();
+    // EXP / GOLD カウントアップ
+    r.text('けいけんち', x + 26, y + 60, { size: 14, color: COLORS.textDim });
+    r.text(`${Math.floor(d.exp * ease)}`, x + 150, y + 58, { size: 18, color: COLORS.exp });
+    r.text('ゴールド', x + 26, y + 88, { size: 14, color: COLORS.textDim });
+    r.text(`${Math.floor(d.gold * ease)}`, x + 150, y + 86, { size: 18, color: '#ffd23f' });
+    // ドロップ（アイコン）
+    r.text('入手', x + 270, y + 56, { size: 13, color: COLORS.textDim });
+    if (d.drops.length) {
+      d.drops.forEach((id, i) => { const it = this.game.db.getItem(id); this.game.assets.drawIcon(c, x + 296, y + 66 + i * 22, 7, it?.type || 'item'); r.text(it ? it.name : id, x + 310, y + 60 + i * 22, { size: 13 }); });
+    } else r.text('なし', x + 296, y + 60, { size: 13, color: COLORS.textDim });
+    // パーティ EXP バー
+    d.rows.forEach((row, i) => {
+      const ry = y + 132 + i * 40, bw = w - 250, bx = x + 210;
+      r.text(row.name, x + 26, ry, { size: 15 });
+      r.text(`Lv ${row.up && ease < 0.9 ? row.lv0 : row.lv1}`, x + 140, ry, { size: 13, color: row.up ? '#ffd23f' : COLORS.text });
+      const ratio = row.up ? ease : (row.r0 + (row.r1 - row.r0) * ease);
+      r.gauge(bx, ry + 2, bw, 11, Math.min(1, ratio), COLORS.exp);
+      if (row.up && ease > 0.55) {
+        const bl = 0.6 + 0.4 * Math.sin(this.tick * 0.3);
+        c.save(); c.globalAlpha = bl; r.text('LEVEL UP!', bx + bw - 96, ry - 1, { size: 13, color: '#ffd23f' }); c.restore();
+      }
+      if (row.learned.length && ease > 0.9) r.text(`▶ ${row.learned.join('・')} を おぼえた！`, bx, ry + 16, { size: 11, color: '#aee0ff' });
+    });
+    // 図鑑報酬
+    if (d.dex && d.dex.length && ease > 0.9) r.text(`★ ${d.dex[0]}`, x + 26, y + h - 44, { size: 12, color: '#ffd23f' });
+    // 続行プロンプト
+    if (ap >= 1) { const bl = 0.5 + 0.5 * Math.sin(this.tick * 0.2); c.save(); c.globalAlpha = bl; r.text('▼ かくにん', x + w - 110, y + h - 26, { size: 13, color: COLORS.selected }); c.restore(); }
   }
 
   _introP() { return Math.max(0, Math.min(1, (this.introMax - this.introT) / this.introMax)); }
