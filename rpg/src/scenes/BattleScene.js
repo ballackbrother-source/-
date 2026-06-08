@@ -53,7 +53,8 @@ export class BattleScene extends Scene {
     this.markSeen();
 
     this.phase = 'intro';
-    this.introT = 60;
+    this.introMax = this.isBoss ? 100 : 60; // ボスは登場演出ぶん長め
+    this.introT = this.introMax;
     this.log = `${this.enemyNames()} が あらわれた！`;
     this.commands = new Map();
     this.flash = null; this.tick = 0;
@@ -352,6 +353,11 @@ export class BattleScene extends Scene {
     let sx = 0, sy = 0;
     if (this.shakeT > 0) { const m = this.shakeMag * (this.shakeT / 12); sx = (Math.random() - 0.5) * m * 2; sy = (Math.random() - 0.5) * m * 2; }
     r.save(); r.translate(sx, sy);
+    if (this.isBoss && this.phase === 'intro') { // 登場ズームイン
+      const z = 1.7 - 0.7 * this._ease(this._introP());
+      const cx = VIEW_W / 2, cy = 150;
+      r.ctx.translate(cx, cy); r.ctx.scale(z, z); r.ctx.translate(-cx, -cy);
+    }
     this.ui.drawEnemies(r, this.enemies, this.flashT > 0 ? this.flash : null, this.tick);
     r.restore();
 
@@ -414,6 +420,40 @@ export class BattleScene extends Scene {
       c.font = `bold ${p.size}px sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
       c.lineWidth = Math.max(3, p.size * 0.18); c.strokeStyle = 'rgba(0,0,0,0.85)'; c.strokeText(p.text, 0, 0);
       c.fillStyle = p.color; c.fillText(p.text, 0, 0);
+      c.restore();
+    }
+
+    // ボス登場演出（暗転リビール＋赤フラッシュ＋WARNINGバナー）は最前面
+    if (this.isBoss && this.phase === 'intro') this._drawBossIntro(r);
+  }
+
+  _introP() { return Math.max(0, Math.min(1, (this.introMax - this.introT) / this.introMax)); }
+  _ease(p) { return p * p * (3 - 2 * p); }
+
+  _drawBossIntro(r) {
+    const c = r.ctx, p = this._introP();
+    c.save();
+    c.fillStyle = `rgba(2,2,8,${Math.pow(1 - p, 1.4) * 0.88})`; c.fillRect(0, 0, VIEW_W, VIEW_H); // 暗転→リビール
+    c.restore();
+    if (p < 0.18) { // 開幕の赤フラッシュ
+      c.save(); c.globalCompositeOperation = 'lighter';
+      c.fillStyle = `rgba(150,20,30,${(0.18 - p) / 0.18 * 0.5})`; c.fillRect(0, 0, VIEW_W, VIEW_H); c.restore();
+    }
+    if (p > 0.15) { // WARNINGバナー
+      const out = p > 0.82 ? (p - 0.82) / 0.18 : 0;
+      const a = 1 - out, by = 196, bh = 56;
+      c.save(); c.globalAlpha = a;
+      const g = c.createLinearGradient(0, by, 0, by + bh);
+      g.addColorStop(0, 'rgba(120,10,20,0.92)'); g.addColorStop(0.5, 'rgba(40,4,10,0.92)'); g.addColorStop(1, 'rgba(120,10,20,0.92)');
+      c.fillStyle = g; c.fillRect(0, by, VIEW_W, bh);
+      c.strokeStyle = '#ff5a4a'; c.lineWidth = 2; c.strokeRect(1, by + 2, VIEW_W - 2, bh - 4);
+      c.fillStyle = '#ff8a3a'; // 端の警告ストライプ
+      for (let i = 0; i < VIEW_W; i += 22) { c.beginPath(); c.moveTo(i, by); c.lineTo(i + 10, by); c.lineTo(i + 4, by + 6); c.closePath(); c.fill(); c.beginPath(); c.moveTo(i, by + bh); c.lineTo(i + 10, by + bh); c.lineTo(i + 4, by + bh - 6); c.closePath(); c.fill(); }
+      const blink = 0.6 + 0.4 * Math.sin(this.tick * 0.4);
+      c.globalAlpha = a * blink;
+      r.text('⚠  W A R N I N G  ⚠', VIEW_W / 2, by + 7, { size: 22, align: 'center', color: '#ffd23f' });
+      c.globalAlpha = a;
+      r.text(this.bossEnemy ? this.bossEnemy.def.name : 'ボス', VIEW_W / 2, by + 34, { size: 16, align: 'center', color: '#ffffff' });
       c.restore();
     }
   }
