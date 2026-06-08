@@ -128,8 +128,31 @@ export class FieldScene extends Scene {
     this.camera.follow(this.player.px, this.player.py);
   }
 
+  /** 歩行時の足元エフェクト（地面に応じた砂埃・草の反応） */
+  spawnFootstep() {
+    const g = this.map.groundAt(this.player.gx, this.player.gy);
+    const palette = {
+      grass: '120,180,90', grass2: '120,180,90', flower: '150,200,110',
+      sand: '210,190,130', path: '200,175,120', grain: '200,175,120',
+      snow: '236,242,250', floor: '150,158,178', floor2: '150,158,178',
+      darkfloor: '120,120,150', mountain: '150,140,120', stairs: '150,158,178',
+    };
+    const col = palette[g] || '200,190,170';
+    const dust = g === 'snow' ? '236,242,250' : '214,198,168'; // 砂埃は土っぽい中立色（地面に同化させない）
+    const x = this.player.px + TILE / 2, y = this.player.py + TILE - 5;
+    this.fx = this.fx || [];
+    this.fx.push({ type: 'puff', x: x + (Math.random() * 8 - 4), y, life: 20, max: 20, col: dust, s: 3.6 });
+    const grassy = g === 'grass' || g === 'grass2' || g === 'flower';
+    const n = grassy ? 3 : 2;
+    for (let i = 0; i < n; i++) {
+      const a = -Math.PI / 2 + (Math.random() - 0.5) * 1.6, sp = 0.6 + Math.random() * 1.2;
+      this.fx.push({ type: 'fleck', x, y: y - 2, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp * 0.7, g: 0.08, life: 16 + Math.random() * 10, max: 26, col, s: 1.2 + Math.random() });
+    }
+  }
+
   /** 1マス歩いた時：触れ判定イベント・ポータル・エンカウント */
   onStep() {
+    this.spawnFootstep();
     const { gx, gy } = this.player;
     // タッチイベント（同一タイルに複数ある場合は発火可能な最初の1つ）
     const ev = (this.map.data.events || []).find((e) => e.x === gx && e.y === gy && e.trigger === 'touch' && this.canFire(e));
@@ -183,22 +206,32 @@ export class FieldScene extends Scene {
 
   _updateFx() {
     if (!this.fx || !this.fx.length) return;
-    for (const f of this.fx) { if (f.type === 'spark') { f.x += f.vx; f.y += f.vy; f.vy += f.g; } f.life--; }
+    for (const f of this.fx) { if (f.type === 'spark' || f.type === 'fleck') { f.x += f.vx; f.y += f.vy; f.vy += f.g; } f.life--; }
     this.fx = this.fx.filter((f) => f.life > 0);
   }
 
   _drawFx(r, camX, camY) {
     if (!this.fx || !this.fx.length) return;
-    const c = r.ctx; c.save(); c.globalCompositeOperation = 'lighter';
+    const c = r.ctx; c.save();
     for (const f of this.fx) {
       const x = f.x - camX, y = f.y - camY, p = f.life / f.max;
       if (f.type === 'ring') {
+        c.globalCompositeOperation = 'lighter';
         c.strokeStyle = `rgba(255,230,150,${p * 0.8})`; c.lineWidth = 2;
         c.beginPath(); c.arc(x, y, (1 - p) * 22 + 4, 0, 7); c.stroke();
         c.fillStyle = `rgba(255,240,190,${p * 0.5})`; c.beginPath(); c.arc(x, y, (1 - p) * 10 + 2, 0, 7); c.fill();
-      } else {
+      } else if (f.type === 'spark') {
+        c.globalCompositeOperation = 'lighter';
         c.fillStyle = `rgba(${f.col},${Math.min(1, p * 1.5)})`;
         c.beginPath(); c.arc(x, y, f.s * (0.6 + p * 0.6), 0, 7); c.fill();
+      } else if (f.type === 'puff') { // 砂埃（やわらかく広がる）
+        c.globalCompositeOperation = 'source-over';
+        c.fillStyle = `rgba(${f.col},${p * 0.5})`;
+        c.beginPath(); c.arc(x, y, (1 - p) * 9 + f.s, 0, 7); c.fill();
+      } else if (f.type === 'fleck') { // 草の切れ端/砂粒
+        c.globalCompositeOperation = 'source-over';
+        c.fillStyle = `rgba(${f.col},${Math.min(1, p * 1.4)})`;
+        c.beginPath(); c.arc(x, y, f.s, 0, 7); c.fill();
       }
     }
     c.restore();
