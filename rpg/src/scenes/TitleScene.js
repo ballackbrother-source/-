@@ -97,8 +97,11 @@ export class TitleScene extends Scene {
     r.text('✦', VIEW_W - 90, 60, { size: 40, color: `rgba(174,224,255,${0.5 + bt * 0.5})` });
 
     if (this.mode === 'main') {
-      r.text('ETERNIA', VIEW_W / 2, 90, { size: 54, align: 'center', color: COLORS.windowBorder });
+      this._drawLogo(r, VIEW_W / 2, 92);
+      const subA = Math.min(1, Math.max(0, (this.t - 24) / 24));
+      r.ctx.save(); r.ctx.globalAlpha = subA;
       r.text('～ 星を継ぐ者 ～', VIEW_W / 2, 150, { size: 22, align: 'center', color: COLORS.textDim });
+      r.ctx.restore();
       // クリア記録バッジ
       const clears = SaveManager.getClears();
       const badges = [['true', 'TRUE', '#ffd23f'], ['normal', 'NORMAL', '#aee0ff'], ['bad', 'BAD', '#e06666']];
@@ -122,5 +125,51 @@ export class TitleScene extends Scene {
     }
     if (this.errorMsg) r.text(this.errorMsg, VIEW_W / 2, VIEW_H - 30, { size: 14, align: 'center', color: '#e06666' });
     r.text('© ETERNIA Project — 設計書 design/ 参照', VIEW_W / 2, VIEW_H - 22, { size: 11, align: 'center', color: '#44506e' });
+  }
+
+  /** ロゴ：光沢グラデ＋光のスイープ＋登場アニメ＋粒子 */
+  _drawLogo(r, cx, cy) {
+    const c = r.ctx;
+    const p = Math.min(1, this.t / 36), ease = 1 - Math.pow(1 - p, 3);
+    const scale = 0.82 + 0.18 * ease, alpha = ease;
+    // 背後の発光（脈動）
+    c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = alpha * (0.22 + 0.08 * Math.sin(this.t * 0.05));
+    const gl = c.createRadialGradient(cx, cy, 6, cx, cy, 190);
+    gl.addColorStop(0, 'rgba(174,224,255,0.5)'); gl.addColorStop(1, 'rgba(174,224,255,0)');
+    c.fillStyle = gl; c.beginPath(); c.arc(cx, cy, 190, 0, 7); c.fill(); c.restore();
+    // オフスクリーンにロゴ＋スイープ（文字内だけに光沢）
+    if (!this._logoCv) { this._logoCv = document.createElement('canvas'); this._logoCv.width = 480; this._logoCv.height = 120; }
+    const lc = this._logoCv, lx = lc.getContext('2d');
+    lx.clearRect(0, 0, 480, 120);
+    lx.font = 'bold 58px serif'; lx.textAlign = 'center'; lx.textBaseline = 'middle';
+    const tx = 240, ty = 62;
+    const g = lx.createLinearGradient(0, ty - 32, 0, ty + 32);
+    g.addColorStop(0, '#fff6cc'); g.addColorStop(0.46, '#ffd23f'); g.addColorStop(0.54, '#e6a832'); g.addColorStop(1, '#caa24a');
+    lx.lineJoin = 'round'; lx.lineWidth = 7; lx.strokeStyle = '#241606'; lx.strokeText('ETERNIA', tx, ty);
+    lx.fillStyle = g; lx.fillText('ETERNIA', tx, ty);
+    lx.save(); lx.globalCompositeOperation = 'source-atop'; // 文字の上だけに光沢バンド
+    const sweep = ((this.t * 4) % 640) - 120;
+    const sg = lx.createLinearGradient(sweep - 44, 0, sweep + 44, 0);
+    sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(255,255,255,0.85)'); sg.addColorStop(1, 'rgba(255,255,255,0)');
+    lx.fillStyle = sg; lx.fillRect(0, 0, 480, 120); lx.restore();
+    c.save(); c.globalAlpha = alpha; c.translate(cx, cy); c.scale(scale, scale); c.drawImage(lc, -240, -60); c.restore();
+    // 粒子（ロゴ周囲を漂うきらめき）
+    c.save(); c.globalCompositeOperation = 'lighter';
+    for (let k = 0; k < 7; k++) {
+      const a = this.t * 0.018 + k * 1.3;
+      const sx = cx + Math.cos(a * 1.2 + k) * (130 + 24 * Math.sin(a));
+      const sy = cy + Math.sin(a * 0.8 + k) * 34;
+      const tw = 0.5 + 0.5 * Math.sin(this.t * 0.1 + k * 2);
+      c.fillStyle = `rgba(255,240,180,${0.45 * tw * alpha})`;
+      this._spark(c, sx, sy, 1.8 + 2.4 * tw);
+    }
+    c.restore();
+  }
+
+  _spark(c, x, y, s) {
+    c.beginPath();
+    c.moveTo(x, y - s); c.lineTo(x + s * 0.3, y - s * 0.3); c.lineTo(x + s, y); c.lineTo(x + s * 0.3, y + s * 0.3);
+    c.lineTo(x, y + s); c.lineTo(x - s * 0.3, y + s * 0.3); c.lineTo(x - s, y); c.lineTo(x - s * 0.3, y - s * 0.3);
+    c.closePath(); c.fill();
   }
 }
