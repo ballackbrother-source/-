@@ -360,7 +360,8 @@ export class FieldScene extends Scene {
   }
   autosave() {
     this.syncLocation();
-    SaveManager.save(0, this.game.state, this.game.db);
+    const ok = SaveManager.save(0, this.game.state, this.game.db);
+    if (ok) this.hud.showSave();
   }
   async gameOver() {
     await this.fade('out', '#000', 800);
