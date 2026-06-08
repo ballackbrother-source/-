@@ -65,6 +65,13 @@ export class FieldScene extends Scene {
     const color = this.game.db.getCharacter(leader.id).color || '#4fb2ff';
     this.player = new FieldPlayer(x, y, dir, color);
     this.npcs = (this.map.data.npcs || []).map((d) => new NPC(d));
+    this.fx = [];
+    // 既に開封済みの宝箱は開いた見た目で表示
+    for (const ev of (this.map.data.events || [])) {
+      if (ev.trigger === 'action' && ev.once && this.map.objectAt(ev.x, ev.y) === 'chest' && this.game.flags.on(this.onceKey(ev))) {
+        this.map.setObject(ev.x, ev.y, 'chestOpen');
+      }
+    }
     this.camera.follow(this.player.px, this.player.py);
     this.resetEncounter();
     this.hud.showLocation(this.game.db.mapName(mapId));
@@ -91,6 +98,7 @@ export class FieldScene extends Scene {
     for (const n of this.npcs) n.update(this.map, [this.player, ...this.occupants()]);
     this.hud.update();
     if (this.shakeT > 0) this.shakeT--;
+    this._updateFx(); // 一発演出は会話中も進める
 
     if (this.eventRunning) {
       // イベント中は会話/選択のみ受け付ける
@@ -154,7 +162,46 @@ export class FieldScene extends Scene {
       if (cmds) { this.runEvent(cmds); return; }
     }
     const ev = (this.map.data.events || []).find((e) => e.x === f.x && e.y === f.y && e.trigger === 'action' && this.canFire(e));
-    if (ev) this.fireEvent(ev);
+    if (ev) {
+      const isChest = this.map.objectAt(f.x, f.y) === 'chest';
+      this.fireEvent(ev);
+      if (isChest) { this.spawnChestBurst(f.x, f.y); this.map.setObject(f.x, f.y, 'chestOpen'); }
+    }
+  }
+
+  /** 宝箱開封の一発演出（光の弾け＋金の粒） */
+  spawnChestBurst(gx, gy) {
+    this.fx = this.fx || [];
+    const x = gx * TILE + TILE / 2, y = gy * TILE + TILE / 2 - 4;
+    this.fx.push({ type: 'ring', x, y, life: 24, max: 24 });
+    for (let i = 0; i < 16; i++) {
+      const a = Math.random() * Math.PI * 2, sp = 1 + Math.random() * 2.2;
+      this.fx.push({ type: 'spark', x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 1.2, g: 0.12, life: 30 + Math.random() * 16, max: 46, col: Math.random() < 0.5 ? '255,226,122' : '255,246,200', s: 1.4 + Math.random() * 1.6 });
+    }
+    this.game.audio?.se?.('open');
+  }
+
+  _updateFx() {
+    if (!this.fx || !this.fx.length) return;
+    for (const f of this.fx) { if (f.type === 'spark') { f.x += f.vx; f.y += f.vy; f.vy += f.g; } f.life--; }
+    this.fx = this.fx.filter((f) => f.life > 0);
+  }
+
+  _drawFx(r, camX, camY) {
+    if (!this.fx || !this.fx.length) return;
+    const c = r.ctx; c.save(); c.globalCompositeOperation = 'lighter';
+    for (const f of this.fx) {
+      const x = f.x - camX, y = f.y - camY, p = f.life / f.max;
+      if (f.type === 'ring') {
+        c.strokeStyle = `rgba(255,230,150,${p * 0.8})`; c.lineWidth = 2;
+        c.beginPath(); c.arc(x, y, (1 - p) * 22 + 4, 0, 7); c.stroke();
+        c.fillStyle = `rgba(255,240,190,${p * 0.5})`; c.beginPath(); c.arc(x, y, (1 - p) * 10 + 2, 0, 7); c.fill();
+      } else {
+        c.fillStyle = `rgba(${f.col},${Math.min(1, p * 1.5)})`;
+        c.beginPath(); c.arc(x, y, f.s * (0.6 + p * 0.6), 0, 7); c.fill();
+      }
+    }
+    c.restore();
   }
 
   // ---- イベント実行 ----
@@ -303,6 +350,8 @@ export class FieldScene extends Scene {
     drawFieldAmbient(r.ctx, this.ambient);
     // 点光源演出（宝箱のきらめき・玄関ランタン）はビネットの上に加算
     this.renderer.drawLights(r, this.camera.x, this.camera.y, performance.now() / 16);
+    // 一発演出（宝箱の光の弾け等）
+    this._drawFx(r, this.camera.x, this.camera.y);
 
     // フェード暗幕はマップの上・UIの下（暗転中も会話文は読める）
     if (this.fadeAlpha > 0) {

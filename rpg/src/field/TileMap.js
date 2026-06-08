@@ -34,6 +34,7 @@ export class TileMap {
   inBounds(x, y) { return x >= 0 && y >= 0 && x < this.width && y < this.height; }
   groundAt(x, y) { return this.inBounds(x, y) ? this.ground[y][x] : 'wall'; }
   objectAt(x, y) { return this.inBounds(x, y) ? (this.objects[y]?.[x] ?? null) : null; }
+  setObject(x, y, name) { if (this.inBounds(x, y)) { (this.objects[y] = this.objects[y] || [])[x] = name; } }
 
   /** プレイヤー/NPCが通れるか（オブジェクトと地形の両方を見る） */
   isPassable(x, y, occupants = []) {
