@@ -454,6 +454,10 @@ export class AssetLoader {
       ctx.translate(0, r * 0.84); ctx.scale(1 + j, 1 - j); ctx.translate(0, -r * 0.84);
     } else if (family === 'undead') {
       ctx.translate(0, Math.sin(t * 0.07) * r * 0.07); // ふわふわ浮遊
+    } else if (family === 'plant') {
+      ctx.translate(0, r * 0.85); ctx.rotate(Math.sin(t * 0.11) * 0.05); ctx.translate(0, -r * 0.85); // 風にゆれる
+    } else if (family === 'aqua') {
+      const w = Math.sin(t * 0.14); ctx.translate(0, r * 0.8); ctx.scale(1 + w * 0.03, 1 - w * 0.03); ctx.rotate(w * 0.03); ctx.translate(0, -r * 0.8); // うねり
     }
 
     // ボディ用グラデ（左上から光）
@@ -666,12 +670,15 @@ export class AssetLoader {
       case 'beast': { // 獣：四足の頭部正面（とがり耳・口吻・牙・前足）
         ctx.beginPath(); ctx.ellipse(-r * 0.5, r * 0.85, r * 0.22, r * 0.16, 0, 0, 7);
         ctx.ellipse(r * 0.5, r * 0.85, r * 0.22, r * 0.16, 0, 0, 7); part(-0.1); // 前足
-        for (const sx of [-1, 1]) { // 耳
+        for (const sx of [-1, 1]) { // 耳（たまにピクッと動く）
+          const tw = (Math.sin(t * 0.5 + (sx > 0 ? 0 : 1.7)) ** 12) * 0.4 * -sx;
+          ctx.save(); ctx.translate(sx * r * 0.45, -r * 0.62); ctx.rotate(tw); ctx.translate(-sx * r * 0.45, r * 0.62);
           ctx.beginPath();
           ctx.moveTo(sx * r * 0.5, -r * 0.55); ctx.lineTo(sx * r * 0.85, -r * 1.2);
           ctx.lineTo(sx * r * 0.1, -r * 0.72); ctx.closePath(); part(0);
           ctx.fillStyle = rgba('#e58aa0', 0.7);
           ctx.beginPath(); ctx.moveTo(sx * r * 0.46, -r * 0.6); ctx.lineTo(sx * r * 0.62, -r * 0.95); ctx.lineTo(sx * r * 0.28, -r * 0.68); ctx.closePath(); ctx.fill();
+          ctx.restore();
         }
         ctx.beginPath(); ctx.ellipse(0, r * 0.05, r, r * 0.82, 0, 0, 7); body(); // 顔
         castShadow(-r * 0.34, -r * 0.44, r * 0.22, r * 0.14, 0.32, 0.4); // 耳→額の落ち影
@@ -851,14 +858,14 @@ export class AssetLoader {
         ctx.beginPath(); ctx.ellipse(0, r * 0.95, r * 1.05, r * 0.34, 0, 0, 7); ctx.stroke();
         ctx.beginPath(); ctx.ellipse(0, r * 0.95, r * 0.72, r * 0.23, 0, 0, 7); ctx.stroke();
         ctx.fillStyle = rgba(arc, 0.8);
-        for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; ctx.beginPath(); ctx.arc(Math.cos(a) * r * 0.88, r * 0.95 + Math.sin(a) * r * 0.28, 1.6 * s, 0, 7); ctx.fill(); }
+        for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2 + t * 0.04; ctx.beginPath(); ctx.arc(Math.cos(a) * r * 0.88, r * 0.95 + Math.sin(a) * r * 0.28, 1.6 * s, 0, 7); ctx.fill(); }
         ctx.restore();
         // 杖（右手側。柄＋先端の光球）
         ctx.strokeStyle = '#7a5230'; ctx.lineWidth = lw * 1.3; ctx.lineCap = 'round';
         ctx.beginPath(); ctx.moveTo(r * 0.78, r * 0.95); ctx.lineTo(r * 0.62, -r * 0.95); ctx.stroke();
         ctx.lineCap = 'butt';
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
-        ctx.fillStyle = rgba(arc, 0.4); ctx.beginPath(); ctx.arc(r * 0.6, -r * 1.05, r * 0.28, 0, 7); ctx.fill(); ctx.restore();
+        ctx.fillStyle = rgba(arc, 0.4); ctx.beginPath(); ctx.arc(r * 0.6, -r * 1.05, r * (0.24 + 0.12 * (0.5 + 0.5 * Math.sin(t * 0.2))), 0, 7); ctx.fill(); ctx.restore();
         ctx.fillStyle = arc; ctx.strokeStyle = outline; ctx.lineWidth = lw * 0.7;
         ctx.beginPath(); ctx.arc(r * 0.6, -r * 1.05, r * 0.14, 0, 7); ctx.fill(); ctx.stroke();
         ctx.fillStyle = rgba('#ffffff', 0.9); ctx.beginPath(); ctx.arc(r * 0.55, -r * 1.1, r * 0.05, 0, 7); ctx.fill();
@@ -900,17 +907,20 @@ export class AssetLoader {
       case 'spirit': { // 精霊/妖精：発光する核＋透ける羽＋きらめき
         rim = false;
         ctx.save(); ctx.globalAlpha = 0.55;
+        const sf = Math.sin(t * 0.35) * 0.22; // 羽ばたき
         for (const sx of [-1, 1]) { // 透明な羽
+          ctx.save(); ctx.translate(sx * r * 0.3, -r * 0.05); ctx.rotate(-sx * sf); ctx.translate(-sx * r * 0.3, r * 0.05);
           ctx.beginPath(); ctx.ellipse(sx * r * 0.7, -r * 0.15, r * 0.55, r * 0.78, sx * 0.4, 0, 7);
           ctx.fillStyle = tint(color, 0.45); ctx.fill(); ctx.strokeStyle = rgba('#ffffff', 0.6); ctx.lineWidth = lw * 0.6; ctx.stroke();
+          ctx.restore();
         }
         ctx.restore();
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; // 発光ハロー
         ctx.fillStyle = rgba(tint(color, 0.5), 0.5); ctx.beginPath(); ctx.arc(0, 0, r * 0.85, 0, 7); ctx.fill(); ctx.restore();
         ctx.beginPath(); ctx.arc(0, 0, r * 0.5, 0, 7); body(); // 核
         ctx.lineWidth = lw;
-        ctx.fillStyle = rgba('#ffffff', 0.9); // きらめき
-        for (const [dx, dy, rr] of [[-r * 0.95, -r * 0.6, 0.12], [r * 0.9, r * 0.2, 0.1], [r * 0.2, -r * 1.0, 0.09]]) {
+        for (const [dx, dy, rr, ph] of [[-r * 0.95, -r * 0.6, 0.12, 0], [r * 0.9, r * 0.2, 0.1, 1.7], [r * 0.2, -r * 1.0, 0.09, 3.1]]) {
+          ctx.fillStyle = rgba('#ffffff', 0.35 + 0.6 * Math.abs(Math.sin(t * 0.2 + ph))); // きらめく
           ctx.beginPath(); ctx.moveTo(dx, dy - r * rr); ctx.lineTo(dx + r * rr * 0.4, dy); ctx.lineTo(dx, dy + r * rr);
           ctx.lineTo(dx - r * rr * 0.4, dy); ctx.closePath(); ctx.fill();
         }
