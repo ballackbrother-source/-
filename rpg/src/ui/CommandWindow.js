@@ -39,7 +39,7 @@ export class CommandWindow {
     return null;
   }
 
-  render(r, x, y, w) {
+  render(r, x, y, w, assets) {
     let oy = y;
     if (this.title) { r.text(this.title, x, oy, { size: 16, color: COLORS.textDim }); oy += 26; }
     const colW = w / this.cols;
@@ -49,7 +49,9 @@ export class CommandWindow {
       const sel = i === this.index;
       const color = it.disabled ? '#6b7390' : (sel ? COLORS.selected : COLORS.text);
       if (sel) r.text('▶', ix, iy, { size: 18, color: COLORS.selected });
-      r.text(it.label, ix + 22, iy, { size: 18, color });
+      const hasIcon = it.icon && assets;
+      if (hasIcon) assets.drawIcon(r.ctx, ix + 26, iy + 9, 7.5, it.icon);
+      r.text(it.label, ix + (hasIcon ? 42 : 22), iy, { size: 18, color });
       if (it.sub != null) r.text(it.sub, ix + colW - 70, iy, { size: 16, color, align: 'left' });
     });
   }

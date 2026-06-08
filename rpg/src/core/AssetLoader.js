@@ -358,6 +358,86 @@ export class AssetLoader {
     ctx.restore();
   }
 
+  // ── 手続きミニアイコン（どうぐ/装備/属性/コマンド）。cx,cy=中心, s=半径目安 ──
+  drawIcon(ctx, cx, cy, s = 8, kind = 'material') {
+    ctx.save(); ctx.translate(cx, cy); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    const OL = 'rgba(10,12,22,0.9)';
+    const line = (w = 1.4) => { ctx.lineWidth = w; ctx.strokeStyle = OL; ctx.stroke(); };
+    const lg = (a, b) => { const g = ctx.createLinearGradient(-s, -s, s, s); g.addColorStop(0, a); g.addColorStop(1, b); return g; };
+    const EC = { fire: '#ff6a3a', ice: '#7fd8ff', thunder: '#ffd23f', wind: '#7fe0a0', earth: '#cf9a52', light: '#fff0a0', dark: '#a878e0' };
+    switch (kind) {
+      case 'weapon': case 'attack':
+        ctx.beginPath(); ctx.moveTo(-s * 0.55, s * 0.85); ctx.lineTo(s * 0.5, -s * 0.9); ctx.lineTo(s * 0.85, -s * 0.55); ctx.lineTo(-s * 0.2, s * 0.95); ctx.closePath();
+        ctx.fillStyle = lg('#f2f6ff', '#9fb2cc'); ctx.fill(); line();
+        ctx.strokeStyle = '#caa24a'; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(-s * 0.9, s * 0.35); ctx.lineTo(-s * 0.1, s * 1.0); ctx.stroke();
+        break;
+      case 'shield': case 'defend':
+        ctx.beginPath(); ctx.moveTo(0, -s); ctx.lineTo(s * 0.85, -s * 0.6); ctx.lineTo(s * 0.7, s * 0.5); ctx.quadraticCurveTo(0, s * 1.05, -s * 0.7, s * 0.5); ctx.lineTo(-s * 0.85, -s * 0.6); ctx.closePath();
+        ctx.fillStyle = lg('#7fb0e0', '#37618f'); ctx.fill(); line();
+        ctx.strokeStyle = rgba('#ffffff', 0.7); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(0, -s * 0.55); ctx.lineTo(0, s * 0.6); ctx.moveTo(-s * 0.45, -s * 0.05); ctx.lineTo(s * 0.45, -s * 0.05); ctx.stroke();
+        break;
+      case 'head':
+        ctx.beginPath(); ctx.arc(0, s * 0.1, s * 0.8, Math.PI, 0); ctx.lineTo(s * 0.8, s * 0.45); ctx.lineTo(-s * 0.8, s * 0.45); ctx.closePath();
+        ctx.fillStyle = lg('#cfd6e2', '#8a93a6'); ctx.fill(); line();
+        ctx.fillStyle = '#caa24a'; ctx.fillRect(-s * 0.85, s * 0.32, s * 1.7, s * 0.22);
+        break;
+      case 'body':
+        ctx.beginPath();
+        ctx.moveTo(-s * 0.55, -s * 0.8); ctx.lineTo(s * 0.55, -s * 0.8); ctx.lineTo(s * 0.9, -s * 0.35); ctx.lineTo(s * 0.6, -s * 0.12);
+        ctx.lineTo(s * 0.7, s * 0.9); ctx.lineTo(-s * 0.7, s * 0.9); ctx.lineTo(-s * 0.6, -s * 0.12); ctx.lineTo(-s * 0.9, -s * 0.35); ctx.closePath();
+        ctx.fillStyle = lg('#b8804a', '#7a5026'); ctx.fill(); line();
+        break;
+      case 'accessory':
+        ctx.lineWidth = 2.4; ctx.strokeStyle = lg('#ffe089', '#caa24a'); ctx.beginPath(); ctx.arc(0, s * 0.25, s * 0.6, 0, 7); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, -s * 0.95); ctx.lineTo(s * 0.3, -s * 0.45); ctx.lineTo(-s * 0.3, -s * 0.45); ctx.closePath(); ctx.fillStyle = EC.ice; ctx.fill(); line(1);
+        break;
+      case 'consumable': case 'item':
+        ctx.beginPath(); ctx.moveTo(-s * 0.28, -s * 0.9); ctx.lineTo(s * 0.28, -s * 0.9); ctx.lineTo(s * 0.28, -s * 0.5);
+        ctx.quadraticCurveTo(s * 0.72, -s * 0.18, s * 0.62, s * 0.55); ctx.quadraticCurveTo(s * 0.5, s * 0.95, 0, s * 0.95);
+        ctx.quadraticCurveTo(-s * 0.5, s * 0.95, -s * 0.62, s * 0.55); ctx.quadraticCurveTo(-s * 0.72, -s * 0.18, -s * 0.28, -s * 0.5); ctx.closePath();
+        ctx.fillStyle = lg('#7be0a0', '#2f9f6a'); ctx.fill(); line();
+        ctx.fillStyle = rgba('#ffffff', 0.5); ctx.fillRect(-s * 0.18, -s * 0.95, s * 0.36, s * 0.3);
+        break;
+      case 'material':
+        ctx.beginPath(); ctx.moveTo(0, -s * 0.9); ctx.lineTo(s * 0.85, -s * 0.2); ctx.lineTo(s * 0.5, s * 0.85); ctx.lineTo(-s * 0.5, s * 0.85); ctx.lineTo(-s * 0.85, -s * 0.2); ctx.closePath();
+        ctx.fillStyle = lg('#9ad8ff', '#4a7fb0'); ctx.fill(); line();
+        ctx.strokeStyle = rgba('#ffffff', 0.6); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -s * 0.9); ctx.lineTo(0, s * 0.85); ctx.moveTo(-s * 0.85, -s * 0.2); ctx.lineTo(s * 0.85, -s * 0.2); ctx.stroke();
+        break;
+      case 'key':
+        ctx.lineWidth = 2.2; ctx.strokeStyle = lg('#ffe089', '#caa24a');
+        ctx.beginPath(); ctx.arc(-s * 0.3, -s * 0.3, s * 0.45, 0, 7); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-s * 0.02, -s * 0.02); ctx.lineTo(s * 0.8, s * 0.8); ctx.lineTo(s * 0.55, s * 0.95); ctx.stroke();
+        break;
+      case 'skill': case 'magic':
+        ctx.fillStyle = lg('#fff0a0', '#ffb24a');
+        ctx.beginPath();
+        for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; ctx.lineTo(Math.cos(a) * s, Math.sin(a) * s); const b = a + Math.PI / 4; ctx.lineTo(Math.cos(b) * s * 0.34, Math.sin(b) * s * 0.34); }
+        ctx.closePath(); ctx.fill(); line(1);
+        break;
+      case 'escape':
+        ctx.beginPath(); ctx.moveTo(-s * 0.5, -s * 0.8); ctx.lineTo(-s * 0.02, -s * 0.8); ctx.lineTo(s * 0.05, s * 0.4); ctx.lineTo(s * 0.9, s * 0.5); ctx.lineTo(s * 0.9, s * 0.9); ctx.lineTo(-s * 0.5, s * 0.9); ctx.closePath();
+        ctx.fillStyle = lg('#a06a3c', '#653a20'); ctx.fill(); line();
+        break;
+      default: {
+        const col = EC[kind];
+        if (col) {
+          ctx.fillStyle = lg(tint(col, 0.3), tint(col, -0.2)); ctx.strokeStyle = OL; ctx.lineWidth = 1.4;
+          if (kind === 'fire') { ctx.beginPath(); ctx.moveTo(0, -s); ctx.quadraticCurveTo(s * 0.9, -s * 0.1, s * 0.45, s * 0.7); ctx.quadraticCurveTo(0, s * 1.05, -s * 0.45, s * 0.7); ctx.quadraticCurveTo(-s * 0.9, -s * 0.1, 0, -s); ctx.closePath(); ctx.fill(); line(); }
+          else if (kind === 'ice') { ctx.beginPath(); for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 - Math.PI / 2; ctx.lineTo(Math.cos(a) * s, Math.sin(a) * s); } ctx.closePath(); ctx.fill(); line(); }
+          else if (kind === 'thunder') { ctx.beginPath(); ctx.moveTo(s * 0.2, -s); ctx.lineTo(-s * 0.5, s * 0.15); ctx.lineTo(0, s * 0.15); ctx.lineTo(-s * 0.2, s); ctx.lineTo(s * 0.6, -s * 0.2); ctx.lineTo(s * 0.05, -s * 0.2); ctx.closePath(); ctx.fill(); line(); }
+          else if (kind === 'wind') { ctx.lineWidth = 2.2; ctx.strokeStyle = col; ctx.beginPath(); ctx.arc(-s * 0.1, -s * 0.1, s * 0.55, 0.4, Math.PI * 1.7); ctx.stroke(); ctx.beginPath(); ctx.arc(s * 0.2, s * 0.5, s * 0.32, 0, Math.PI * 1.6); ctx.stroke(); }
+          else if (kind === 'earth') { ctx.beginPath(); ctx.moveTo(-s, s * 0.8); ctx.lineTo(-s * 0.2, -s * 0.3); ctx.lineTo(s * 0.1, s * 0.2); ctx.lineTo(s * 0.55, -s * 0.7); ctx.lineTo(s, s * 0.8); ctx.closePath(); ctx.fill(); line(); }
+          else if (kind === 'light') { ctx.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; const rr = i % 2 ? s * 0.4 : s; ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); line(1); }
+          else if (kind === 'dark') { ctx.beginPath(); ctx.arc(0, 0, s, Math.PI * 0.5, Math.PI * 1.5); ctx.arc(s * 0.4, 0, s * 0.95, Math.PI * 1.5, Math.PI * 0.5, true); ctx.closePath(); ctx.fill(); line(); }
+          else { ctx.beginPath(); ctx.arc(0, 0, s * 0.7, 0, 7); ctx.fill(); line(); }
+        } else {
+          ctx.beginPath(); ctx.arc(0, 0, s * 0.78, 0, 7); ctx.fillStyle = lg('#9aa6b8', '#5a6478'); ctx.fill(); line();
+        }
+      }
+    }
+    ctx.restore();
+  }
+
   // ── 戦闘モンスター：系統が「見て分かる」シルエット＋陰影＋リムライト ──
   drawMonster(ctx, cx, cy, family, color, s = 1, t = 0) {
     ctx.save();

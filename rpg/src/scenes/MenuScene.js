@@ -119,7 +119,7 @@ export class MenuScene extends Scene {
     if (!items.length) { this.setToast('どうぐを 持っていない。'); return; }
     this.itemList = items;
     this.itemMenu = new CommandWindow(items.map((e) => ({
-      value: e.id, label: e.item.name, sub: `×${e.count}`,
+      value: e.id, label: e.item.name, sub: `×${e.count}`, icon: e.item.type || 'item',
     })), { lineH: 26 });
     this.state = 'item';
   }
@@ -159,7 +159,7 @@ export class MenuScene extends Scene {
       a.se(ef.raise ? 'levelup' : 'heal');
       this.setToast(`${target.name}に ${it.name}を つかった。`);
       if (!this.game.inventory.has(this.pendingItem)) { this.openItem(); }
-      else { this.itemMenu.setItems(this.game.inventory.list().map((e) => ({ value: e.id, label: e.item.name, sub: `×${e.count}` }))); this.state = 'item'; }
+      else { this.itemMenu.setItems(this.game.inventory.list().map((e) => ({ value: e.id, label: e.item.name, sub: `×${e.count}`, icon: e.item.type || 'item' }))); this.state = 'item'; }
     }
   }
 
@@ -196,7 +196,7 @@ export class MenuScene extends Scene {
     const candidates = this.game.inventory.list().filter((e) =>
       wanted.includes(e.item.type) && this.game.inventory.canEquip(this.char, e.id));
     const items = [{ value: '__none', label: '（はずす）' }].concat(candidates.map((e) => ({
-      value: e.id, label: e.item.name, sub: this.equipDelta(slot, e.id),
+      value: e.id, label: e.item.name, sub: this.equipDelta(slot, e.id), icon: e.item.type || 'material',
     })));
     this.equipMenu = new CommandWindow(items, { lineH: 26 });
     this.state = 'equip_item';
@@ -317,7 +317,7 @@ export class MenuScene extends Scene {
         MenuUI.detail(r, this.party[this.charIdx], px, 16, VIEW_W - px - 16, 440);
         r.text('← →で キャラ切替', VIEW_W - 220, VIEW_H - 26, { size: 12, color: COLORS.textDim }); break;
       case 'item': case 'item_target':
-        r.window(px, 16, 300, 360); this.itemMenu.render(r, px + 14, 30, 280);
+        r.window(px, 16, 300, 360); this.itemMenu.render(r, px + 14, 30, 280, this.game.assets);
         if (this.state === 'item_target') {
           MenuUI.partyList(r, this.party, px + 320, 16, 200, this.targetIdx);
           r.text('だれに つかう？', px + 320, VIEW_H - 70, { size: 13, color: COLORS.selected });
@@ -369,7 +369,7 @@ export class MenuScene extends Scene {
     });
     if (this.state === 'equip_item') {
       r.window(px + 260, 16, 250, 360); r.text(`${SLOT_LABEL[EQUIP_SLOTS[this.slotIdx]]}を えらぶ`, px + 274, 26, { size: 14, color: COLORS.textDim });
-      this.equipMenu.render(r, px + 274, 56, 230);
+      this.equipMenu.render(r, px + 274, 56, 230, this.game.assets);
     }
   }
   renderSkills(r, px) {

@@ -111,11 +111,11 @@ export class BattleScene extends Scene {
 
   _buildCmdMenu() {
     this.cmdMenu = new CommandWindow([
-      { label: 'たたかう', value: 'attack' },
-      { label: 'じゅもん', value: 'skill' },
-      { label: 'どうぐ', value: 'item' },
-      { label: 'ぼうぎょ', value: 'defend' },
-      { label: 'にげる', value: 'escape', disabled: this.isBoss },
+      { label: 'たたかう', value: 'attack', icon: 'attack' },
+      { label: 'じゅもん', value: 'skill', icon: 'skill' },
+      { label: 'どうぐ', value: 'item', icon: 'item' },
+      { label: 'ぼうぎょ', value: 'defend', icon: 'defend' },
+      { label: 'にげる', value: 'escape', disabled: this.isBoss, icon: 'escape' },
     ], { cols: 1, lineH: 28 });
   }
 
@@ -182,6 +182,7 @@ export class BattleScene extends Scene {
       usable.map((s) => ({
         value: s.id, label: s.sk.name, sub: `MP${s.sk.mp || 0}`,
         disabled: (s.sk.mp || 0) > this.curPlayer.curMp,
+        icon: (s.sk.element && s.sk.element !== 'none') ? s.sk.element : (s.sk.type === 'heal' ? 'item' : 'skill'),
       })), { lineH: 26 });
     this.phase = 'skill';
   }
@@ -199,7 +200,7 @@ export class BattleScene extends Scene {
     const items = this.game.inventory.list().filter((e) => e.item.usableInBattle);
     if (items.length === 0) { this.game.audio.se('cancel'); return; }
     this.itemMenu = new CommandWindow(
-      items.map((e) => ({ value: e.id, label: e.item.name, sub: `×${e.count}` })), { lineH: 26 });
+      items.map((e) => ({ value: e.id, label: e.item.name, sub: `×${e.count}`, icon: e.item.type || 'item' })), { lineH: 26 });
     this.phase = 'item';
   }
   updateItem(a) {
@@ -386,9 +387,9 @@ export class BattleScene extends Scene {
     this.ui.drawPartyStatus(r, this.players, (this.phase === 'cmd' || this.phase === 'skill' || this.phase === 'item' || this.phase === 'target') ? this.curPlayer : null, this.tick);
 
     // コマンド系ウィンドウ
-    if (this.phase === 'cmd') { r.window(16, VIEW_H - 92, 150, 84); this.cmdMenu.render(r, 30, VIEW_H - 84, 130); }
-    if (this.phase === 'skill') { r.window(16, 70, 240, 200); r.text('じゅもん／スキル', 30, 78, { size: 14, color: COLORS.textDim }); this.skillMenu.render(r, 30, 104, 220); }
-    if (this.phase === 'item')  { r.window(16, 70, 240, 200); r.text('どうぐ', 30, 78, { size: 14, color: COLORS.textDim }); this.itemMenu.render(r, 30, 104, 220); }
+    if (this.phase === 'cmd') { r.window(16, VIEW_H - 92, 150, 84); this.cmdMenu.render(r, 30, VIEW_H - 84, 130, this.game.assets); }
+    if (this.phase === 'skill') { r.window(16, 70, 240, 200); r.text('じゅもん／スキル', 30, 78, { size: 14, color: COLORS.textDim }); this.skillMenu.render(r, 30, 104, 220, this.game.assets); }
+    if (this.phase === 'item')  { r.window(16, 70, 240, 200); r.text('どうぐ', 30, 78, { size: 14, color: COLORS.textDim }); this.itemMenu.render(r, 30, 104, 220, this.game.assets); }
     if (this.phase === 'target' && this.targetKind === 'ally') {
       const t = this.targets[this.targetIdx];
       const i = this.players.indexOf(t);
