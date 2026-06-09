@@ -25,6 +25,15 @@ const FAM_LABEL = {
   beast: '獣', plant: '植物', insect: '蟲', undead: '不死', machine: '機械', aqua: '水',
   flying: '飛行', dragon: '竜', elemental: '精霊', demon: '魔', boss: '魔王', slime: 'スライム', mage: '魔導', spirit: '精霊',
 };
+// 状態異常の凡例（戦闘表示の記号・色と効果）
+const STATUS_LEGEND = [
+  { char: '毒', color: '#7fd96b', name: 'どく', desc: 'まいターン HPが すこしずつ 減る。' },
+  { char: 'Z', color: '#bfe0ff', name: 'ねむり', desc: '行動できない。物理こうげきで 目を覚ます。' },
+  { char: '雷', color: '#ffe24a', name: 'まひ', desc: 'ときどき 行動できなくなる。' },
+  { char: '黙', color: '#c9b6ff', name: 'ちんもく', desc: 'じゅもん／スキルが 使えない。' },
+  { char: '?', color: '#ff9ad2', name: 'こんらん', desc: '行動が 乱れ、味方を ねらうことも。' },
+  { char: '暗', color: '#9aa6b8', name: 'くらやみ', desc: '命中率が 下がる。' },
+];
 
 export class MenuScene extends Scene {
   constructor(game) { super(game); this.opaque = false; this.toast = ''; this.toastT = 0; }
@@ -273,13 +282,15 @@ export class MenuScene extends Scene {
   }
   updBestiary(a) {
     const input = this.game.input;
-    if (input.isPressed('left') || input.isPressed('right')) {
-      this.bestMode = this.bestMode === 'monster' ? 'item' : 'monster'; a.se('cursor');
+    const modes = ['monster', 'item', 'status'];
+    if (input.isPressed('right')) { this.bestMode = modes[(modes.indexOf(this.bestMode) + 1) % 3]; a.se('cursor'); }
+    if (input.isPressed('left'))  { this.bestMode = modes[(modes.indexOf(this.bestMode) + 2) % 3]; a.se('cursor'); }
+    if (this.bestMode !== 'status') {
+      const ids = this.bestMode === 'monster' ? this.monIds : this.itemIds;
+      const key = this.bestMode === 'monster' ? 'monIdx' : 'itemIdx';
+      if (input.isPressed('up'))   { this[key] = (this[key] - 1 + ids.length) % ids.length; a.se('cursor'); }
+      if (input.isPressed('down')) { this[key] = (this[key] + 1) % ids.length; a.se('cursor'); }
     }
-    const ids = this.bestMode === 'monster' ? this.monIds : this.itemIds;
-    const key = this.bestMode === 'monster' ? 'monIdx' : 'itemIdx';
-    if (input.isPressed('up'))   { this[key] = (this[key] - 1 + ids.length) % ids.length; a.se('cursor'); }
-    if (input.isPressed('down')) { this[key] = (this[key] + 1) % ids.length; a.se('cursor'); }
     if (input.isPressed('cancel')) { a.se('cancel'); this.state = 'root'; }
   }
 
@@ -416,12 +427,38 @@ export class MenuScene extends Scene {
   }
 
   renderBestiary(r, px) {
-    // タブヘッダ
-    r.text('◀ モンスター ／ アイテム ▶', px, 0, { size: 12, color: COLORS.textDim });
+    // タブヘッダ（現在タブを強調）
+    const tabs = [['monster', 'モンスター'], ['item', 'アイテム'], ['status', '状態いじょう']];
+    let tx = px;
+    r.text('◀', tx, 0, { size: 12, color: COLORS.textDim }); tx += 16;
+    tabs.forEach(([m, t], i) => {
+      r.text(t, tx, 0, { size: 12, color: m === this.bestMode ? COLORS.selected : COLORS.textDim });
+      tx += t.length * 12 + 8;
+      if (i < tabs.length - 1) { r.text('／', tx, 0, { size: 12, color: COLORS.textDim }); tx += 18; }
+    });
+    r.text('▶', tx, 0, { size: 12, color: COLORS.textDim });
     const titles = this.game.state.titles || [];
-    if (titles.length) r.text(`称号: ${titles.join('・')}`, px + 250, 0, { size: 12, color: COLORS.selected });
+    if (titles.length) r.text(`称号: ${titles.join('・')}`, VIEW_W - 200, 0, { size: 12, color: COLORS.selected });
     if (this.bestMode === 'monster') this.renderMonDex(r, px);
-    else this.renderItemDex(r, px);
+    else if (this.bestMode === 'item') this.renderItemDex(r, px);
+    else this.renderStatusLegend(r, px);
+  }
+
+  renderStatusLegend(r, px) {
+    const dw = VIEW_W - px - 16, c = r.ctx;
+    r.window(px, 16, dw, 440);
+    r.text('状態いじょう 一覧', px + 16, 26, { size: 17, color: COLORS.selected });
+    r.text('戦闘中、敵の頭上や 味方パネルに 記号で 表示されます。', px + 16, 52, { size: 12, color: COLORS.textDim });
+    STATUS_LEGEND.forEach((e, i) => {
+      const y = 88 + i * 56, bx = px + 36, by = y + 12;
+      c.save();
+      c.fillStyle = 'rgba(8,12,24,0.72)'; c.beginPath(); c.arc(bx, by, 13, 0, 7); c.fill();
+      c.strokeStyle = e.color; c.lineWidth = 2; c.beginPath(); c.arc(bx, by, 13, 0, 7); c.stroke();
+      c.restore();
+      r.text(e.char, bx, by - 8, { size: 15, align: 'center', color: e.color });
+      r.text(e.name, px + 64, y, { size: 16, color: e.color });
+      r.text(e.desc, px + 64, y + 24, { size: 13, color: COLORS.text });
+    });
   }
 
   renderMonDex(r, px) {
