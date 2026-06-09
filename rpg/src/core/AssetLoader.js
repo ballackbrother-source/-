@@ -343,10 +343,15 @@ export class AssetLoader {
       }
     }
 
-    // 顔（向き別。後ろ向きは描かない）
+    // 顔（向き別。後ろ向きは描かない。tでときどき まばたき）
     if (dir !== 'up') {
+      const blink = Math.sin(t * 0.6) > 0.985;
       ctx.fillStyle = '#26203a';
-      if (dir === 'down') {
+      if (blink) { // 閉じ目（横線）
+        if (dir === 'down') { ctx.fillRect(cx - 3.6, top + 7.4, 2.2, 0.9); ctx.fillRect(cx + 1.5, top + 7.4, 2.2, 0.9); }
+        else if (dir === 'left') { ctx.fillRect(cx - 4.2, top + 7.4, 2.2, 0.9); }
+        else if (dir === 'right') { ctx.fillRect(cx + 2.0, top + 7.4, 2.2, 0.9); }
+      } else if (dir === 'down') {
         ctx.fillRect(cx - 3.5, top + 6.5, 1.8, 2.2); ctx.fillRect(cx + 1.7, top + 6.5, 1.8, 2.2);
         ctx.fillStyle = rgba('#d77', 0.5); ctx.fillRect(cx - 4, top + 9.5, 1.5, 1); ctx.fillRect(cx + 2.5, top + 9.5, 1.5, 1);
       } else if (dir === 'left') {

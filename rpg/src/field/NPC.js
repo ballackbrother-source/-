@@ -17,6 +17,9 @@ export class NPC {
     this.frame = 0; this.animTimer = 0;
     this.wander = def.wander || false;
     this._wanderCd = 60 + Math.floor(Math.random() * 120);
+    this.baseDir = this.dir; // 待機時の基準向き
+    this._lookCd = 150 + Math.floor(Math.random() * 300);
+    this._lookBack = 0;
     this.pages = def.pages || null;   // インラインpages
     this.eventId = def.eventId || null; // 外部eventファイル参照
     this.visible = def.visible !== false;
@@ -37,14 +40,25 @@ export class NPC {
       this.animTimer++; if (this.animTimer >= 10) { this.animTimer = 0; this.frame ^= 1; }
       return;
     }
-    if (this.wander && --this._wanderCd <= 0) {
-      this._wanderCd = 90 + Math.floor(Math.random() * 150);
-      const dirs = ['up', 'down', 'left', 'right'];
-      const d = dirs[Math.floor(Math.random() * 4)];
-      const v = DIR_VEC[d]; const nx = this.gx + v.x, ny = this.gy + v.y;
-      this.dir = d;
-      if (map.isPassable(nx, ny, occupants.filter((o) => o !== this))) {
-        this.gx = nx; this.gy = ny; this.tx = nx * TILE; this.ty = ny * TILE; this.moving = true;
+    if (this.wander) {
+      if (--this._wanderCd <= 0) {
+        this._wanderCd = 90 + Math.floor(Math.random() * 150);
+        const dirs = ['up', 'down', 'left', 'right'];
+        const d = dirs[Math.floor(Math.random() * 4)];
+        const v = DIR_VEC[d]; const nx = this.gx + v.x, ny = this.gy + v.y;
+        this.dir = d;
+        if (map.isPassable(nx, ny, occupants.filter((o) => o !== this))) {
+          this.gx = nx; this.gy = ny; this.tx = nx * TILE; this.ty = ny * TILE; this.moving = true;
+        }
+      }
+    } else {
+      // 据え置きNPC：たまに横を ちらっと見て 元の向きに戻る
+      if (this._lookBack > 0) { if (--this._lookBack === 0) this.dir = this.baseDir; }
+      else if (--this._lookCd <= 0) {
+        this._lookCd = 200 + Math.floor(Math.random() * 320);
+        const dirs = ['up', 'down', 'left', 'right'].filter((d) => d !== this.baseDir);
+        this.dir = dirs[Math.floor(Math.random() * dirs.length)];
+        this._lookBack = 34 + Math.floor(Math.random() * 30);
       }
     }
   }
