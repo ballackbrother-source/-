@@ -62,6 +62,7 @@ export class MessageWindow {
   update(input, audio) {
     if (!this.active) return;
     this.blink = (this.blink + 1) % 60;
+    this._faceT = (this._faceT || 0) + 1;
     const speed = SPEED[this.settings.textSpeed] ?? 2;
     if (!this.revealed) {
       const before = this.shown;
@@ -87,11 +88,14 @@ export class MessageWindow {
     const hasFace = this.faceData && this.assets;
     // 顔（左側のポートレート）
     if (hasFace) {
+      const t = this._faceT || 0;
+      const bob = Math.sin(t * 0.05) * 1.0;                  // 呼吸の上下
+      const blink = (t % 196) < 7;                            // ときどき まばたき
       const fx = this.x + 46, fy = this.y + this.h / 2;
       const c = r.ctx;
       c.save(); c.fillStyle = 'rgba(8,12,28,0.5)'; c.beginPath(); c.arc(fx, fy, 34, 0, 7); c.fill();
       c.lineWidth = 2; c.strokeStyle = '#3a6ea5'; c.beginPath(); c.arc(fx, fy, 34, 0, 7); c.stroke(); c.restore();
-      this.assets.drawFace(r.ctx, fx, fy - 4, 22, this.faceData);
+      this.assets.drawFace(r.ctx, fx, fy - 4 + bob, 22, { ...this.faceData, blink });
     }
     if (this.name) {
       const nx = hasFace ? this.x + 78 : this.x;

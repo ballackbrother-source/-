@@ -389,11 +389,16 @@ export class AssetLoader {
     ctx.quadraticCurveTo(cx, cy - s * 0.34, cx - s * 0.34, cy - s * 0.04);
     ctx.quadraticCurveTo(cx - s * 0.5, cy - s * 0.22, cx - s * 0.84, cy + s * 0.05);
     ctx.closePath(); ctx.fill();
-    // 目＋ハイライト＋ほお＋口
+    // 目（まばたき対応）＋ハイライト
     ctx.fillStyle = '#26203a';
-    ctx.beginPath(); ctx.ellipse(cx - s * 0.32, cy + s * 0.14, s * 0.1, s * 0.15, 0, 0, 7); ctx.ellipse(cx + s * 0.32, cy + s * 0.14, s * 0.1, s * 0.15, 0, 0, 7); ctx.fill();
-    ctx.fillStyle = rgba('#ffffff', 0.85);
-    ctx.beginPath(); ctx.arc(cx - s * 0.35, cy + s * 0.08, s * 0.035, 0, 7); ctx.arc(cx + s * 0.29, cy + s * 0.08, s * 0.035, 0, 7); ctx.fill();
+    if (opts.blink) { // 閉じ目（横線）
+      ctx.fillRect(cx - s * 0.44, cy + s * 0.14, s * 0.24, s * 0.06);
+      ctx.fillRect(cx + s * 0.2, cy + s * 0.14, s * 0.24, s * 0.06);
+    } else {
+      ctx.beginPath(); ctx.ellipse(cx - s * 0.32, cy + s * 0.14, s * 0.1, s * 0.15, 0, 0, 7); ctx.ellipse(cx + s * 0.32, cy + s * 0.14, s * 0.1, s * 0.15, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = rgba('#ffffff', 0.85);
+      ctx.beginPath(); ctx.arc(cx - s * 0.35, cy + s * 0.08, s * 0.035, 0, 7); ctx.arc(cx + s * 0.29, cy + s * 0.08, s * 0.035, 0, 7); ctx.fill();
+    }
     ctx.fillStyle = rgba('#e08070', 0.35);
     ctx.beginPath(); ctx.arc(cx - s * 0.46, cy + s * 0.32, s * 0.12, 0, 7); ctx.arc(cx + s * 0.46, cy + s * 0.32, s * 0.12, 0, 7); ctx.fill();
     ctx.strokeStyle = rgba('#7a4a3a', 0.7); ctx.lineWidth = 1.4;
