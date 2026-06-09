@@ -430,9 +430,44 @@ export class FieldScene extends Scene {
       r.restore();
     }
 
+    if (!this.eventRunning) this._drawMinimap(r);
     this.hud.render(r, this.game.party.gold);
     this.msgWin.render(r);
     this.choiceWin.render(r);
+  }
+
+  _miniColor(tx, ty) {
+    const m = this.map, obj = m.objectAt(tx, ty);
+    if (obj) {
+      if (obj === 'chest') return '#ffd23f';
+      if (obj === 'door') return '#b9803c';
+      if (obj === 'sign') return '#a87e48';
+      if (['wall', 'tree', 'roof', 'roof2', 'mountain'].includes(obj)) return '#272c40';
+    }
+    const G = { water: '#2f6fb0', grass: '#3f8f4a', grass2: '#4aa258', path: '#c8a96b', sand: '#d8c483', snow: '#cfdbe8', flower: '#5fbf63', floor: '#6b6f87', floor2: '#7a7e96', darkfloor: '#2a2440', wall: '#3a3e56', stairs: '#8a8ea6' };
+    return G[m.groundAt(tx, ty)] || '#46563a';
+  }
+
+  /** ミニマップ（右上隅・マップ全体の縮小表示＋自機/出口） */
+  _drawMinimap(r) {
+    const m = this.map, W = m.width, H = m.height;
+    if (!W || !H) return;
+    const cell = Math.max(2, Math.min(Math.floor(132 / W), Math.floor(108 / H), 6));
+    const mw = W * cell, mh = H * cell;
+    const x = VIEW_W - mw - 12, y = 50, c = r.ctx;
+    c.save();
+    c.globalAlpha = 0.92;
+    c.fillStyle = 'rgba(8,12,24,0.9)'; r.roundPath(x - 5, y - 5, mw + 10, mh + 10, 5); c.fill();
+    c.lineWidth = 2; c.strokeStyle = '#3a6ea5'; r.roundPath(x - 5, y - 5, mw + 10, mh + 10, 5); c.stroke();
+    for (let ty = 0; ty < H; ty++) for (let tx = 0; tx < W; tx++) { c.fillStyle = this._miniColor(tx, ty); c.fillRect(x + tx * cell, y + ty * cell, cell, cell); }
+    // 出口（ポータル）
+    c.fillStyle = '#5ad6ff';
+    for (const p of (m.portals || [])) c.fillRect(x + p.x * cell - 1, y + p.y * cell - 1, cell + 2, cell + 2);
+    // 自機（点滅）
+    const blink = (Math.floor(performance.now() / 350) & 1) === 0;
+    c.fillStyle = blink ? '#ffffff' : '#ffd23f';
+    c.fillRect(x + this.player.gx * cell - 1, y + this.player.gy * cell - 1, cell + 2, cell + 2);
+    c.restore();
   }
 
   onPause() { this.syncLocation(); }
