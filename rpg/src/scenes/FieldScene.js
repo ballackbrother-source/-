@@ -9,7 +9,7 @@ import { VIEW_W, VIEW_H, COLORS, TILE } from '../config/constants.js';
 import { TileMap } from '../field/TileMap.js';
 import { Camera } from '../field/Camera.js';
 import { MapRenderer } from '../field/MapRenderer.js';
-import { drawFieldAmbient, fieldMood } from '../ui/Backdrop.js';
+import { drawFieldAmbient, fieldMood, fieldWeather } from '../ui/Backdrop.js';
 import { FieldPlayer } from '../field/FieldPlayer.js';
 import { NPC } from '../field/NPC.js';
 import { MessageWindow } from '../ui/MessageWindow.js';
@@ -59,6 +59,8 @@ export class FieldScene extends Scene {
   loadMap(mapId, x, y, dir) {
     this.game.state.location = { mapId, x, y, dir };
     this.ambient = fieldMood(mapId); // 場所/時間帯ライティング
+    this.weather = this.game.db.getMap(mapId).weather || fieldWeather(mapId);
+    this._initWeather();
     this.map = new TileMap(this.game.db.getMap(mapId));
     this.camera = new Camera(this.map);
     this.renderer = new MapRenderer(this.map, this.game.assets);
@@ -102,6 +104,7 @@ export class FieldScene extends Scene {
     this.hud.update();
     if (this.shakeT > 0) this.shakeT--;
     this._updateFx(); // 一発演出は会話中も進める
+    this.updateWeather();
 
     if (this.eventRunning) {
       // イベント中は会話/選択のみ受け付ける
@@ -129,6 +132,37 @@ export class FieldScene extends Scene {
       if (this.game.input.isPressed('confirm')) this.tryInteract();
     }
     this.camera.follow(this.player.px, this.player.py);
+  }
+
+  // ---- 天候（画面オーバーレイ・パーティクル） ----
+  _initWeather() {
+    this.wp = [];
+    if (this.weather === 'snow') {
+      for (let i = 0; i < 80; i++) this.wp.push({ x: Math.random() * VIEW_W, y: Math.random() * VIEW_H, r: 1 + Math.random() * 1.8, sp: 0.4 + Math.random() * 1.0, ph: Math.random() * 6.28 });
+    } else if (this.weather === 'rain') {
+      for (let i = 0; i < 150; i++) this.wp.push({ x: Math.random() * VIEW_W, y: Math.random() * VIEW_H, len: 8 + Math.random() * 9, vy: 6 + Math.random() * 4 });
+    }
+  }
+  updateWeather() {
+    if (!this.wp || !this.wp.length) return;
+    if (this.weather === 'snow') {
+      for (const f of this.wp) { f.ph += 0.03; f.y += f.sp; f.x += Math.sin(f.ph) * 0.4; if (f.y > VIEW_H) { f.y = -4; f.x = Math.random() * VIEW_W; } }
+    } else if (this.weather === 'rain') {
+      for (const d of this.wp) { d.y += d.vy; d.x -= d.vy * 0.34; if (d.y > VIEW_H) { d.y = -d.len; d.x = Math.random() * (VIEW_W + 120); } if (d.x < -20) d.x += VIEW_W + 40; }
+    }
+  }
+  _drawWeather(r) {
+    if (!this.wp || !this.wp.length) return;
+    const c = r.ctx; c.save();
+    if (this.weather === 'snow') {
+      c.fillStyle = '#ffffff';
+      for (const f of this.wp) { c.globalAlpha = 0.4 + 0.5 * Math.abs(Math.sin(f.ph)); c.beginPath(); c.arc(f.x, f.y, f.r, 0, 7); c.fill(); }
+    } else if (this.weather === 'rain') {
+      c.strokeStyle = 'rgba(174,206,255,0.5)'; c.lineWidth = 1.4; c.beginPath();
+      for (const d of this.wp) { c.moveTo(d.x, d.y); c.lineTo(d.x - d.len * 0.34, d.y + d.len); }
+      c.stroke();
+    }
+    c.restore();
   }
 
   /** 隊列：後続メンバーを生成（リーダー以外の前衛）。プレイヤーの足跡を辿る */
@@ -422,6 +456,7 @@ export class FieldScene extends Scene {
     this.renderer.drawLights(r, this.camera.x, this.camera.y, performance.now() / 16);
     // 一発演出（宝箱の光の弾け等）
     this._drawFx(r, this.camera.x, this.camera.y);
+    this._drawWeather(r);
 
     // フェード暗幕はマップの上・UIの下（暗転中も会話文は読める）
     if (this.fadeAlpha > 0) {

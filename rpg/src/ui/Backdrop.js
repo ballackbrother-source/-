@@ -174,6 +174,11 @@ export function fieldMood(mapId) {
   })[mapId] || 'day';
 }
 
+/** マップID → 天候（none/snow/rain）。屋内は無し */
+export function fieldWeather(mapId) {
+  return ({ frost: 'snow', ruin: 'rain' })[mapId] || 'none';
+}
+
 /** タイトル背景。t = フレームカウンタ */
 export function drawTitleBg(ctx, t = 0) {
   // 空
