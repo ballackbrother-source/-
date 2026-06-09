@@ -17,6 +17,11 @@ import { rng } from '../core/RNG.js';
 
 const ENEMY_LABELS = ['Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ'];
 
+function rgbaHex(hex, a) {
+  const n = parseInt(String(hex).replace('#', ''), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
 export class BattleScene extends Scene {
   constructor(game) { super(game); this.ui = new BattleUI(game.assets); }
 
@@ -58,7 +63,7 @@ export class BattleScene extends Scene {
     this.log = `${this.enemyNames()} が あらわれた！`;
     this.commands = new Map();
     this.flash = null; this.tick = 0;
-    this.popups = []; this.shakeT = 0; this.shakeMag = 0;
+    this.popups = []; this.shakeT = 0; this.shakeMag = 0; this.bfx = [];
     this._buildCmdMenu();
   }
 
@@ -97,7 +102,47 @@ export class BattleScene extends Scene {
   _updatePopups() {
     for (const p of this.popups) { p.x += p.vx; p.y += p.vy; p.vy += p.g; p.life--; }
     this.popups = this.popups.filter((p) => p.life > 0);
+    if (this.bfx.length) { for (const f of this.bfx) { if (f.type === 'spark') { f.x += f.vx; f.y += f.vy; f.vy += f.g; } f.life--; } this.bfx = this.bfx.filter((f) => f.life > 0); }
     if (this.shakeT > 0) this.shakeT--;
+  }
+
+  // 全体攻撃/魔法のエフェクト（バンド閃光＋各対象にリング＋粒子）
+  _spawnSkillFx(fx) {
+    if (!fx || !fx.aoe) return;
+    const EC = { fire: '#ff6a3a', ice: '#7fd8ff', thunder: '#ffd23f', wind: '#7fe0a0', earth: '#cf9a52', light: '#fff0a0', dark: '#a878e0' };
+    const col = fx.kind === 'heal' ? '#7bf08a' : (EC[fx.element] || '#bfd8ff');
+    const targets = (fx.side === 'ally' ? this.players : this.enemies).filter((t) => !t.isDead);
+    this.bfx.push({ type: 'band', col, side: fx.side, life: 22, max: 22 });
+    this.shakeT = Math.max(this.shakeT, 8); this.shakeMag = 4;
+    for (const t of targets) {
+      const pos = this._targetPos(t); if (!pos) continue;
+      this.bfx.push({ type: 'ring', x: pos.x, y: pos.y, col, life: 22, max: 22 });
+      for (let k = 0; k < 10; k++) {
+        const a = Math.random() * Math.PI * 2, sp = 1 + Math.random() * 2.4;
+        this.bfx.push({ type: 'spark', x: pos.x, y: pos.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - (fx.kind === 'heal' ? 1.8 : 0.6), g: 0.12, life: 22 + Math.random() * 14, max: 38, col });
+      }
+    }
+  }
+
+  _drawBfx(r) {
+    if (!this.bfx || !this.bfx.length) return;
+    const c = r.ctx; c.save(); c.globalCompositeOperation = 'lighter';
+    for (const f of this.bfx) {
+      const p = Math.max(0, f.life / f.max);
+      if (f.type === 'band') {
+        const y0 = f.side === 'ally' ? VIEW_H - 168 : 66, h = 132;
+        const g = c.createLinearGradient(0, y0, 0, y0 + h);
+        g.addColorStop(0, rgbaHex(f.col, 0)); g.addColorStop(0.5, rgbaHex(f.col, 0.32 * p)); g.addColorStop(1, rgbaHex(f.col, 0));
+        c.fillStyle = g; c.fillRect(0, y0, VIEW_W, h);
+      } else if (f.type === 'ring') {
+        c.strokeStyle = rgbaHex(f.col, 0.85 * p); c.lineWidth = 3;
+        c.beginPath(); c.arc(f.x, f.y, (1 - p) * 34 + 6, 0, 7); c.stroke();
+      } else {
+        c.fillStyle = rgbaHex(f.col, Math.min(1, p * 1.4));
+        c.beginPath(); c.arc(f.x, f.y, 2.4 * (0.5 + p), 0, 7); c.fill();
+      }
+    }
+    c.restore();
   }
 
   markSeen() {
@@ -267,6 +312,7 @@ export class BattleScene extends Scene {
     // 被弾/攻撃モーション用のトリガ（敵のみ。tickを起点に BattleUI が演出）
     if (m.flash && this.enemies.includes(m.flash)) m.flash._hitTick = this.tick;
     if (m.actor && this.enemies.includes(m.actor)) m.actor._atkTick = this.tick;
+    if (m.fx) this._spawnSkillFx(m.fx);
     if (m.popup) this.spawnPopup(m.popup);
     if (m.se) this.game.audio.se(m.se);
     this.msgTimer = m.text ? 40 : 1;
@@ -388,6 +434,8 @@ export class BattleScene extends Scene {
 
     this.ui.drawLog(r, this.log);
     this.ui.drawPartyStatus(r, this.players, (this.phase === 'cmd' || this.phase === 'skill' || this.phase === 'item' || this.phase === 'target') ? this.curPlayer : null, this.tick);
+    // 全体攻撃/魔法のエフェクト（敵・味方の上に加算）
+    this._drawBfx(r);
     // 行動順（AGI順の予測）インジケータ
     if (this.phase === 'cmd' || this.phase === 'target') this._drawTurnOrder(r);
 

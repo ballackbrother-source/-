@@ -196,12 +196,17 @@ export class BattleSystem {
     }
     actor.curMp -= skill.mp || 0;
 
+    // 演出キュー（全体攻撃/魔法のエフェクト用）
+    const elem = (skill.element && skill.element !== 'none') ? skill.element : null;
+    const aoe = skill.target === 'allEnemies' || skill.target === 'allAllies';
+    const side = (skill.target === 'allAllies' || skill.target === 'oneAlly' || skill.type === 'heal' || skill.type === 'revive') ? 'ally' : 'enemy';
+
     // 行動メッセージ
     if (cmd.skillId === 'attack') yield { text: `${actor.name}の こうげき！` };
     else if (['magic', 'heal', 'revive', 'status'].includes(skill.type)) {
-      yield { text: `${actor.name}は ${skill.name}を となえた！`, se: skill.type === 'heal' ? 'heal' : 'magic' };
+      yield { text: `${actor.name}は ${skill.name}を となえた！`, se: skill.type === 'heal' ? 'heal' : 'magic', fx: { element: elem, kind: skill.type === 'heal' ? 'heal' : 'magic', aoe, side } };
     } else {
-      yield { text: `${actor.name}の ${skill.name}！`, se: skill.type === 'steal' ? 'open' : undefined };
+      yield { text: `${actor.name}の ${skill.name}！`, se: skill.type === 'steal' ? 'open' : undefined, fx: aoe ? { element: elem, kind: 'physical', aoe, side } : null };
     }
 
     const targets = this._resolveTargets(actor, skill, cmd.target);
