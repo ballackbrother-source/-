@@ -10,7 +10,23 @@
 
 ## 遊び方（起動）
 
-ES Modules は `file://` 直開きでは CORS で動きません。**静的サーバ経由**で開いてください。
+### A. いちばん簡単：単一HTMLをダブルクリック（サーバ不要）
+
+`dist/eternia-standalone.html` を **ブラウザにドラッグ＆ドロップ**（またはダブルクリック）するだけで遊べます。
+全ソース・全データ・CSS を1ファイルに束ねてあるので、サーバも通信も不要（`file://` 直開きでOK）。
+
+```bash
+# 自分でビルドし直す場合（任意。ソース構成は変えません）
+cd rpg && npm run build      # → dist/eternia-standalone.html を生成
+```
+
+> 開発時のソースは ES Modules（ビルド不要）構成のまま。配布用の単一HTMLは
+> `tools/build-standalone.cjs` が `src/**.js` を関数包みでバンドルし、`data/**.json` を
+> インライン化して生成します。
+
+### B. 開発サーバ経由（ソースをそのまま配信）
+
+ES Modules を `src/` から直接読む場合は `file://` だと CORS で動かないため、**静的サーバ経由**で開きます。
 
 ```bash
 # リポジトリ直下のサーバを使う場合（rpg は /rpg/ で配信される）
