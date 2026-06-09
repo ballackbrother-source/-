@@ -22,7 +22,7 @@ export class TrialScene extends Scene {
     // 体験用の一時GameStateを構築（本編セーブには影響しない）
     const state = GameState.newGame(this.game.db);
     this.game.bindState(state);
-    this.msgWin = new MessageWindow(state.settings);
+    this.msgWin = new MessageWindow(state.settings, this.game.assets, this.game.db);
     this.choiceWin = new ChoiceWindow();
     this.t = 0;
     this.game.audio.init();

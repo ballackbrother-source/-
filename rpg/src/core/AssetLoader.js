@@ -363,6 +363,44 @@ export class AssetLoader {
     ctx.restore();
   }
 
+  // ── 会話用の簡易フェイス（正面・チビ顔）。cx,cy=中心, s=おおよその半径 ──
+  drawFace(ctx, cx, cy, s = 22, opts = {}) {
+    const color = opts.color || '#4fb2ff';
+    const hair = opts.hair || '#5a3a26';
+    const skin = '#f1c79a', skinSh = '#d8a574';
+    ctx.save();
+    // 襟/肩（服の色）
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(cx - s * 1.05, cy + s * 1.35); ctx.quadraticCurveTo(cx, cy + s * 0.55, cx + s * 1.05, cy + s * 1.35);
+    ctx.lineTo(cx + s * 1.05, cy + s * 1.5); ctx.lineTo(cx - s * 1.05, cy + s * 1.5); ctx.closePath(); ctx.fill();
+    // 頭（肌グラデ）
+    const g = ctx.createLinearGradient(cx - s, cy - s, cx + s, cy + s);
+    g.addColorStop(0, tint(skin, 0.12)); g.addColorStop(1, skinSh);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(cx, cy, s * 0.82, s * 0.92, 0, 0, 7); ctx.fill();
+    ctx.strokeStyle = rgba('#3a2a16', 0.5); ctx.lineWidth = 1.5; ctx.stroke();
+    // 髪（前髪つき）
+    ctx.fillStyle = hair;
+    ctx.beginPath();
+    ctx.moveTo(cx - s * 0.84, cy + s * 0.05);
+    ctx.quadraticCurveTo(cx - s * 0.98, cy - s * 0.98, cx, cy - s * 1.04);
+    ctx.quadraticCurveTo(cx + s * 0.98, cy - s * 0.98, cx + s * 0.84, cy + s * 0.05);
+    ctx.quadraticCurveTo(cx + s * 0.5, cy - s * 0.22, cx + s * 0.34, cy - s * 0.04);
+    ctx.quadraticCurveTo(cx, cy - s * 0.34, cx - s * 0.34, cy - s * 0.04);
+    ctx.quadraticCurveTo(cx - s * 0.5, cy - s * 0.22, cx - s * 0.84, cy + s * 0.05);
+    ctx.closePath(); ctx.fill();
+    // 目＋ハイライト＋ほお＋口
+    ctx.fillStyle = '#26203a';
+    ctx.beginPath(); ctx.ellipse(cx - s * 0.32, cy + s * 0.14, s * 0.1, s * 0.15, 0, 0, 7); ctx.ellipse(cx + s * 0.32, cy + s * 0.14, s * 0.1, s * 0.15, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = rgba('#ffffff', 0.85);
+    ctx.beginPath(); ctx.arc(cx - s * 0.35, cy + s * 0.08, s * 0.035, 0, 7); ctx.arc(cx + s * 0.29, cy + s * 0.08, s * 0.035, 0, 7); ctx.fill();
+    ctx.fillStyle = rgba('#e08070', 0.35);
+    ctx.beginPath(); ctx.arc(cx - s * 0.46, cy + s * 0.32, s * 0.12, 0, 7); ctx.arc(cx + s * 0.46, cy + s * 0.32, s * 0.12, 0, 7); ctx.fill();
+    ctx.strokeStyle = rgba('#7a4a3a', 0.7); ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(cx, cy + s * 0.34, s * 0.16, 0.25, Math.PI - 0.25); ctx.stroke();
+    ctx.restore();
+  }
+
   // ── 手続きミニアイコン（どうぐ/装備/属性/コマンド）。cx,cy=中心, s=半径目安 ──
   drawIcon(ctx, cx, cy, s = 8, kind = 'material') {
     ctx.save(); ctx.translate(cx, cy); ctx.lineJoin = 'round'; ctx.lineCap = 'round';

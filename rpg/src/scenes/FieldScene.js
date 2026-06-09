@@ -27,7 +27,7 @@ import { ShopScene } from './ShopScene.js';
 export class FieldScene extends Scene {
   constructor(game) {
     super(game);
-    this.msgWin = new MessageWindow(game.state.settings);
+    this.msgWin = new MessageWindow(game.state.settings, game.assets, game.db);
     this.choiceWin = new ChoiceWindow();
     this.hud = new HUD();
     this.eventRunning = false;
