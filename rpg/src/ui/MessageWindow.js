@@ -20,11 +20,23 @@ export class MessageWindow {
   }
 
   show(text, opts = {}) {
-    // 配列で渡された場合は改行連結（防御的）。1ボックスに複数行表示。
-    this.text = Array.isArray(text) ? text.join('\n') : (text || '');
+    // 配列で渡された場合は改行連結（防御的）。横幅に合わせて自動折り返し。
+    const raw = Array.isArray(text) ? text.join('\n') : (text || '');
+    this.text = this._wrap(raw);
     this.name = opts.name || '';
     this.shown = 0; this.active = true;
     return new Promise((res) => { this._resolve = res; });
+  }
+
+  /** ウィンドウ幅に合わせて改行を挿入（全角想定） */
+  _wrap(text) {
+    const maxC = Math.max(8, Math.floor((this.w - 40) / 17));
+    const out = [];
+    for (const para of String(text).split('\n')) {
+      if (para.length <= maxC) { out.push(para); continue; }
+      for (let i = 0; i < para.length; i += maxC) out.push(para.slice(i, i + maxC));
+    }
+    return out.join('\n');
   }
 
   get revealed() { return this.shown >= this.text.length; }
@@ -33,7 +45,13 @@ export class MessageWindow {
     if (!this.active) return;
     this.blink = (this.blink + 1) % 60;
     const speed = SPEED[this.settings.textSpeed] ?? 2;
-    if (!this.revealed) this.shown = Math.min(this.text.length, this.shown + speed);
+    if (!this.revealed) {
+      const before = this.shown;
+      this.shown = Math.min(this.text.length, this.shown + speed);
+      // タイプ音（ごく小・送り出した文字に空白/改行が無いときだけ、少し間引いて）
+      const ch = this.text[this.shown - 1];
+      if (speed < 999 && this.shown > before && ch && ch !== ' ' && ch !== '\n' && (this.shown & 1) === 0) audio?.se('text');
+    }
 
     if (input.isPressed('confirm') || input.isPressed('cancel')) {
       if (!this.revealed) { this.shown = this.text.length; }
@@ -56,9 +74,13 @@ export class MessageWindow {
     const visible = this.text.slice(0, this.shown);
     const lines = visible.split('\n');
     lines.forEach((ln, i) => r.text(ln, this.x + 18, this.y + 16 + i * 26, { size: 18 }));
-    // 送り三角（点滅）
-    if (this.revealed && this.blink < 30) {
-      r.text('▼', this.x + this.w - 28, this.y + this.h - 26, { size: 16, color: COLORS.selected });
+    // 送り三角（点滅＋上下に小さく動く）
+    if (this.revealed) {
+      const bob = Math.sin(this.blink * 0.2) * 2;
+      const a = 0.55 + 0.45 * Math.sin(this.blink * 0.18);
+      r.save(); r.alpha(a);
+      r.text('▼', this.x + this.w - 28, this.y + this.h - 26 + bob, { size: 16, color: COLORS.selected });
+      r.restore();
     }
   }
 }

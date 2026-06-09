@@ -47,6 +47,7 @@ export class AudioManager {
     if (!this.ctx) return;
     const map = {
       cursor:  () => this._tone(660, 0.06, { type: 'square', gain: 0.12 }),
+      text:    () => this._tone(720, 0.016, { type: 'square', gain: 0.045 }), // タイプ音（ごく小）
       confirm: () => { this._tone(880, 0.07); this._tone(1320, 0.09); },
       cancel:  () => this._tone(330, 0.08, { gain: 0.12 }),
       hit:     () => this._tone(180, 0.1, { type: 'sawtooth', gain: 0.18 }),
