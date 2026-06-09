@@ -62,13 +62,25 @@ function ridge(ctx, baseY, amp, step, color) {
 }
 
 /** 戦闘背景。opt = { boss, special, tick } */
-export function drawBattleBg(ctx, { boss = false, special = false, tick = 0 } = {}) {
+// ロケーション(mood)ごとの戦闘背景パレット（通常戦のみ反映）
+const BATTLE_ENV = {
+  default: { s0: '#091230', s1: '#163a64', glow: '#4f93c4', g0: '#13243f', g1: '#070f1e', star: '#ffffff', moon: '#cfe6ff' },
+  town:    { s0: '#0a1230', s1: '#163a64', glow: '#4f93c4', g0: '#13243f', g1: '#070f1e', star: '#ffffff', moon: '#cfe6ff' },
+  forest:  { s0: '#0a1a14', s1: '#16402e', glow: '#4fae74', g0: '#12281c', g1: '#06120c', star: '#dfffe6', moon: '#cfe6cf' },
+  cave:    { s0: '#0a0a16', s1: '#1a1626', glow: '#7a5a3a', g0: '#1c1622', g1: '#070510', star: '#caa', moon: '#9a8a7a' },
+  snow:    { s0: '#16243f', s1: '#3a5f86', glow: '#bfe4ff', g0: '#24364f', g1: '#0e1a2e', star: '#ffffff', moon: '#eaf4ff' },
+  shrine:  { s0: '#0a1430', s1: '#243a6a', glow: '#7fb0ff', g0: '#161f3f', g1: '#080a1a', star: '#cfe0ff', moon: '#bfe8ff' },
+  ruin:    { s0: '#1a0e16', s1: '#3a2030', glow: '#c87a4a', g0: '#241420', g1: '#100610', star: '#ffd9c0', moon: '#ffc69a' },
+  indoor:  { s0: '#140e08', s1: '#2e2012', glow: '#caa24a', g0: '#241a10', g1: '#0e0804', star: '#ffe0a0', moon: '#ffd9a0' },
+};
+
+export function drawBattleBg(ctx, { boss = false, special = false, tick = 0, env = 'default' } = {}) {
   const HZ = 212; // 地平線
   const P = special
     ? { s0: '#160a2e', s1: '#2c1450', glow: '#8a52d6', g0: '#1d1142', g1: '#090720', star: '#e7d8ff', moon: '#d9c6ff' }
     : boss
       ? { s0: '#190a13', s1: '#341021', glow: '#c24356', g0: '#2a0e1c', g1: '#100510', star: '#ffd9d9', moon: '#ff9f8e' }
-      : { s0: '#091230', s1: '#163a64', glow: '#4f93c4', g0: '#13243f', g1: '#070f1e', star: '#ffffff', moon: '#cfe6ff' };
+      : (BATTLE_ENV[env] || BATTLE_ENV.default);
 
   // 空
   const sky = ctx.createLinearGradient(0, 0, 0, HZ);

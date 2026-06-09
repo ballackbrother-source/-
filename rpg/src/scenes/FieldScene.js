@@ -315,7 +315,7 @@ export class FieldScene extends Scene {
       this._battleResolve = resolve;
       this._battleResult = { outcome: 'escape' };
       this.game.scenes.push(new BattleScene(this.game), {
-        troopId, opts,
+        troopId, opts, env: this.ambient,
         onComplete: (result) => { this._battleResult = result; },
       });
     });

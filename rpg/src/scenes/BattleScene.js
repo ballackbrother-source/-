@@ -344,7 +344,7 @@ export class BattleScene extends Scene {
   // =================== RENDER ===================
   render(r) {
     // 背景（雰囲気のある手続き背景）
-    drawBattleBg(r.ctx, { boss: this.isBoss, special: this.special, tick: this.tick });
+    drawBattleBg(r.ctx, { boss: this.isBoss, special: this.special, tick: this.tick, env: this.params?.env });
 
     // 画面シェイク（会心/弱点ヒット時、敵の描画をゆらす）
     let sx = 0, sy = 0;
