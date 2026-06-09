@@ -66,6 +66,7 @@ export class FieldScene extends Scene {
     const color = this.game.db.getCharacter(leader.id).color || '#4fb2ff';
     this.player = new FieldPlayer(x, y, dir, color);
     this.npcs = (this.map.data.npcs || []).map((d) => new NPC(d));
+    this.buildFollowers();
     this.fx = [];
     // 既に開封済みの宝箱は開いた見た目で表示
     for (const ev of (this.map.data.events || [])) {
@@ -96,6 +97,7 @@ export class FieldScene extends Scene {
     this.updateFade();
     this.updateWaiters();
     this.player.update();
+    this.updateFollowers();
     for (const n of this.npcs) n.update(this.map, [this.player, ...this.occupants()]);
     this.hud.update();
     if (this.shakeT > 0) this.shakeT--;
@@ -127,6 +129,38 @@ export class FieldScene extends Scene {
       if (this.game.input.isPressed('confirm')) this.tryInteract();
     }
     this.camera.follow(this.player.px, this.player.py);
+  }
+
+  /** 隊列：後続メンバーを生成（リーダー以外の前衛）。プレイヤーの足跡を辿る */
+  buildFollowers() {
+    const front = this.game.party.frontline();
+    this.followGap = 8; // ブレッドクラム間隔（≒1タイル/8フレーム）
+    this.trail = [];
+    this.followers = front.slice(1).map((m, i) => ({
+      id: m.id, color: this.game.db.getCharacter(m.id).color || '#88a',
+      px: this.player.px, py: this.player.py, dir: this.player.dir,
+      frame: 0, animTimer: 0, moving: false, visible: true, _ph: i * 1.7,
+      draw(r, assets, camX, camY) {
+        assets.drawActor(r.ctx, this.px - camX, this.py - camY, this.color, this.dir, this.frame, 'hero', performance.now() / 220 + this._ph);
+      },
+    }));
+  }
+
+  updateFollowers() {
+    if (!this.followers || !this.followers.length) return;
+    if (this.player.moving) {
+      this.trail.push({ px: this.player.px, py: this.player.py, dir: this.player.dir });
+      const cap = (this.followers.length + 1) * this.followGap + 8;
+      if (this.trail.length > cap) this.trail.splice(0, this.trail.length - cap);
+    }
+    this.followers.forEach((f, i) => {
+      const idx = this.trail.length - 1 - (i + 1) * this.followGap;
+      const b = idx >= 0 ? this.trail[idx] : null;
+      const nx = b ? b.px : this.player.px, ny = b ? b.py : this.player.py;
+      f.moving = (nx !== f.px || ny !== f.py);
+      f.px = nx; f.py = ny; f.dir = b ? b.dir : this.player.dir;
+      if (f.moving) { if (++f.animTimer >= 8) { f.animTimer = 0; f.frame ^= 1; } } else { f.frame = 0; f.animTimer = 0; }
+    });
   }
 
   /** 歩行時の足元エフェクト（地面に応じた砂埃・草の反応） */
@@ -379,7 +413,7 @@ export class FieldScene extends Scene {
     let sx = 0, sy = 0;
     if (this.shakeT > 0) { sx = (Math.random() - 0.5) * this.shakeP; sy = (Math.random() - 0.5) * this.shakeP; }
     r.save(); r.translate(sx, sy);
-    this.renderer.draw(r, this.camera.x, this.camera.y, [this.player, ...this.npcs]);
+    this.renderer.draw(r, this.camera.x, this.camera.y, [this.player, ...this.followers, ...this.npcs]);
     r.restore();
 
     // 場所/時間帯ライティング（色温度＋光＋ビネット）
