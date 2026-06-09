@@ -22,6 +22,8 @@ function rgbaHex(hex, a) {
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
 
+const ELEM_COLOR = { fire: '#ff6a3a', ice: '#7fd8ff', thunder: '#ffd23f', wind: '#7fe0a0', earth: '#cf9a52', light: '#fff0a0', dark: '#a878e0' };
+
 export class BattleScene extends Scene {
   constructor(game) { super(game); this.ui = new BattleUI(game.assets); }
 
@@ -107,10 +109,20 @@ export class BattleScene extends Scene {
   }
 
   // 全体攻撃/魔法のエフェクト（バンド閃光＋各対象にリング＋粒子）
+  // 単体魔法ヒット時の属性バースト（リング＋粒子）
+  _spawnHitFx(target, element) {
+    const pos = this._targetPos(target); if (!pos) return;
+    const col = ELEM_COLOR[element] || '#bfd8ff';
+    this.bfx.push({ type: 'ring', x: pos.x, y: pos.y, col, life: 18, max: 18 });
+    for (let k = 0; k < 9; k++) {
+      const a = Math.random() * Math.PI * 2, sp = 1 + Math.random() * 2.2;
+      this.bfx.push({ type: 'spark', x: pos.x, y: pos.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.6, g: 0.12, life: 18 + Math.random() * 12, max: 32, col });
+    }
+  }
+
   _spawnSkillFx(fx) {
     if (!fx || !fx.aoe) return;
-    const EC = { fire: '#ff6a3a', ice: '#7fd8ff', thunder: '#ffd23f', wind: '#7fe0a0', earth: '#cf9a52', light: '#fff0a0', dark: '#a878e0' };
-    const col = fx.kind === 'heal' ? '#7bf08a' : (EC[fx.element] || '#bfd8ff');
+    const col = fx.kind === 'heal' ? '#7bf08a' : (ELEM_COLOR[fx.element] || '#bfd8ff');
     const targets = (fx.side === 'ally' ? this.players : this.enemies).filter((t) => !t.isDead);
     this.bfx.push({ type: 'band', col, side: fx.side, life: 22, max: 22 });
     this.shakeT = Math.max(this.shakeT, 8); this.shakeMag = 4;
@@ -313,6 +325,7 @@ export class BattleScene extends Scene {
     if (m.flash && this.enemies.includes(m.flash)) m.flash._hitTick = this.tick;
     if (m.actor && this.enemies.includes(m.actor)) m.actor._atkTick = this.tick;
     if (m.fx) this._spawnSkillFx(m.fx);
+    if (m.magic && m.flash) this._spawnHitFx(m.flash, m.element);
     if (m.popup) this.spawnPopup(m.popup);
     if (m.se) this.game.audio.se(m.se);
     this.msgTimer = m.text ? 40 : 1;

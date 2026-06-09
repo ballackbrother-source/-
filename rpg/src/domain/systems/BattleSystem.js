@@ -303,6 +303,7 @@ export class BattleSystem {
       yield {
         text: `${t.name}に ${dmg}の ダメージ！${res.crit ? ' 会心の一撃！' : ''}${tag}`,
         se: res.crit ? 'crit' : 'damage', flash: t, actor,
+        magic: skill.type === 'magic', element: (skill.element && skill.element !== 'none') ? skill.element : null,
         popup: { who: t, value: dmg, kind: res.crit ? 'crit' : (res.mult > 1 ? 'weak' : 'damage') },
       };
       for (const w of wake) yield { text: w };
