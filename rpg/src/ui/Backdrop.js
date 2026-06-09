@@ -186,6 +186,17 @@ export function drawTitleBg(ctx, t = 0) {
   sky.addColorStop(0, '#05070f'); sky.addColorStop(0.55, '#0b1430'); sky.addColorStop(1, '#142a52');
   ctx.fillStyle = sky; ctx.fillRect(0, 0, VIEW_W, VIEW_H);
 
+  // ゆっくり流れる雲（星の背後）
+  ctx.save();
+  for (const [cy0, scale, spd, alpha] of [[70, 1.0, 0.18, 0.10], [132, 1.4, 0.10, 0.08], [44, 0.7, 0.26, 0.07]]) {
+    const cx = ((t * spd) % (VIEW_W + 240)) - 120;
+    ctx.fillStyle = rgba('#9fb8e0', alpha);
+    for (const [dx, dy, rx, ry] of [[0, 0, 60, 16], [42, -6, 44, 13], [-44, 4, 40, 12], [84, 4, 34, 11]]) {
+      ctx.beginPath(); ctx.ellipse(cx + dx * scale, cy0 + dy, rx * scale, ry * scale, 0, 0, 7); ctx.fill();
+    }
+  }
+  ctx.restore();
+
   // オーロラ／星雲
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const [cx, cy, rr, col, a] of [[180, 150, 230, '#2f6fd0', 0.16], [470, 120, 210, '#7a3fc0', 0.15], [VIEW_W / 2, 110, 180, '#3fb0c0', 0.12]]) {
@@ -197,6 +208,21 @@ export function drawTitleBg(ctx, t = 0) {
 
   starfield(ctx, 110, VIEW_W, VIEW_H - 110, t, '#ffffff');
   moon(ctx, 110, 96, 30, '#cfe0ff');
+
+  // 流れ星（ときどき上空を横切る）
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let k = 0; k < 2; k++) {
+    const period = 300 + k * 170, ph = ((t + k * 150) % period) / period;
+    if (ph < 0.16) {
+      const p = ph / 0.16, sx = 60 + p * VIEW_W * 0.72 + k * 110, sy = 36 + p * 84 + k * 26, len = 28;
+      const g = ctx.createLinearGradient(sx, sy, sx - len, sy - len * 0.55);
+      g.addColorStop(0, rgba('#ffffff', 0.9 * (1 - p))); g.addColorStop(1, rgba('#aee0ff', 0));
+      ctx.strokeStyle = g; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx - len, sy - len * 0.55); ctx.stroke();
+      ctx.fillStyle = rgba('#ffffff', 0.9 * (1 - p)); ctx.beginPath(); ctx.arc(sx, sy, 1.6, 0, 7); ctx.fill();
+    }
+  }
+  ctx.restore();
 
   // タイトル裏のやわらかな光暈
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
