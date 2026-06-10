@@ -1,0 +1,13 @@
+{
+  "name": "eternia-rpg",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ETERNIA ～星を継ぐ者～ : browser fantasy RPG (vanilla JS + Canvas, ES Modules, no build)",
+  "scripts": {
+    "serve": "node ../tools/serve.js 8080",
+    "build": "node tools/build-standalone.cjs",
+    "qa": "node qa/flow.mjs",
+    "smoke": "node qa/play.mjs"
+  }
+}

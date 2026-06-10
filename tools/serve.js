@@ -17,7 +17,11 @@ const MIME = {
 function handler(req, res) {
   let p = decodeURIComponent(req.url.split("?")[0]);
   if (p === "/") p = "/index.html";
-  const file = path.join(ROOT, path.normalize(p).replace(/^([/\\])+/, ""));
+  // ディレクトリ（末尾スラッシュ）アクセスは index.html を返す（例: /rpg/ -> /rpg/index.html）
+  if (p.endsWith("/")) p += "index.html";
+  let file = path.join(ROOT, path.normalize(p).replace(/^([/\\])+/, ""));
+  // 拡張子なしのディレクトリ指定（例: /rpg）にも index.html をフォールバック
+  try { if (fs.statSync(file).isDirectory()) file = path.join(file, "index.html"); } catch {}
   if (!file.startsWith(ROOT)) { res.writeHead(403); return res.end("forbidden"); }
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); return res.end("not found"); }

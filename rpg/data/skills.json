@@ -1,0 +1,44 @@
+{
+  "attack":      { "name": "こうげき", "type": "physical", "target": "oneEnemy", "mp": 0, "power": 1.0, "desc": "ぶきで こうげきする" },
+
+  "power_strike":{ "name": "パワーアタック", "type": "physical", "target": "oneEnemy", "mp": 3, "power": 1.8, "desc": "つよい 一撃" },
+  "reckless":    { "name": "すてみのいちげき", "type": "physical", "target": "oneEnemy", "mp": 6, "power": 2.6, "desc": "特大の物理ダメージ" },
+  "earth_cleave":{ "name": "グランドクレイブ", "type": "physical", "element": "earth", "target": "allEnemies", "mp": 8, "power": 1.4, "desc": "大地の力で 全体攻撃" },
+  "guard_stance":{ "name": "ガードのかまえ", "type": "status", "target": "self", "mp": 2, "desc": "身を かたくする" },
+
+  "double_slash":{ "name": "二段斬り", "type": "physical", "target": "oneEnemy", "mp": 4, "power": 1.3, "desc": "すばやい 連撃" },
+  "poison_edge": { "name": "ポイズンエッジ", "type": "physical", "target": "oneEnemy", "mp": 3, "power": 1.0, "inflict": { "status": "poison", "rate": 0.6 }, "desc": "どくを 与える斬撃" },
+  "steal":       { "name": "ぬすむ", "type": "steal", "target": "oneEnemy", "mp": 0, "desc": "敵から アイテムを 盗む（シノが 得意）" },
+  "sleep_dust":  { "name": "ねむりのこな", "type": "status", "target": "oneEnemy", "mp": 5, "inflict": { "status": "sleep", "rate": 0.7 }, "desc": "敵を ねむらせる" },
+
+  "fire":  { "name": "ファイア", "type": "magic", "element": "fire", "target": "oneEnemy", "mp": 4, "power": 2.6, "desc": "炎の じゅもん" },
+  "flame": { "name": "フレイム", "type": "magic", "element": "fire", "target": "allEnemies", "mp": 10, "power": 2.2, "desc": "炎で 全体攻撃" },
+  "ice":   { "name": "アイス", "type": "magic", "element": "ice", "target": "oneEnemy", "mp": 4, "power": 2.6, "desc": "氷の じゅもん" },
+  "spark": { "name": "スパーク", "type": "magic", "element": "thunder", "target": "oneEnemy", "mp": 5, "power": 2.6, "desc": "雷の じゅもん" },
+  "shine": { "name": "シャイン", "type": "magic", "element": "light", "target": "oneEnemy", "mp": 5, "power": 2.8, "desc": "光の じゅもん" },
+  "holy":  { "name": "ホーリー", "type": "magic", "element": "light", "target": "allEnemies", "mp": 14, "power": 2.6, "desc": "聖なる光で 全体攻撃" },
+
+  "heal":      { "name": "ヒール", "type": "heal", "target": "oneAlly", "mp": 4, "power": 32, "desc": "HPを かいふくする" },
+  "area_heal": { "name": "エリアヒール", "type": "heal", "target": "allAllies", "mp": 12, "power": 28, "desc": "みかた全員を かいふく" },
+  "revive":    { "name": "リザレクション", "type": "revive", "target": "deadAlly", "mp": 16, "power": 0.5, "desc": "せんとうふのうを 復活" },
+
+  "star_read": { "name": "星詠", "type": "magic", "element": "light", "target": "oneEnemy", "mp": 6, "power": 2.4, "desc": "星の記憶を 読み 弱点を つく" },
+
+  "last_requiem": { "name": "ラスト・レクイエム", "type": "physical", "element": "dark", "target": "oneEnemy", "mp": 0, "power": 4.0, "breaksRegen": true, "desc": "赦しの 連携技。神の 不死を 打ち砕く唯一の 一撃" },
+
+  "meteor_slash":  { "name": "流星斬", "type": "physical", "element": "light", "target": "oneEnemy", "mp": 8, "power": 3.2, "desc": "ルゥの 覚醒奥義。光を まとう 一閃" },
+  "giga_slash":    { "name": "ギガスラッシュ", "type": "physical", "target": "allEnemies", "mp": 10, "power": 2.0, "desc": "ガロードの 覚醒奥義。全体に 渾身の 一撃" },
+  "mega_heal":     { "name": "メガヒール", "type": "heal", "target": "allAllies", "mp": 18, "power": 70, "desc": "フィーナの 覚醒奥義。みかた全員を 大回復" },
+  "assassinate":   { "name": "アサシネイト", "type": "physical", "target": "oneEnemy", "mp": 8, "power": 3.6, "inflict": { "status": "poison", "rate": 0.5 }, "desc": "シノの 覚醒奥義。急所を えぐる 暗殺の一撃" },
+
+  "tsunami":     { "name": "ツナミ", "type": "magic", "element": "ice", "target": "allEnemies", "mp": 0, "power": 1.7, "desc": "" },
+  "enemy_fang":  { "name": "かみつき", "type": "physical", "target": "oneEnemy", "mp": 0, "power": 1.5, "desc": "" },
+
+  "great_slam":    { "name": "なぎ払い", "type": "physical", "element": "earth", "target": "allEnemies", "mp": 0, "power": 1.7, "charge": true, "desc": "" },
+  "great_tsunami": { "name": "大津波", "type": "magic", "element": "ice", "target": "allEnemies", "mp": 0, "power": 2.6, "charge": true, "desc": "" },
+  "genesis":       { "name": "ジェネシス", "type": "magic", "element": "light", "target": "allEnemies", "mp": 0, "power": 2.5, "charge": true, "desc": "" },
+  "hellflame":     { "name": "ヘルフレイム", "type": "magic", "element": "fire", "target": "allEnemies", "mp": 0, "power": 2.8, "charge": true, "desc": "" },
+  "wail":          { "name": "怨嗟の慟哭", "type": "magic", "element": "dark", "target": "allEnemies", "mp": 0, "power": 2.4, "charge": true, "desc": "" },
+  "root_slam":   { "name": "ねっこの一撃", "type": "physical", "element": "earth", "target": "allEnemies", "mp": 0, "power": 0.9, "desc": "" },
+  "poison_spore":{ "name": "どくの ほうし", "type": "status", "target": "allEnemies", "mp": 0, "inflict": { "status": "poison", "rate": 0.5 }, "desc": "" }
+}

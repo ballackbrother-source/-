@@ -1,0 +1,1935 @@
+{
+  "monsters": {
+    "M01": {
+      "name": "野ネズミ",
+      "family": "beast",
+      "stats": {
+        "hp": 18,
+        "mp": 0,
+        "atk": 6,
+        "def": 3,
+        "mat": 0,
+        "mdf": 1,
+        "agi": 8,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "wind"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 6,
+      "gold": 3,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.12
+        }
+      ],
+      "skills": [],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        }
+      ]
+    },
+    "M02": {
+      "name": "グリーンスライム",
+      "family": "slime",
+      "stats": {
+        "hp": 26,
+        "mp": 0,
+        "atk": 7,
+        "def": 5,
+        "mat": 2,
+        "mdf": 3,
+        "agi": 5,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 9,
+      "gold": 5,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.1
+        },
+        {
+          "item": "antidote",
+          "rate": 0.05
+        }
+      ],
+      "skills": [],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "herb",
+        "rate": 0.5
+      }
+    },
+    "M04": {
+      "name": "森オオカミ",
+      "family": "beast",
+      "stats": {
+        "hp": 44,
+        "mp": 0,
+        "atk": 12,
+        "def": 7,
+        "mat": 0,
+        "mdf": 3,
+        "agi": 14,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "ice"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 16,
+      "gold": 11,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.1
+        },
+        {
+          "item": "leather_armor",
+          "rate": 0.03
+        },
+        {
+          "item": "magic_seed",
+          "rate": 0.04
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 3
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": [
+        {
+          "item": "herb",
+          "rate": 0.5
+        },
+        {
+          "item": "leather_armor",
+          "rate": 0.15
+        }
+      ]
+    },
+    "M05": {
+      "name": "毒蛾",
+      "family": "insect",
+      "stats": {
+        "hp": 30,
+        "mp": 0,
+        "atk": 10,
+        "def": 5,
+        "mat": 6,
+        "mdf": 6,
+        "agi": 16,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "fire",
+          "wind"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 18,
+      "gold": 9,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.15
+        },
+        {
+          "item": "wind_crystal",
+          "rate": 0.08
+        }
+      ],
+      "skills": [
+        "poison_spore"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "poison_spore",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "antidote",
+        "rate": 0.5
+      }
+    },
+    "ALDIA": {
+      "name": "創世神アルディア",
+      "family": "demon",
+      "boss": true,
+      "regenUntilBroken": true,
+      "doomTurn": 14,
+      "stats": {
+        "hp": 5200,
+        "mp": 999,
+        "atk": 84,
+        "def": 22,
+        "mat": 88,
+        "mdf": 26,
+        "agi": 16,
+        "luk": 12
+      },
+      "element": {
+        "weak": [
+          "dark"
+        ],
+        "resist": [],
+        "absorb": [
+          "light"
+        ],
+        "null": []
+      },
+      "attackElement": "light",
+      "exp": 0,
+      "gold": 0,
+      "drops": [],
+      "skills": [
+        "holy",
+        "genesis",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "holy",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "genesis",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "genesis",
+          "weight": 2,
+          "cond": "low"
+        }
+      ],
+      "statusResist": 0.6
+    },
+    "NEREID": {
+      "name": "水将ネレイド",
+      "family": "aqua",
+      "boss": true,
+      "stats": {
+        "hp": 3400,
+        "mp": 200,
+        "atk": 35,
+        "def": 15,
+        "mat": 38,
+        "mdf": 17,
+        "agi": 15,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "thunder"
+        ],
+        "resist": [],
+        "absorb": [
+          "ice"
+        ],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 200,
+      "gold": 150,
+      "drops": [
+        {
+          "item": "hi_herb",
+          "rate": 1.0
+        },
+        {
+          "item": "guard_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "ice_crystal",
+          "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.4
+        }
+      ],
+      "skills": [
+        "tsunami",
+        "great_tsunami",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "tsunami",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "great_tsunami",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_tsunami",
+          "weight": 3,
+          "cond": "low"
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "statusResist": 0.45,
+      "steal": {
+        "item": "guard_ring",
+        "rate": 0.4
+      },
+      "phases": [
+        {
+          "hp": 0.5,
+          "message": "水将ネレイドは 海の怒りを 解き放った！",
+          "atkMul": 1.25,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "tsunami",
+              "weight": 1
+            },
+            {
+              "type": "skill",
+              "skillId": "great_tsunami",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "enemy_fang",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    "SHION_BOSS": {
+      "name": "白銀の執行者シオン",
+      "family": "demon",
+      "boss": true,
+      "stats": {
+        "hp": 7500,
+        "mp": 200,
+        "atk": 66,
+        "def": 24,
+        "mat": 30,
+        "mdf": 22,
+        "agi": 24,
+        "luk": 12
+      },
+      "element": {
+        "weak": [],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 0,
+      "gold": 0,
+      "drops": [
+        {
+          "item": "speed_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 1.0
+        }
+      ],
+      "skills": [
+        "power_strike",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "power_strike",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "statusResist": 0.55,
+      "steal": {
+        "item": "feather_charm",
+        "rate": 0.5
+      },
+      "phases": [
+        {
+          "hp": 0.5,
+          "message": "シオンは 銀の 本気を 見せた！",
+          "atkMul": 1.3,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "power_strike",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "enemy_fang",
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    },
+    "B2": {
+      "name": "森獣ヴェルダンテ",
+      "family": "plant",
+      "boss": true,
+      "stats": {
+        "hp": 1100,
+        "mp": 40,
+        "atk": 21,
+        "def": 13,
+        "mat": 12,
+        "mdf": 9,
+        "agi": 7,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "earth"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 140,
+      "gold": 90,
+      "drops": [
+        {
+          "item": "power_ring",
+          "rate": 1.0
+        },
+        {
+          "item": "hi_herb",
+          "rate": 0.5
+        },
+        {
+          "item": "power_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "fire_crystal",
+          "rate": 0.6
+        }
+      ],
+      "skills": [
+        "root_slam",
+        "poison_spore",
+        "enemy_fang",
+        "great_slam"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "root_slam",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "poison_spore",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 2,
+          "cond": "low"
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 2,
+          "cond": "low"
+        }
+      ],
+      "statusResist": 0.25,
+      "steal": {
+        "item": "power_ring",
+        "rate": 0.35
+      },
+      "phases": [
+        {
+          "hp": 0.4,
+          "message": "森獣の 核が むき出しに なった！ （炎と 光が 弱点に！）",
+          "element": {
+            "weak": [
+              "fire",
+              "light"
+            ],
+            "resist": [],
+            "absorb": [],
+            "null": []
+          },
+          "atkMul": 1.15,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "root_slam",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "great_slam",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "poison_spore",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    "M06": {
+      "name": "ケイブバット",
+      "family": "flying",
+      "stats": {
+        "hp": 48,
+        "mp": 0,
+        "atk": 16,
+        "def": 8,
+        "mat": 0,
+        "mdf": 4,
+        "agi": 24,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "wind",
+          "thunder"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 22,
+      "gold": 12,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.1
+        },
+        {
+          "item": "wind_crystal",
+          "rate": 0.12
+        }
+      ],
+      "skills": [],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "magic_water",
+        "rate": 0.3
+      }
+    },
+    "M07": {
+      "name": "いわトカゲ",
+      "family": "beast",
+      "stats": {
+        "hp": 96,
+        "mp": 0,
+        "atk": 21,
+        "def": 19,
+        "mat": 0,
+        "mdf": 6,
+        "agi": 9,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "ice"
+        ],
+        "resist": [
+          "earth"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 28,
+      "gold": 18,
+      "drops": [
+        {
+          "item": "iron_helm",
+          "rate": 0.04
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 3
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "iron_helm",
+        "rate": 0.1
+      }
+    },
+    "M08": {
+      "name": "スケルトン",
+      "family": "undead",
+      "stats": {
+        "hp": 72,
+        "mp": 0,
+        "atk": 23,
+        "def": 13,
+        "mat": 0,
+        "mdf": 6,
+        "agi": 12,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "light"
+        ],
+        "resist": [
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 30,
+      "gold": 22,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.1
+        },
+        {
+          "item": "dark_crystal",
+          "rate": 0.12
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "steel_sword",
+        "rate": 0.05
+      }
+    },
+    "B_GOLEM": {
+      "name": "鉱石ゴーレム",
+      "family": "machine",
+      "stats": {
+        "hp": 1900,
+        "mp": 40,
+        "atk": 27,
+        "def": 26,
+        "mat": 0,
+        "mdf": 12,
+        "agi": 7,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "thunder"
+        ],
+        "resist": [
+          "earth"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 120,
+      "gold": 110,
+      "drops": [
+        {
+          "item": "life_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "chain_mail",
+          "rate": 0.5
+        },
+        {
+          "item": "thunder_crystal",
+          "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.5
+        }
+      ],
+      "skills": [
+        "great_slam",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 2,
+          "cond": "low"
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "guard_ring",
+        "rate": 0.3
+      },
+      "boss": true,
+      "statusResist": 0.4,
+      "phases": [
+        {
+          "hp": 0.4,
+          "message": "鉱石ゴーレムの 核が 露出した！（雷が さらに 弱点に！）",
+          "element": {
+            "weak": [
+              "thunder"
+            ],
+            "resist": [],
+            "absorb": [],
+            "null": []
+          },
+          "atkMul": 1.2,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "great_slam",
+              "weight": 3
+            }
+          ]
+        }
+      ]
+    },
+    "IGNIS": {
+      "name": "業火竜イグニス",
+      "family": "dragon",
+      "boss": true,
+      "stats": {
+        "hp": 4200,
+        "mp": 99,
+        "atk": 42,
+        "def": 22,
+        "mat": 38,
+        "mdf": 18,
+        "agi": 15,
+        "luk": 8
+      },
+      "element": {
+        "weak": [
+          "ice"
+        ],
+        "resist": [],
+        "absorb": [
+          "fire"
+        ],
+        "null": []
+      },
+      "attackElement": "fire",
+      "exp": 300,
+      "gold": 300,
+      "drops": [
+        {
+          "item": "dragon_blade",
+          "rate": 1.0
+        },
+        {
+          "item": "life_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "power_seed",
+          "rate": 0.5
+        },
+        {
+          "item": "mei_stone",
+          "rate": 1.0
+        }
+      ],
+      "skills": [
+        "hellflame",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "hellflame",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "hellflame",
+          "weight": 2,
+          "cond": "low"
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "fire_crystal",
+        "rate": 0.5
+      },
+      "statusResist": 0.55,
+      "phases": [
+        {
+          "hp": 0.5,
+          "message": "業火竜イグニスが 怒りに 燃え上がった！",
+          "atkMul": 1.3,
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "hellflame",
+              "weight": 3
+            }
+          ]
+        }
+      ]
+    },
+    "ASTERION": {
+      "name": "ありえざる初期化体 アステリオン",
+      "family": "demon",
+      "boss": true,
+      "stats": {
+        "hp": 34000,
+        "mp": 999,
+        "atk": 78,
+        "def": 34,
+        "mat": 82,
+        "mdf": 36,
+        "agi": 18,
+        "luk": 15
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "light",
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "dark",
+      "exp": 0,
+      "gold": 0,
+      "drops": [],
+      "skills": [
+        "genesis",
+        "hellflame",
+        "great_tsunami",
+        "holy",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "holy",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "genesis",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "genesis",
+          "weight": 2,
+          "cond": "low"
+        }
+      ],
+      "statusResist": 0.8,
+      "doomTurn": 40,
+      "phases": [
+        {
+          "hp": 0.75,
+          "message": "アステリオン：弱点が 氷へ 移ろう…",
+          "element": {
+            "weak": [
+              "ice"
+            ],
+            "resist": [
+              "light",
+              "dark"
+            ],
+            "absorb": [
+              "fire"
+            ],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "great_tsunami",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "hp": 0.5,
+          "message": "アステリオン：弱点が 雷へ 移ろう…！",
+          "atkMul": 1.2,
+          "element": {
+            "weak": [
+              "thunder"
+            ],
+            "resist": [
+              "light",
+              "dark"
+            ],
+            "absorb": [
+              "ice"
+            ],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "hellflame",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "hp": 0.25,
+          "message": "アステリオン：すべての 世界の 悲鳴が ほとばしる！",
+          "atkMul": 1.45,
+          "element": {
+            "weak": [
+              "light"
+            ],
+            "resist": [
+              "dark"
+            ],
+            "absorb": [
+              "thunder"
+            ],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "genesis",
+              "weight": 3
+            }
+          ]
+        }
+      ],
+      "dexExclude": true
+    },
+    "M09": {
+      "name": "枯れ木の精",
+      "family": "plant",
+      "stats": {
+        "hp": 88,
+        "mp": 0,
+        "atk": 24,
+        "def": 16,
+        "mat": 8,
+        "mdf": 8,
+        "agi": 11,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "fire",
+          "light"
+        ],
+        "resist": [
+          "earth"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 34,
+      "gold": 20,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.12
+        },
+        {
+          "item": "fire_crystal",
+          "rate": 0.08
+        }
+      ],
+      "skills": [
+        "root_slam"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "root_slam",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "hi_herb",
+        "rate": 0.3
+      }
+    },
+    "M10": {
+      "name": "さまよう亡者",
+      "family": "undead",
+      "stats": {
+        "hp": 110,
+        "mp": 0,
+        "atk": 28,
+        "def": 14,
+        "mat": 0,
+        "mdf": 7,
+        "agi": 9,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "light"
+        ],
+        "resist": [
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 40,
+      "gold": 26,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.12
+        },
+        {
+          "item": "dark_crystal",
+          "rate": 0.12
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "life_seed",
+        "rate": 0.05
+      }
+    },
+    "M11": {
+      "name": "砂蟲",
+      "family": "insect",
+      "stats": {
+        "hp": 78,
+        "mp": 0,
+        "atk": 26,
+        "def": 11,
+        "mat": 6,
+        "mdf": 6,
+        "agi": 22,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "ice",
+          "wind"
+        ],
+        "resist": [],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 36,
+      "gold": 22,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.15
+        },
+        {
+          "item": "wind_crystal",
+          "rate": 0.1
+        }
+      ],
+      "skills": [
+        "poison_spore"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "poison_spore",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "magic_water",
+        "rate": 0.3
+      }
+    },
+    "M12": {
+      "name": "呪詛人形",
+      "family": "mage",
+      "stats": {
+        "hp": 96,
+        "mp": 40,
+        "atk": 18,
+        "def": 15,
+        "mat": 30,
+        "mdf": 14,
+        "agi": 12,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "fire",
+          "light"
+        ],
+        "resist": [
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 46,
+      "gold": 30,
+      "drops": [
+        {
+          "item": "magic_water",
+          "rate": 0.15
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.04
+        }
+      ],
+      "skills": [
+        "wail"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "wail",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "dark_crystal",
+        "rate": 0.35
+      }
+    },
+    "B_REVENANT": {
+      "name": "嘆きの亡霊レヴナント",
+      "family": "undead",
+      "stats": {
+        "hp": 4200,
+        "mp": 120,
+        "atk": 46,
+        "def": 26,
+        "mat": 54,
+        "mdf": 20,
+        "agi": 16,
+        "luk": 7
+      },
+      "element": {
+        "weak": [
+          "light"
+        ],
+        "resist": [
+          "dark"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 260,
+      "gold": 200,
+      "drops": [
+        {
+          "item": "life_seed",
+          "rate": 1.0
+        },
+        {
+          "item": "light_crystal",
+          "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.6
+        },
+        {
+          "item": "hi_herb",
+          "rate": 0.5
+        }
+      ],
+      "skills": [
+        "wail",
+        "enemy_fang",
+        "poison_spore"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "wail",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "poison_spore",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "mei_stone",
+        "rate": 0.4
+      },
+      "boss": true,
+      "statusResist": 0.45,
+      "phases": [
+        {
+          "hp": 0.45,
+          "message": "嘆きの亡霊が 怨念を 撒き散らす！ （光が さらに 効く！）",
+          "atkMul": 1.25,
+          "element": {
+            "weak": [
+              "light"
+            ],
+            "resist": [],
+            "absorb": [],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "wail",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "enemy_fang",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    "M13": {
+      "name": "フロストウルフ",
+      "family": "beast",
+      "stats": {
+        "hp": 92,
+        "mp": 0,
+        "atk": 27,
+        "def": 12,
+        "mat": 0,
+        "mdf": 8,
+        "agi": 20,
+        "luk": 6
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 38,
+      "gold": 22,
+      "drops": [
+        {
+          "item": "herb",
+          "rate": 0.1
+        },
+        {
+          "item": "fire_crystal",
+          "rate": 0.08
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 3
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "hi_herb",
+        "rate": 0.3
+      }
+    },
+    "M14": {
+      "name": "アイスゴーレム",
+      "family": "machine",
+      "stats": {
+        "hp": 140,
+        "mp": 0,
+        "atk": 26,
+        "def": 24,
+        "mat": 0,
+        "mdf": 12,
+        "agi": 7,
+        "luk": 4
+      },
+      "element": {
+        "weak": [
+          "fire",
+          "thunder"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 52,
+      "gold": 34,
+      "drops": [
+        {
+          "item": "iron_shield",
+          "rate": 0.05
+        },
+        {
+          "item": "guard_seed",
+          "rate": 0.04
+        }
+      ],
+      "skills": [
+        "great_slam"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "great_slam",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "guard_ring",
+        "rate": 0.1
+      }
+    },
+    "M15": {
+      "name": "ブリザード妖精",
+      "family": "spirit",
+      "stats": {
+        "hp": 80,
+        "mp": 40,
+        "atk": 16,
+        "def": 10,
+        "mat": 32,
+        "mdf": 14,
+        "agi": 18,
+        "luk": 7
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 46,
+      "gold": 30,
+      "drops": [
+        {
+          "item": "magic_water",
+          "rate": 0.15
+        },
+        {
+          "item": "ice_crystal",
+          "rate": 0.12
+        }
+      ],
+      "skills": [
+        "ice"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "ice",
+          "weight": 2
+        }
+      ],
+      "steal": {
+        "item": "magic_seed",
+        "rate": 0.08
+      }
+    },
+    "M16": {
+      "name": "クリスタルリザード",
+      "family": "beast",
+      "stats": {
+        "hp": 104,
+        "mp": 0,
+        "atk": 29,
+        "def": 18,
+        "mat": 0,
+        "mdf": 7,
+        "agi": 12,
+        "luk": 5
+      },
+      "element": {
+        "weak": [
+          "thunder",
+          "fire"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 44,
+      "gold": 28,
+      "drops": [
+        {
+          "item": "antidote",
+          "rate": 0.1
+        },
+        {
+          "item": "thunder_crystal",
+          "rate": 0.1
+        }
+      ],
+      "skills": [
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "enemy_fang",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "ice_crystal",
+        "rate": 0.3
+      }
+    },
+    "B_FROSTKING": {
+      "name": "氷皇フリーゲル",
+      "family": "aqua",
+      "stats": {
+        "hp": 4600,
+        "mp": 160,
+        "atk": 44,
+        "def": 22,
+        "mat": 52,
+        "mdf": 20,
+        "agi": 17,
+        "luk": 9
+      },
+      "element": {
+        "weak": [
+          "fire"
+        ],
+        "resist": [
+          "ice"
+        ],
+        "absorb": [],
+        "null": []
+      },
+      "attackElement": "none",
+      "exp": 280,
+      "gold": 220,
+      "drops": [
+        {
+          "item": "frost_ring",
+          "rate": 1.0
+        },
+        {
+          "item": "ice_crystal",
+          "rate": 1.0
+        },
+        {
+          "item": "mei_stone",
+          "rate": 0.6
+        },
+        {
+          "item": "life_seed",
+          "rate": 0.5
+        }
+      ],
+      "skills": [
+        "ice",
+        "tsunami",
+        "great_tsunami",
+        "enemy_fang"
+      ],
+      "ai": [
+        {
+          "type": "attack",
+          "weight": 2
+        },
+        {
+          "type": "skill",
+          "skillId": "ice",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "tsunami",
+          "weight": 1
+        },
+        {
+          "type": "skill",
+          "skillId": "great_tsunami",
+          "weight": 1
+        }
+      ],
+      "steal": {
+        "item": "frost_ring",
+        "rate": 0.25
+      },
+      "boss": true,
+      "statusResist": 0.45,
+      "phases": [
+        {
+          "hp": 0.5,
+          "message": "氷皇フリーゲルが 氷の 衣を 張り替えた！ （弱点が 雷へ 移り、炎を 吸収する！）",
+          "atkMul": 1.25,
+          "element": {
+            "weak": [
+              "thunder"
+            ],
+            "resist": [
+              "ice"
+            ],
+            "absorb": [
+              "fire"
+            ],
+            "null": []
+          },
+          "ai": [
+            {
+              "type": "attack",
+              "weight": 2
+            },
+            {
+              "type": "skill",
+              "skillId": "great_tsunami",
+              "weight": 3
+            },
+            {
+              "type": "skill",
+              "skillId": "enemy_fang",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "troops": {
+    "tutorial_rat": {
+      "members": [
+        "M01"
+      ]
+    },
+    "rat": {
+      "members": [
+        "M01"
+      ]
+    },
+    "rats": {
+      "members": [
+        "M01",
+        "M01"
+      ]
+    },
+    "rat_slime": {
+      "members": [
+        "M01",
+        "M02"
+      ]
+    },
+    "slimes": {
+      "members": [
+        "M02",
+        "M02"
+      ]
+    },
+    "slime_trio": {
+      "members": [
+        "M02",
+        "M02",
+        "M01"
+      ]
+    },
+    "wolf": {
+      "members": [
+        "M04"
+      ]
+    },
+    "wolf_pack": {
+      "members": [
+        "M04",
+        "M01"
+      ]
+    },
+    "moth": {
+      "members": [
+        "M05",
+        "M01"
+      ]
+    },
+    "verdante": {
+      "members": [
+        "B2"
+      ]
+    },
+    "nereid": {
+      "members": [
+        "NEREID"
+      ]
+    },
+    "shion_boss": {
+      "members": [
+        "SHION_BOSS"
+      ]
+    },
+    "aldia": {
+      "members": [
+        "ALDIA"
+      ]
+    },
+    "cave_bats": {
+      "members": [
+        "M06",
+        "M06"
+      ]
+    },
+    "cave_mix": {
+      "members": [
+        "M07",
+        "M06"
+      ]
+    },
+    "cave_undead": {
+      "members": [
+        "M08",
+        "M08"
+      ]
+    },
+    "cave_pack": {
+      "members": [
+        "M07",
+        "M08",
+        "M06"
+      ]
+    },
+    "golem": {
+      "members": [
+        "B_GOLEM"
+      ]
+    },
+    "ignis": {
+      "members": [
+        "IGNIS"
+      ]
+    },
+    "asterion": {
+      "members": [
+        "ASTERION"
+      ]
+    },
+    "vale_spirits": {
+      "members": [
+        "M09",
+        "M09"
+      ]
+    },
+    "vale_undead": {
+      "members": [
+        "M10",
+        "M12"
+      ]
+    },
+    "vale_worms": {
+      "members": [
+        "M11",
+        "M11",
+        "M09"
+      ]
+    },
+    "vale_pack": {
+      "members": [
+        "M10",
+        "M11",
+        "M12"
+      ]
+    },
+    "vale_dolls": {
+      "members": [
+        "M12",
+        "M12"
+      ]
+    },
+    "revenant": {
+      "members": [
+        "B_REVENANT"
+      ]
+    },
+    "frost_wolves": {
+      "members": [
+        "M13",
+        "M13"
+      ]
+    },
+    "frost_mix": {
+      "members": [
+        "M14",
+        "M15"
+      ]
+    },
+    "frost_lizards": {
+      "members": [
+        "M16",
+        "M13"
+      ]
+    },
+    "frost_pack": {
+      "members": [
+        "M14",
+        "M15",
+        "M16"
+      ]
+    },
+    "frost_spirits": {
+      "members": [
+        "M15",
+        "M15"
+      ]
+    },
+    "frostking": {
+      "members": [
+        "B_FROSTKING"
+      ]
+    }
+  }
+}

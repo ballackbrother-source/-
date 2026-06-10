@@ -1,0 +1,119 @@
+{
+  "name": "辺境の村ルミナ",
+  "bgm": "town",
+  "encounter": null,
+  "legend": { "G": "grass", "g": "grass2", "p": "path", "F": "flower", "w": "water" },
+  "objectLegend": { "T": "tree", "H": "roof", "h": "roof2", "D": "door", "C": "chest", "S": "sign", "M": "mountain" },
+  "ground": [
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGppGGGGGGGGG",
+    "GGGGGGGGGppGGGGGGGGG",
+    "GGGGGGGGGppGGGGGGGGG",
+    "GGppppppppppppppGGGG",
+    "GGpGGGGGGppGGGGpGGGG",
+    "GGpGGGGGGppGGGGpGGGG",
+    "GGpppppppppppppppGGG",
+    "GGGGGGGGGppGGGGGGGGG",
+    "GGGGFGGGGppGGGGFGGGG",
+    "GGGGGGGGGppGGGGGGGGG",
+    "GGGGGGGGGppGGGGGGGGG",
+    "wwGGGGGGGppGGGGGGGGG",
+    "GGGGGGGGGppGGGGGGGGG"
+  ],
+  "objects": [
+    "TTTTTTTTTTTTTTTTTTTT",
+    "T                  T",
+    "T HH        HH     T",
+    "T HH        HH     T",
+    "T D         D      T",
+    "T                  T",
+    "T S                T",
+    "T                  T",
+    "T                  T",
+    "T                  T",
+    "T                  T",
+    "T HH        TTT    T",
+    "T HH        TCT    T",
+    "T D                T",
+    "TTTTTTTTT  TTTTTTTTT"
+  ],
+  "portals": [
+    { "x": 2, "y": 4, "toMap": "lumina_house", "toX": 4, "toY": 6, "dir": "up" },
+    { "x": 9, "y": 14, "toMap": "lumina_forest", "toX": 9, "toY": 1, "dir": "down" },
+    { "x": 10, "y": 14, "toMap": "lumina_forest", "toX": 10, "toY": 1, "dir": "down" }
+  ],
+  "npcs": [
+    {
+      "id": "teo", "x": 12, "y": 9, "dir": "left", "color": "#e0b85a",
+      "pages": [
+        { "conditions": { "notFlag": "p_intro" }, "commands": [
+          { "type": "message", "name": "テオ", "text": "ルゥ、また 星を 見てたのか？へんなやつ。" } ] },
+        { "conditions": { "flag": "p_intro" }, "commands": [
+          { "type": "message", "name": "テオ", "text": ["やくそうなら 森の おくに たくさん あるぞ。","気をつけてな！"] } ] }
+      ]
+    },
+    {
+      "id": "villager1", "x": 15, "y": 7, "dir": "down", "color": "#c8a06a", "wander": true,
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "村人", "text": ["第七星が、また 暗くなった 気がする…。","作物も 育たないし、いやな よかんだよ。"] } ] } ]
+    }
+  ],
+  "events": [
+    {
+      "trigger": "autorun",
+      "cond": { "flag": "p_herbs", "notFlag": "p_attack" },
+      "commands": [
+        { "type": "setFlag", "key": "p_attack" },
+        { "type": "playBgm", "id": "boss" },
+        { "type": "shake", "power": 8, "ms": 700 },
+        { "type": "message", "text": ["村に もどると——","モンスターの 群れが 村を おそっていた！"] },
+        { "type": "message", "name": "ミルカ婆", "text": ["ルゥ…! 無事だったんだね…","ゴホッ…ああ、もう 時間が ないようだ。"] },
+        { "type": "message", "name": "ミルカ婆", "text": ["これを お前に。星のかけらの ペンダントだよ。","お前は…わたしの 子では ない。「預かりもの」なんだ。","いつか きっと、誰かが お前を 迎えに 来る。","それ までの——預かりもの。聖樹の里ユグルへ、お行き…。"] },
+        { "type": "giveItem", "id": "star_pendant", "notify": false },
+        { "type": "message", "name": "ミルカ婆", "text": "達者で…ね、ルゥ…。" },
+        { "type": "playSe", "id": "heal" },
+        { "type": "fade", "dir": "out", "color": "#ffffff", "ms": 900 },
+        { "type": "message", "text": "ミルカ婆は ひかりに なって 還っていった。" },
+        { "type": "fade", "dir": "out", "color": "#000000", "ms": 600 },
+        { "type": "message", "text": ["燃える村。第七星が、いっそう 鈍く 光る。","ルゥは 自分が 何者なのかを 知るため——","ひとり、旅立つ ことを 決めた。"] },
+        { "type": "setChapter", "id": "ch1", "step": 0 },
+        { "type": "stopBgm" },
+        { "type": "transfer", "mapId": "hafen", "x": 9, "y": 13, "dir": "up", "fadeOut": false }
+      ]
+    },
+    {
+      "trigger": "autorun",
+      "cond": { "notFlag": "p_intro" },
+      "commands": [
+        { "type": "playBgm", "id": "theme" },
+        { "type": "message", "text": ["——夜空には いつも、七つの 星が かがやいている。","だが その ひとつ、第七星エテルナの 光が","少しずつ 弱まって、世界は ゆっくりと 枯れ始めていた。"] },
+        { "type": "message", "name": "ミルカ婆", "text": ["ルゥ、起きたかい。","すまないが、森で やくそうを つんで きておくれ。","村の みんなが 弱って いてね。"] },
+        { "type": "message", "name": "ルゥ", "text": "…うん、いってくる。" },
+        { "type": "message", "text": "【そうさ】矢印キー/Dパッドで 移動、決定で 調べる・話す。メニューは Shift/メニュー。" },
+        { "type": "message", "text": "村の みなみ（下）の 出口から、森へ 行こう。" },
+        { "type": "setFlag", "key": "p_intro" },
+        { "type": "playBgm", "id": "town" }
+      ]
+    },
+    {
+      "trigger": "action", "x": 12, "y": 4,
+      "commands": [ { "type": "message", "text": "とびらには かぎが かかっている。" } ]
+    },
+    {
+      "trigger": "action", "x": 2, "y": 13,
+      "commands": [ { "type": "message", "text": "だれも いないようだ。" } ]
+    },
+    {
+      "trigger": "action", "x": 2, "y": 6,
+      "commands": [ { "type": "message", "text": "「辺境の村 ルミナ ／ 星に いちばん 近い 村」と 書かれている。" } ]
+    },
+    {
+      "trigger": "action", "x": 13, "y": 12, "once": true,
+      "commands": [
+        { "type": "playSe", "id": "open" },
+        { "type": "giveItem", "id": "magic_water", "count": 1 }
+      ]
+    }
+  ]
+}

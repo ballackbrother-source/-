@@ -1,0 +1,6 @@
+{
+  "_comment": "属性相性の倍率は config/constants.js の ELEM_MULT を正とする。本ファイルは資料・将来拡張用。",
+  "labels": { "none": "無", "fire": "炎", "ice": "氷", "thunder": "雷", "wind": "風", "earth": "土", "light": "光", "dark": "闇" },
+  "multipliers": { "weak": 1.5, "normal": 1.0, "half": 0.5, "null": 0.0, "absorb": -1.0 },
+  "mirror": [["fire", "ice"], ["thunder", "earth"], ["light", "dark"]]
+}

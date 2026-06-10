@@ -1,0 +1,100 @@
+{
+  "name": "水晶洞",
+  "bgm": "field",
+  "encounter": "cavern1",
+  "legend": { "f": "floor", "F": "darkfloor", "w": "water" },
+  "objectLegend": { "W": "wall", "S": "sign", "C": "chest" },
+  "ground": [
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF"
+  ],
+  "objects": [
+    "WWWWWWWWWWWWWWWWWWWW",
+    "W        S         W",
+    "W                  W",
+    "W  C            C  W",
+    "W                  W",
+    "W   WW      WW     W",
+    "W                  W",
+    "W                  W",
+    "W      WW  WW      W",
+    "W                  W",
+    "W   WW      WW     W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "WWWWWWWWW  WWWWWWWWW"
+  ],
+  "portals": [
+    { "x": 9, "y": 15, "toMap": "hafen", "toX": 9, "toY": 12, "dir": "down" },
+    { "x": 10, "y": 15, "toMap": "hafen", "toX": 10, "toY": 12, "dir": "down" }
+  ],
+  "npcs": [],
+  "events": [
+    {
+      "trigger": "autorun", "cond": { "notFlag": "cavern_enter" },
+      "commands": [
+        { "type": "message", "text": ["水晶洞。壁に 埋もれた 結晶が、青白く 光っている。", "ここにも 星核の 気配が する。"] },
+        { "type": "setFlag", "key": "cavern_enter" }
+      ]
+    },
+    {
+      "trigger": "action", "x": 3, "y": 3, "once": true,
+      "commands": [ { "type": "playSe", "id": "open" }, { "type": "giveItem", "id": "spirit_seed", "count": 1 } ]
+    },
+    {
+      "trigger": "action", "x": 16, "y": 3, "once": true,
+      "commands": [ { "type": "playSe", "id": "open" }, { "type": "giveItem", "id": "hi_herb", "count": 2 } ]
+    },
+    {
+      "trigger": "action", "x": 9, "y": 1,
+      "cond": { "notFlag": "cavern_clear" },
+      "commands": [
+        { "type": "message", "text": "結晶の 守り手——鉱石ゴーレムが 立ちはだかった！" },
+        { "type": "battle", "troopId": "golem", "isBoss": true, "canEscape": true,
+          "onWin": [
+            { "type": "message", "text": "ゴーレムは くずれ、奥の 星核が 手に入った！" },
+            { "type": "giveItem", "id": "star_core", "count": 1, "notify": false },
+            { "type": "setFlag", "key": "cavern_clear" }
+          ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 9, "y": 1,
+      "commands": [ { "type": "message", "text": "奥の 結晶は 静かに 光っている。もう 守り手は いない。" } ]
+    },
+    {
+      "trigger": "action", "x": 7, "y": 8,
+      "cond": { "flag": "cavern_clear", "notFlag": "ignis_down" },
+      "commands": [
+        { "type": "message", "text": "…この 柱、かすかに 熱い。押してみると——奥に 隠し通路が 現れた！" },
+        { "type": "message", "text": "灼熱の 空洞。封じられていた 業火竜イグニスが 目を 覚ます！" },
+        { "type": "battle", "troopId": "ignis", "isBoss": true, "canEscape": true,
+          "onWin": [
+            { "type": "message", "text": "業火竜を 討ち取った！ その牙から 鍛えられた『炎竜の大剣』を 手に入れた！" },
+            { "type": "setFlag", "key": "ignis_down" }
+          ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 7, "y": 8,
+      "cond": { "flag": "ignis_down" },
+      "commands": [ { "type": "message", "text": "隠し通路の 奥は、もう もぬけの殻だ。" } ]
+    }
+  ]
+}

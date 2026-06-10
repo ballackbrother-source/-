@@ -1,0 +1,85 @@
+{
+  "chapters": {
+    "prologue": { "name": "プロローグ" },
+    "ch1": { "name": "第1章 旅の始まり" },
+    "ch2": { "name": "第2章 裏切りの聖騎士" },
+    "ch3": { "name": "第3章 失われた光" },
+    "ch4": { "name": "第4章 シオンの真実" },
+    "ch5": { "name": "第5章 赦せない仲間" },
+    "ch6": { "name": "第6章 神々の嘘" },
+    "ch7": { "name": "最終章 赦しの剣" },
+    "end": { "name": "エピローグ" }
+  },
+  "mapNames": {
+    "lumina": "辺境の村ルミナ",
+    "lumina_house": "ミルカの家",
+    "lumina_forest": "ルミナの森",
+    "hafen": "宿場町ハーフェン",
+    "ruin": "古代遺跡",
+    "shrine": "星の祭壇・神域",
+    "cavern": "水晶洞",
+    "vale": "枯れ谷",
+    "frost": "霜結の祠"
+  },
+  "maps": ["lumina", "lumina_house", "lumina_forest", "hafen", "ruin", "shrine", "cavern", "vale", "frost"],
+  "eventFiles": [],
+  "encounters": {
+    "forest1": {
+      "steps": [4, 9],
+      "troops": [
+        { "troop": "rat", "weight": 3 },
+        { "troop": "rats", "weight": 2 },
+        { "troop": "rat_slime", "weight": 2 },
+        { "troop": "slimes", "weight": 1 }
+      ]
+    },
+    "forest2": {
+      "steps": [4, 8],
+      "troops": [
+        { "troop": "rats", "weight": 2 },
+        { "troop": "slime_trio", "weight": 2 },
+        { "troop": "wolf", "weight": 2 },
+        { "troop": "moth", "weight": 1 },
+        { "troop": "wolf_pack", "weight": 1 }
+      ]
+    },
+    "ruin1": {
+      "steps": [5, 9],
+      "troops": [
+        { "troop": "wolf", "weight": 2 },
+        { "troop": "moth", "weight": 2 },
+        { "troop": "slime_trio", "weight": 1 },
+        { "troop": "wolf_pack", "weight": 2 }
+      ]
+    },
+    "cavern1": {
+      "steps": [5, 9],
+      "troops": [
+        { "troop": "cave_bats", "weight": 2 },
+        { "troop": "cave_mix", "weight": 2 },
+        { "troop": "cave_undead", "weight": 2 },
+        { "troop": "cave_pack", "weight": 1 }
+      ]
+    },
+    "vale1": {
+      "steps": [5, 9],
+      "troops": [
+        { "troop": "vale_spirits", "weight": 2 },
+        { "troop": "vale_undead", "weight": 2 },
+        { "troop": "vale_worms", "weight": 2 },
+        { "troop": "vale_dolls", "weight": 1 },
+        { "troop": "vale_pack", "weight": 1 }
+      ]
+    },
+    "frost1": {
+      "steps": [5, 9],
+      "troops": [
+        { "troop": "frost_wolves", "weight": 2 },
+        { "troop": "frost_mix", "weight": 2 },
+        { "troop": "frost_lizards", "weight": 2 },
+        { "troop": "frost_spirits", "weight": 1 },
+        { "troop": "frost_pack", "weight": 1 }
+      ]
+    }
+  }
+}

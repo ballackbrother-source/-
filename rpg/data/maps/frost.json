@@ -1,0 +1,88 @@
+{
+  "name": "霜結の祠",
+  "bgm": "field",
+  "encounter": "frost1",
+  "legend": { "f": "floor", "F": "darkfloor", "w": "water" },
+  "objectLegend": { "W": "wall", "S": "sign", "C": "chest" },
+  "ground": [
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF"
+  ],
+  "objects": [
+    "WWWWWWWWWWWWWWWWWWWW",
+    "W        S         W",
+    "W  C            C  W",
+    "W                  W",
+    "W     WW     WW    W",
+    "W                  W",
+    "W        WW        W",
+    "W   WW        WW   W",
+    "W                  W",
+    "W      C           W",
+    "W        WW        W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "WWWWWWWWW  WWWWWWWWW"
+  ],
+  "portals": [
+    { "x": 9, "y": 15, "toMap": "hafen", "toX": 13, "toY": 12, "dir": "down" },
+    { "x": 10, "y": 15, "toMap": "hafen", "toX": 13, "toY": 12, "dir": "down" }
+  ],
+  "npcs": [],
+  "events": [
+    {
+      "trigger": "autorun", "cond": { "notFlag": "frost_enter" },
+      "commands": [
+        { "type": "message", "text": ["霜結の祠。吐く息が 白く 凍る、永久の 冬。", "壁という 壁に、青い 氷が 張りついている。"] },
+        { "type": "message", "text": "最奥に、ひときわ 冷たい 王気が 満ちている——氷の 主が、眠っているのだ。" },
+        { "type": "setFlag", "key": "frost_enter" }
+      ]
+    },
+    {
+      "trigger": "action", "x": 3, "y": 2, "once": true,
+      "commands": [ { "type": "playSe", "id": "open" }, { "type": "giveItem", "id": "hi_herb", "count": 3 } ]
+    },
+    {
+      "trigger": "action", "x": 16, "y": 2, "once": true,
+      "commands": [ { "type": "playSe", "id": "open" }, { "type": "giveItem", "id": "thunder_crystal", "count": 1 } ]
+    },
+    {
+      "trigger": "action", "x": 7, "y": 9, "once": true,
+      "commands": [ { "type": "playSe", "id": "open" }, { "type": "giveItem", "id": "guard_seed", "count": 1 } ]
+    },
+    {
+      "trigger": "action", "x": 9, "y": 1, "cond": { "notFlag": "frost_clear" },
+      "commands": [
+        { "type": "message", "text": ["祠の 最奥。氷の 玉座に、巨大な 影が 凍りついている。", "——足音に 反応し、その 双眸が 蒼く 開いた。"] },
+        { "type": "message", "name": "氷皇フリーゲル", "text": "……温かき 者よ。我が 永久の 冬で、その 鼓動を 鎮めて くれよう。" },
+        { "type": "message", "text": "（弱点は 移り変わる。炎と 雷、両方の 備えが あると よさそうだ）" },
+        { "type": "battle", "troopId": "frostking", "isBoss": true, "canEscape": true,
+          "onWin": [
+            { "type": "message", "text": ["氷皇は 砕け、祠に 暖かな 光が 差し込んだ。", "凍てついた 心臓の 跡に、青く 輝く 指輪が 残されている。"] },
+            { "type": "message", "name": "ルゥ", "text": "…長い 冬が、やっと 終わるんだね。" },
+            { "type": "setFlag", "key": "frost_clear" }
+          ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 9, "y": 1, "cond": { "flag": "frost_clear" },
+      "commands": [ { "type": "message", "text": "氷の 玉座は 砕けたまま。祠には、もう 王気は 残っていない。" } ]
+    }
+  ]
+}

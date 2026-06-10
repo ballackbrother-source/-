@@ -1,0 +1,89 @@
+{
+  "name": "枯れ谷",
+  "bgm": "field",
+  "encounter": "vale1",
+  "legend": { "f": "floor", "F": "darkfloor", "w": "water" },
+  "objectLegend": { "W": "wall", "S": "sign", "C": "chest" },
+  "ground": [
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFFFFFF"
+  ],
+  "objects": [
+    "WWWWWWWWWWWWWWWWWWWW",
+    "W        S         W",
+    "W   C           C  W",
+    "W                  W",
+    "W    WW       WW   W",
+    "W                  W",
+    "W         WW       W",
+    "W   WW             W",
+    "W            WW    W",
+    "W   C              W",
+    "W       WW         W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "WWWWWWWWW  WWWWWWWWW"
+  ],
+  "portals": [
+    { "x": 9, "y": 15, "toMap": "hafen", "toX": 13, "toY": 12, "dir": "down" },
+    { "x": 10, "y": 15, "toMap": "hafen", "toX": 13, "toY": 12, "dir": "down" }
+  ],
+  "npcs": [],
+  "events": [
+    {
+      "trigger": "autorun", "cond": { "notFlag": "vale_enter" },
+      "commands": [
+        { "type": "message", "text": ["枯れ谷。かつては 豊かな 谷だったという。", "今は 草木も 枯れ、亡者の うめきだけが 風に 混じる。"] },
+        { "type": "message", "text": "奥には、何かが——強い 怨念の 気配が とぐろを 巻いている。" },
+        { "type": "setFlag", "key": "vale_enter" }
+      ]
+    },
+    {
+      "trigger": "action", "x": 4, "y": 2, "once": true,
+      "commands": [ { "type": "playSe", "id": "open" }, { "type": "giveItem", "id": "hi_herb", "count": 3 } ]
+    },
+    {
+      "trigger": "action", "x": 16, "y": 2, "once": true,
+      "commands": [ { "type": "playSe", "id": "open" }, { "type": "giveItem", "id": "light_crystal", "count": 1 } ]
+    },
+    {
+      "trigger": "action", "x": 4, "y": 9, "once": true,
+      "commands": [ { "type": "playSe", "id": "open" }, { "type": "giveItem", "id": "magic_seed", "count": 1 } ]
+    },
+    {
+      "trigger": "action", "x": 9, "y": 1,
+      "cond": { "notFlag": "vale_clear" },
+      "commands": [
+        { "type": "message", "text": ["谷の 最奥。朽ちた 祠の 前に、ひときわ 濃い 影が わだかまっている。", "——影は ゆっくりと 形を なし、嘆きの 声を あげた。"] },
+        { "type": "message", "name": "嘆きの亡霊", "text": "……かえせ……うばわれた……いのちを……かえせぇ……" },
+        { "type": "battle", "troopId": "revenant", "isBoss": true, "canEscape": true,
+          "onWin": [
+            { "type": "message", "text": ["亡霊は 光に 包まれ、安らかに 溶けて いった。", "その 後には、古い 護符と 結晶が 残されていた。"] },
+            { "type": "giveItem", "id": "life_seed", "count": 1, "notify": false },
+            { "type": "message", "name": "ルゥ", "text": "…やっと、眠れるね。" },
+            { "type": "setFlag", "key": "vale_clear" }
+          ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 9, "y": 1, "cond": { "flag": "vale_clear" },
+      "commands": [ { "type": "message", "text": "穏やかな 風が 吹き抜ける。枯れ谷に、少しだけ 緑が 戻りはじめている。亡霊は もう、ここには いない。" } ]
+    }
+  ]
+}

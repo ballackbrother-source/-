@@ -1,0 +1,316 @@
+{
+  "name": "宿場町ハーフェン",
+  "bgm": "town",
+  "encounter": null,
+  "legend": { "G": "grass", "g": "grass2", "p": "path", "F": "flower", "w": "water" },
+  "objectLegend": { "T": "tree", "H": "roof", "h": "roof2", "D": "door", "C": "chest", "S": "sign" },
+  "ground": [
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGG"
+  ],
+  "objects": [
+    "TTTTTTTTTTTTTTTTTTTT",
+    "T                  T",
+    "T HHHH      HHHH   T",
+    "T HHHH      HHHH   T",
+    "T  D         D     T",
+    "T                  T",
+    "T                  T",
+    "T                  T",
+    "T      HHHH        T",
+    "T      HHHH        T",
+    "T       D          T",
+    "T                  T",
+    "T              C   T",
+    "T                  T",
+    "TTTTTTTTT  TTTTTTTTT"
+  ],
+  "portals": [
+    { "x": 9, "y": 14, "toMap": "lumina_forest", "toX": 9, "toY": 14, "dir": "up" },
+    { "x": 10, "y": 14, "toMap": "lumina_forest", "toX": 10, "toY": 14, "dir": "up" }
+  ],
+  "npcs": [
+    {
+      "id": "innkeeper", "x": 4, "y": 5, "dir": "down", "color": "#cf9b5a",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "宿屋の主人", "text": "やどへ ようこそ。ひと晩 10ギルだよ。泊まるかい？" },
+        { "type": "choice", "options": [
+          { "text": "泊まる", "commands": [
+            { "type": "giveGold", "amount": -10, "notify": false },
+            { "type": "fade", "dir": "out", "color": "#000", "ms": 500 },
+            { "type": "playSe", "id": "heal" },
+            { "type": "heal" },
+            { "type": "wait", "ms": 400 },
+            { "type": "fade", "dir": "in", "color": "#000", "ms": 500 },
+            { "type": "message", "name": "宿屋の主人", "text": "ぐっすり 眠れたかい？ HPと MPが 全回復したよ。" }
+          ] },
+          { "text": "やめる", "commands": [ { "type": "message", "name": "宿屋の主人", "text": "またのお越しを。" } ] }
+        ] }
+      ] } ]
+    },
+    {
+      "id": "shopkeeper", "x": 13, "y": 5, "dir": "down", "color": "#6aa9cf",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "道具屋", "text": "いらっしゃい！ 何を 買うかね？" },
+        { "type": "shop", "title": "どうぐ屋", "items": ["herb", "magic_water", "revive_feather", "sleep_incense", "flash_bomb"] }
+      ] } ]
+    },
+    {
+      "id": "smith", "x": 10, "y": 5, "dir": "down", "color": "#b56a4a",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "武器防具屋", "text": "いい 装備が そろってるぜ。武器か? 防具か?" },
+        { "type": "choice", "prompt": "武器防具屋", "options": [
+          { "text": "武器を 見る", "commands": [
+            { "type": "shop", "title": "武器", "items": ["steel_sword", "battle_axe", "iron_dagger", "thunder_rod"] } ] },
+          { "text": "防具を 見る", "commands": [
+            { "type": "shop", "title": "防具", "items": ["iron_shield", "iron_helm", "chain_mail", "robe", "feather_charm"] } ] },
+          { "text": "結晶を 見る（属性付与用）", "commands": [
+            { "type": "shop", "title": "結晶（改造屋で 武器に 付与）", "items": ["fire_crystal", "ice_crystal", "thunder_crystal", "light_crystal"] } ] },
+          { "text": "やめる", "commands": [ { "type": "message", "name": "武器防具屋", "text": "まいど！" } ] }
+        ] }
+      ] } ]
+    },
+    {
+      "id": "campfire", "x": 16, "y": 7, "dir": "down", "color": "#e0703f",
+      "pages": [
+        { "conditions": {}, "commands": [
+          { "type": "message", "text": "小さな 焚き火が ゆれている。…まだ、語り合う 仲間は いない。" } ] },
+        { "conditions": { "flag": "ch1_join", "notFlag": "ch2_intro" }, "commands": [
+          { "type": "message", "text": "焚き火を 囲んで、ひと休み。" },
+          { "type": "message", "name": "ガロード", "text": "ルゥ、お前 細っこいのに よく 食うな。…いいことだ。たくさん 食え。" },
+          { "type": "message", "name": "フィーナ", "text": "ふふ。こうして 火を 囲むと、家族みたいですね。" },
+          { "type": "message", "name": "シオン", "text": "おう。…俺は 兄貴分だからな。弟は 任せとけ。" },
+          { "type": "message", "name": "ルゥ", "text": "（あたたかいな。…ずっと、こうだったら いいのに）" } ] },
+        { "conditions": { "flag": "ch2_intro", "notFlag": "betrayed" }, "commands": [
+          { "type": "message", "text": "焚き火を 囲む 夜。…誰かと、ゆっくり 話して みようか。" },
+          { "type": "choice", "prompt": "誰と 話す?", "options": [
+            { "text": "ガロードと 話す", "commands": [
+              { "type": "if", "cond": { "notFlag": "bond_garrod" }, "then": [
+                { "type": "message", "name": "ガロード", "text": ["…昔、俺には 弟分が いた。スラムで 拾った チビでな。","俺が 守れなかった。目の前で——な。"] },
+                { "type": "message", "name": "ガロード", "text": "だから 二度と 見捨てない。ルゥ、お前も だ。…兄貴ぶってる 奴に 任せきりに すんなよ?" },
+                { "type": "message", "name": "ルゥ", "text": "（ガロードの ことばは、いつも 不器用で——あたたかい）" },
+                { "type": "setFlag", "key": "bond_garrod" }
+              ], "else": [
+                { "type": "message", "name": "ガロード", "text": "しっかり 食って 寝ろ。明日も 長いぞ。" }
+              ] } ] },
+            { "text": "フィーナと 話す", "commands": [
+              { "type": "if", "cond": { "notFlag": "bond_fina" }, "then": [
+                { "type": "message", "name": "フィーナ", "text": ["ルゥさん。…あなたに、いつか 話さなければ ならない ことが あります。"] },
+                { "type": "message", "name": "フィーナ", "text": ["わたしは 星詠みの 巫女。星の 記憶を 読む 力が あるのです。","——でも、20年前の 英雄の 記録だけ、なぜか 読めない。まるで、誰かに 消されたように。"] },
+                { "type": "message", "name": "ルゥ", "text": "消された……? それって——" },
+                { "type": "message", "name": "フィーナ", "text": "…ごめんなさい、今は うまく 言えない。でも、覚えて いて ください。" },
+                { "type": "setFlag", "key": "bond_fina" }
+              ], "else": [
+                { "type": "message", "name": "フィーナ", "text": "ふふ。こうして 火を 囲むと、家族みたいですね。" }
+              ] } ] },
+            { "text": "シノと 話す", "commands": [
+              { "type": "if", "cond": { "notFlag": "bond_shino" }, "then": [
+                { "type": "message", "name": "シノ", "text": ["あたしの 故郷? スラムさ。腹を すかせた チビどもを 食わせるのに 必死だった。"] },
+                { "type": "message", "name": "シノ", "text": ["盗みも したさ。…でも、あの子らの 笑った 顔だけは、宝物なんだ。","だから あんたらの『星を 救う』ってのも、まあ……悪かない。"] },
+                { "type": "message", "name": "ルゥ", "text": "（シノは ぶっきらぼうだけど、誰より 仲間思いだ）" },
+                { "type": "setFlag", "key": "bond_shino" }
+              ], "else": [
+                { "type": "message", "name": "シノ", "text": "なんだい、あたしの 顔に 何か ついてるかい?" }
+              ] } ] },
+            { "text": "シオンと 話す", "commands": [
+              { "type": "if", "cond": { "notFlag": "bond_shion" }, "then": [
+                { "type": "message", "name": "シオン", "text": "…俺にも、守りたかった 奴が いたよ。" },
+                { "type": "message", "name": "シオン", "text": ["親父だ。誰よりも 強くて、優しい 人だった。","——なのに、誰も あの人を 覚えていない。記録にも、人の 記憶にも、どこにも 残っていないんだ。"] },
+                { "type": "message", "name": "ルゥ", "text": "そんな……どうして?" },
+                { "type": "message", "name": "シオン", "text": ["さあな。…すまん、湿っぽい 話を した。","ルゥ。何が あっても——お前は、俺の 弟だ。それだけは、忘れるな。"] },
+                { "type": "message", "name": "シオン", "text": "（シオンは そう言って、星空を 見上げた。その横顔が、ひどく 寂しげに 見えた）" },
+                { "type": "addVar", "key": "forgiveness", "delta": 5 },
+                { "type": "setFlag", "key": "bond_shion" }
+              ], "else": [
+                { "type": "message", "name": "シオン", "text": "おう。…俺は 兄貴分だからな。弟は 任せとけ。" }
+              ] } ] },
+            { "text": "火を 見つめる", "commands": [
+              { "type": "message", "name": "ルゥ", "text": "（あたたかいな。…ずっと、こうだったら いいのに）" } ] }
+          ] } ] },
+        { "conditions": { "flag": "betrayed" }, "commands": [
+          { "type": "message", "text": "焚き火の そばに、ひとつ 多く 食器が 並んでいる。…シオンの ぶんだ。" },
+          { "type": "choice", "prompt": "どうする?", "options": [
+            { "text": "シオンの 話を する", "commands": [
+              { "type": "if", "cond": { "notFlag": "fire_shion" }, "then": [
+                { "type": "message", "name": "フィーナ", "text": "…シオンさんにも、きっと 事情が あったはず。わたしは、まだ 信じたい。" },
+                { "type": "message", "name": "ルゥ", "text": "兄さん……。（胸の おくが、少しだけ あたたかくなる）" },
+                { "type": "addVar", "key": "forgiveness", "delta": 5 },
+                { "type": "setFlag", "key": "fire_shion" }
+              ], "else": [
+                { "type": "message", "name": "ルゥ", "text": "……兄さん。今、どこに いるんだろう。" }
+              ] } ] },
+            { "text": "黙って 火を 見る", "commands": [
+              { "type": "message", "text": "誰も 何も 言わない。薪の はぜる 音だけが ひびく。" } ] }
+          ] } ] }
+      ]
+    },
+    {
+      "id": "arena", "x": 4, "y": 11, "dir": "down", "color": "#c8b04a",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "闘技場の 主", "text": "腕試しは どうだ? 3連戦、間に 回復は してやる。勝てば 賞金だ。" },
+        { "type": "choice", "options": [
+          { "text": "挑戦する", "commands": [
+            { "type": "heal" },
+            { "type": "battle", "troopId": "wolf_pack", "canEscape": false, "isBoss": true,
+              "onLose": [ { "type": "message", "text": "1回戦 敗退… また 挑戦しよう。" } ],
+              "onWin": [
+                { "type": "message", "text": "1回戦 突破！ 回復して 次へ。" },
+                { "type": "heal" },
+                { "type": "battle", "troopId": "cave_pack", "canEscape": false, "isBoss": true,
+                  "onLose": [ { "type": "message", "text": "2回戦 敗退… また 挑戦しよう。" } ],
+                  "onWin": [
+                    { "type": "message", "text": "2回戦 突破！ 最終戦だ。" },
+                    { "type": "heal" },
+                    { "type": "battle", "troopId": "golem", "canEscape": false, "isBoss": true,
+                      "onLose": [ { "type": "message", "text": "最終戦 敗退… 惜しい！" } ],
+                      "onWin": [
+                        { "type": "message", "text": "闘技場 制覇！ 賞金 500ギル！" },
+                        { "type": "giveGold", "amount": 500, "notify": false },
+                        { "type": "heal" },
+                        { "type": "if", "cond": { "notFlag": "arena_clear" }, "then": [
+                          { "type": "giveItem", "id": "heros_proof", "count": 1 },
+                          { "type": "setFlag", "key": "arena_clear" }
+                        ] }
+                      ] }
+                  ] }
+              ] }
+          ] },
+          { "text": "やめる", "commands": [ { "type": "message", "name": "闘技場の 主", "text": "気が 向いたら いつでも 来な。" } ] }
+        ] }
+      ] } ]
+    },
+    {
+      "id": "forge_master", "x": 7, "y": 6, "dir": "down", "color": "#9a5a3a",
+      "pages": [ { "conditions": {}, "commands": [
+        { "type": "message", "name": "改造屋", "text": "装備を 鍛えて やろうか? ゴールドぶん、強くしてやるぜ。" },
+        { "type": "forge" }
+      ] } ]
+    },
+    {
+      "id": "guide", "x": 6, "y": 11, "dir": "down", "color": "#c8a06a", "wander": true,
+      "pages": [
+        { "conditions": { "notFlag": "verdante_down" }, "commands": [
+          { "type": "message", "name": "ギルドの 受付", "text": ["北の森が モンスターで あれている らしい。","腕に おぼえが あるなら、奥の 巨獣を 倒してくれ。"] } ] },
+        { "conditions": { "flag": "betrayed" }, "commands": [
+          { "type": "message", "name": "ギルドの 受付", "text": ["あんた、ひどい 顔だ…。何が あったんだい?","…無理は すんなよ。"] } ] },
+        { "conditions": { "flag": "verdante_down" }, "commands": [
+          { "type": "message", "name": "ギルドの 受付", "text": ["森を 鎮めて くれて ありがとう！","聖王国の 使者が あんたを 探していたよ。"] } ] }
+      ]
+    },
+    {
+      "id": "carriage", "x": 13, "y": 11, "dir": "down", "color": "#8a6a4a",
+      "pages": [
+        { "conditions": {}, "commands": [
+          { "type": "message", "name": "御者", "text": "馬車で どこへでも 運ぶよ。…今は 行き先が ないかい。" } ] },
+        { "conditions": { "flag": "ch2_intro", "notFlag": "betrayed" }, "commands": [
+          { "type": "message", "name": "御者", "text": "星核の 在処は ふたつ。どっちへ 行く?" },
+          { "type": "choice", "options": [
+            { "text": "古代遺跡へ 行く", "commands": [
+              { "type": "transfer", "mapId": "ruin", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "水晶洞へ 行く", "commands": [
+              { "type": "transfer", "mapId": "cavern", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "枯れ谷へ 行く（腕試し）", "commands": [
+              { "type": "transfer", "mapId": "vale", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "霜結の祠へ 行く（腕試し）", "commands": [
+              { "type": "transfer", "mapId": "frost", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "気が 向いたら 言ってくれ。" } ] }
+          ] } ] },
+        { "conditions": { "flag": "betrayed", "notFlag": "regrouped" }, "commands": [
+          { "type": "message", "name": "御者", "text": "…ひどい 顔だ。今は、休んだ ほうが いい。" } ] },
+        { "conditions": { "chapterAtLeast": "ch4", "notFlag": "s_final" }, "commands": [
+          { "type": "message", "name": "御者", "text": "『星の祭壇・神域』へ——? 命の 保証は できんぞ。…それでも 行くか?" },
+          { "type": "choice", "options": [
+            { "text": "神域へ 行く", "commands": [
+              { "type": "transfer", "mapId": "shrine", "x": 9, "y": 10, "dir": "up" } ] },
+            { "text": "枯れ谷へ 行く（腕試し）", "commands": [
+              { "type": "transfer", "mapId": "vale", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "霜結の祠へ 行く（腕試し）", "commands": [
+              { "type": "transfer", "mapId": "frost", "x": 9, "y": 14, "dir": "up" } ] },
+            { "text": "やめる", "commands": [ { "type": "message", "name": "御者", "text": "覚悟が できたら 言ってくれ。" } ] }
+          ] } ] }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "trigger": "autorun",
+      "cond": { "flag": "betrayed", "notFlag": "ch3_seen" },
+      "commands": [
+        { "type": "playBgm", "id": "town" },
+        { "type": "message", "text": ["——第3章 失われた光——","光を 失った 街。人々の 顔にも、暗い 影が さしている。"] },
+        { "type": "message", "text": ["星核も、信じた 兄も 失った。打ちひしがれる ルゥ。"] },
+        { "type": "message", "name": "フィーナ", "text": ["…ルゥ。まだ、終わって いません。","シオンが 星核を 奪った 理由を——確かめに いきましょう。"] },
+        { "type": "message", "name": "ガロード", "text": "ああ。俺たちが ついてる。立て、ルゥ。" },
+        { "type": "message", "text": ["散り散りに なりかけた 仲間が、ふたたび ルゥの もとに 集った。","——第4章。シオンの 真実を 追う 旅が 始まる。"] },
+        { "type": "setChapter", "id": "ch4" },
+        { "type": "setFlag", "key": "regrouped" },
+        { "type": "message", "text": "街の 御者に 話すと、シオンの 向かった『星の祭壇・神域』へ 行ける。" },
+        { "type": "setFlag", "key": "ch3_seen" }
+      ]
+    },
+    {
+      "trigger": "autorun",
+      "cond": { "flag": "verdante_down", "notFlag": "ch2_intro" },
+      "commands": [
+        { "type": "playBgm", "id": "town" },
+        { "type": "message", "text": "森を 鎮めた 一行のもとへ、聖王国の 使者が 駆けつけた。" },
+        { "type": "message", "name": "聖王国の 使者", "text": ["勇者よ。星の翳りを 鎮める 道は ただ 一つ。","世界に 散った 七つの『星核』を 集め、星の祭壇に 捧げるのだ。"] },
+        { "type": "setChapter", "id": "ch2", "step": 0 },
+        { "type": "setFlag", "key": "ch2_intro" },
+        { "type": "message", "name": "シオン", "text": "星核、か。…（シオンの 横顔が、一瞬 だけ 曇った）" },
+        { "type": "message", "name": "？？？", "text": "——星核? そりゃ 高く 売れそうだねェ。" },
+        { "type": "message", "name": "シノ", "text": ["あたしは シノ。しがない 盗賊さ。","遺跡の お宝、あんたらに ついてけば 拝めそうだ。","用心棒も 兼ねて、混ぜとくれよ。"] },
+        { "type": "addMember", "id": "shino" },
+        { "type": "message", "text": ["（シノは すばやく、毒や 眠りで 敵を 崩すのが 得意。","メニューの『メンバー』で 前衛に 入れ替えられる。）"] },
+        { "type": "message", "text": ["【第2章 裏切りの聖騎士】", "街の 御者に 話すと、東の『古代遺跡』へ 向かえる。"] }
+      ]
+    },
+    {
+      "trigger": "autorun",
+      "cond": { "chapterAtLeast": "ch1", "notFlag": "ch1_join" },
+      "commands": [
+        { "type": "setFlag", "key": "ch1_join" },
+        { "type": "playBgm", "id": "town" },
+        { "type": "message", "text": ["何日も 歩き、ルゥは 宿場町ハーフェンに たどり着いた。"] },
+        { "type": "message", "name": "ガロード", "text": ["——おい、ひとりで 旅か？ あぶなっかしいな。","おれは ガロード。流れの 剣闘士さ。","行く あてが ないなら、しばらく 付き合ってやる。"] },
+        { "type": "addMember", "id": "garrod" },
+        { "type": "message", "name": "フィーナ", "text": ["わたしも ごいっしょ させて ください。","フィーナと もうします。…あなたに、聞きたいことが あるのです。"] },
+        { "type": "addMember", "id": "fina" },
+        { "type": "message", "name": "？？？", "text": ["——よう、あぶなっかしい 旅人だな。さっきの ならず者、見事に かわしてたぜ。"] },
+        { "type": "message", "name": "シオン", "text": ["おれは シオン。しがない 流れの 剣士さ。","ひとりで ユグルを 目指すって? ……ほっとけねえな。","しばらく 兄貴分として 付き合ってやるよ、弟。"] },
+        { "type": "addMember", "id": "shion" },
+        { "type": "message", "name": "シオン", "text": ["…なあ、その ペンダント。"] },
+        { "type": "message", "name": "シオン", "text": ["……いや。なんでも ない。さあ、行こうぜ。"] },
+        { "type": "message", "text": ["こうして、ルゥは なかまと——そして 初めての「兄」を 得た。","【MVP版】森の 奥の 巨獣ヴェルダンテを 倒すと、第1章は ひと区切り。"] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 3, "y": 4,
+      "commands": [ { "type": "message", "text": "やどやの 入口だ。主人が 立っている。" } ]
+    },
+    {
+      "trigger": "action", "x": 13, "y": 4,
+      "commands": [ { "type": "message", "text": "どうぐ屋の 入口だ。" } ]
+    },
+    {
+      "trigger": "action", "x": 15, "y": 12, "once": true,
+      "commands": [
+        { "type": "playSe", "id": "open" },
+        { "type": "giveGold", "amount": 50, "notify": true }
+      ]
+    }
+  ]
+}

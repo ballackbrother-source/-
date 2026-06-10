@@ -1,0 +1,44 @@
+{
+  "name": "ミルカの家",
+  "bgm": "town",
+  "encounter": null,
+  "legend": { "f": "floor", "#": "wall", "D": "door" },
+  "objectLegend": { "C": "chest", "T": "tree" },
+  "ground": [
+    "#########",
+    "#fffffff#",
+    "#fffffff#",
+    "#fffffff#",
+    "#fffffff#",
+    "#fffffff#",
+    "#fffffff#",
+    "####D####"
+  ],
+  "objects": [
+    "         ",
+    "  C      ",
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    "         "
+  ],
+  "portals": [
+    { "x": 4, "y": 7, "toMap": "lumina", "toX": 2, "toY": 5, "dir": "down" }
+  ],
+  "npcs": [],
+  "events": [
+    {
+      "trigger": "action", "x": 2, "y": 1, "once": true,
+      "commands": [
+        { "type": "playSe", "id": "open" },
+        { "type": "giveItem", "id": "herb", "count": 2 }
+      ]
+    },
+    {
+      "trigger": "action", "x": 2, "y": 1, "cond": { "flag": "_ev_ミルカの家_2_1" },
+      "commands": [ { "type": "message", "text": "からっぽの たんすだ。" } ]
+    }
+  ]
+}

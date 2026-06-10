@@ -1,0 +1,124 @@
+{
+  "name": "古代遺跡",
+  "bgm": "field",
+  "encounter": "ruin1",
+  "legend": { "f": "floor", "F": "darkfloor", "w": "water" },
+  "objectLegend": { "W": "wall", "C": "chest", "S": "sign" },
+  "ground": [
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff"
+  ],
+  "objects": [
+    "WWWWWWWWWWWWWWWWWWWW",
+    "W        S         W",
+    "W                  W",
+    "W  C               W",
+    "W                  W",
+    "W    WW      WW    W",
+    "W                  W",
+    "W                  W",
+    "W            S     W",
+    "W                  W",
+    "W    WW      WW    W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "W                  W",
+    "WWWWWWWWW  WWWWWWWWW"
+  ],
+  "portals": [
+    { "x": 9, "y": 15, "toMap": "hafen", "toX": 9, "toY": 12, "dir": "down" },
+    { "x": 10, "y": 15, "toMap": "hafen", "toX": 10, "toY": 12, "dir": "down" }
+  ],
+  "npcs": [],
+  "events": [
+    {
+      "trigger": "autorun", "cond": { "notFlag": "ruin_enter" },
+      "commands": [
+        { "type": "message", "text": "古代遺跡の 内部。ひんやりとした 空気が 満ちている。" },
+        { "type": "message", "name": "シオン", "text": ["この遺跡の 造り…なぜか、手に取るように わかる。", "……いや、気のせいか。"] },
+        { "type": "setFlag", "key": "ruin_enter" }
+      ]
+    },
+    {
+      "trigger": "touch", "x": 9, "y": 8, "once": true,
+      "commands": [
+        { "type": "message", "text": "通路の 奥から、魔物の 群れが 襲いかかってきた！" },
+        { "type": "battle", "troopId": "wolf_pack", "canEscape": false,
+          "onWin": [ { "type": "message", "name": "シオン", "text": "（シオンは——まるで 襲撃を 知っていたように、少しも 動じなかった）" } ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 3, "y": 3, "once": true,
+      "commands": [
+        { "type": "playSe", "id": "open" },
+        { "type": "message", "text": "祭壇の 奥に、淡く 光る 結晶——『星核』を 見つけた！" },
+        { "type": "giveItem", "id": "star_core", "count": 1, "notify": false },
+        { "type": "message", "text": ["（こうして ルゥたちは 各地の 遺跡をめぐり、", "ついに 4つ目の 星核を 手に入れた。）"] },
+        { "type": "setVar", "key": "starcores", "value": 4 },
+        { "type": "setFlag", "key": "cores4" }
+      ]
+    },
+    {
+      "trigger": "action", "x": 13, "y": 8,
+      "cond": { "flag": "cores4", "notFlag": "night_seen" },
+      "commands": [
+        { "type": "message", "text": "野営の 跡だ。…そういえば、ゆうべ——" },
+        { "type": "message", "text": ["夜、ふと 目を覚ますと——", "シオンが 暗がりで、誰かと 小声で 話していた。"] },
+        { "type": "choice", "prompt": "どうする？", "options": [
+          { "text": "近づく", "commands": [ { "type": "message", "text": "近づこうとすると、シオンは 話を やめた。" } ] },
+          { "text": "寝たふりをする", "commands": [ { "type": "message", "text": "聞こえてきたのは…『…ああ、もうすぐ だ』という ひと言だけ。" } ] }
+        ] },
+        { "type": "message", "name": "シオン", "text": "…悪い夢でも 見たか? 寝てな、弟。" },
+        { "type": "setFlag", "key": "night_seen" }
+      ]
+    },
+    {
+      "trigger": "action", "x": 9, "y": 1,
+      "cond": { "flag": "cores4", "notFlag": "betrayed" },
+      "commands": [
+        { "type": "message", "text": "祭壇の 間。集めた 星核を 捧げよう とした その時——" },
+        { "type": "message", "text": "魔王軍 四天王・水将ネレイドが 立ちはだかった！" },
+        { "type": "battle", "troopId": "nereid", "isBoss": true, "canEscape": false,
+          "onWin": [
+            { "type": "message", "text": ["四天王を 退けた！", "…やった。これで、世界は——"] },
+            { "type": "shake", "power": 9, "ms": 600 },
+            { "type": "message", "name": "シオン", "text": "……すまない。" },
+            { "type": "playSe", "id": "damage" },
+            { "type": "message", "text": "——シオンの 剣が、ルゥの 背を 貫いた。" },
+            { "type": "fade", "dir": "out", "color": "#6a0f1a", "ms": 800 },
+            { "type": "message", "name": "シオン", "text": ["これが…私の 使命だった。", "私の 正体は——魔王軍 最高幹部。『白銀の執行者』。"] },
+            { "type": "takeItem", "id": "star_core", "count": 1 },
+            { "type": "setVar", "key": "starcores", "value": 0 },
+            { "type": "removeMember", "id": "shion" },
+            { "type": "message", "text": "シオンは 4つの 星核を すべて 奪い、振り返りもせず 去っていった。" },
+            { "type": "message", "name": "ルゥ", "text": "兄さん……なんで……" },
+            { "type": "setFlag", "key": "betrayed" },
+            { "type": "setChapter", "id": "ch3", "step": 0 },
+            { "type": "fade", "dir": "out", "color": "#000000", "ms": 700 },
+            { "type": "message", "text": ["——第3章 「失われた光」——", "信じた すべてを 失い、ルゥの 本当の 物語が 始まる。"] },
+            { "type": "message", "text": "（MVP版の 物語実装は ここまで。第3〜最終章は design/02 を、最終決戦は タイトルの ★体験版で 遊べます）" },
+            { "type": "transfer", "mapId": "hafen", "x": 9, "y": 12, "dir": "down", "fadeOut": false }
+          ] }
+      ]
+    },
+    {
+      "trigger": "action", "x": 9, "y": 1,
+      "commands": [ { "type": "message", "text": "強大な 気配が 奥に 満ちている。…まだ 進む 時ではない。まず 星核を 集めよう。" } ]
+    }
+  ]
+}
