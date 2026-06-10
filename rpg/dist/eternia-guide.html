@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ETERNIA ～星を継ぐ者～ 完全攻略本</title>
+<style>
+  :root{
+    --bg:#0a0e1f; --bg2:#111733; --panel:#161d3d; --panel2:#1d2750;
+    --ink:#e8ecff; --dim:#9aa6d6; --gold:#ffd76a; --line:#2c356a;
+    --fire:#ff6a3a; --ice:#7fd8ff; --thunder:#ffd23f; --wind:#7fe0a0;
+    --earth:#cf9a52; --light:#fff0a0; --dark:#a878e0; --none:#c4ccea;
+    --good:#7fe0a0; --bad:#ff8a8a;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:linear-gradient(180deg,#070b1a,#0a0e1f 40%,#0b1024);
+    color:var(--ink);font:15px/1.7 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+    -webkit-text-size-adjust:100%;padding:0 0 80px;
+  }
+  header.top{
+    position:relative;text-align:center;padding:34px 18px 26px;
+    background:radial-gradient(120% 90% at 50% 0%,#22306e 0%,#0c1230 55%,transparent 100%);
+    border-bottom:1px solid var(--line);overflow:hidden;
+  }
+  header.top h1{margin:0;font-size:25px;letter-spacing:.04em;
+    background:linear-gradient(180deg,#fff,#ffe39a 60%,#c79a3a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 2px 12px rgba(255,200,90,.18)}
+  header.top .sub{color:var(--gold);font-size:13px;margin-top:6px;letter-spacing:.3em}
+  header.top .tag{color:var(--dim);font-size:12px;margin-top:10px}
+  .wrap{max-width:860px;margin:0 auto;padding:0 14px}
+
+  nav.toc{
+    position:sticky;top:0;z-index:20;background:rgba(10,14,31,.93);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    padding:8px 10px;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;
+  }
+  nav.toc a{
+    display:inline-block;color:var(--dim);text-decoration:none;font-size:12.5px;
+    padding:6px 11px;margin:2px 2px;border:1px solid var(--line);border-radius:999px;background:var(--panel);
+  }
+  nav.toc a:active{color:var(--gold)}
+
+  section{margin:30px 0;scroll-margin-top:58px}
+  h2{font-size:19px;margin:0 0 14px;padding:10px 14px;border-left:4px solid var(--gold);
+     background:linear-gradient(90deg,var(--panel),transparent);border-radius:6px}
+  h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+  h4{font-size:14px;margin:14px 0 6px;color:#cbd4ff}
+  p{margin:8px 0}
+  .lead{color:var(--dim)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+  .grid{display:grid;gap:10px}
+  @media(min-width:620px){.grid.two{grid-template-columns:1fr 1fr}}
+  ul{margin:8px 0;padding-left:20px}
+  li{margin:3px 0}
+  code{background:#0c1230;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12.5px;color:#ffe7a8}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);margin:1px 2px;vertical-align:middle}
+  .muted{color:var(--dim);font-size:12.5px}
+  .note{border-left:3px solid var(--ice);background:#0e1838;padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:13.5px}
+  .warn{border-left:3px solid var(--fire);background:#241225;padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:13.5px}
+  .spoiler-head{color:var(--bad);font-size:12px;letter-spacing:.1em}
+
+  /* tables */
+  .tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl table{width:100%;border-collapse:collapse;min-width:480px}
+  .tbl th,.tbl td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  .tbl th{background:var(--panel2);color:#cfe;position:sticky;top:0;font-weight:600}
+  .tbl tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+  .tbl td.b{color:var(--gold);font-weight:600;white-space:nowrap}
+
+  /* element chips */
+  .e{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;margin:1px;color:#0a0e1f}
+  .e.fire{background:var(--fire)}.e.ice{background:var(--ice)}.e.thunder{background:var(--thunder)}
+  .e.wind{background:var(--wind)}.e.earth{background:var(--earth)}.e.light{background:var(--light)}
+  .e.dark{background:var(--dark);color:#fff}.e.none{background:var(--none)}
+  .weak{color:var(--good);font-weight:700}.res{color:var(--ice)}.abs{color:var(--bad);font-weight:700}
+
+  details{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:10px 0;overflow:hidden}
+  details>summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none;background:var(--panel2)}
+  details>summary::-webkit-details-marker{display:none}
+  details>summary::before{content:"▸ ";color:var(--gold)}
+  details[open]>summary::before{content:"▾ "}
+  details .body{padding:4px 16px 14px}
+
+  .boss{border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden;background:var(--panel)}
+  .boss .bh{padding:12px 16px;background:linear-gradient(90deg,#2a1746,#1a1030);display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .boss .bh .nm{font-size:16px;font-weight:700;color:#ffd9ff}
+  .boss .bh .hp{font-size:12.5px;color:var(--dim)}
+  .boss .bb{padding:12px 16px}
+  .kv{display:flex;gap:8px;margin:4px 0;font-size:13px}
+  .kv .k{min-width:74px;color:var(--dim);flex:none}
+
+  .steplist{counter-reset:s;list-style:none;padding-left:0}
+  .steplist>li{counter-increment:s;position:relative;padding:8px 8px 8px 40px;margin:6px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+  .steplist>li::before{content:counter(s);position:absolute;left:8px;top:8px;width:24px;height:24px;border-radius:50%;
+    background:var(--gold);color:#0a0e1f;font-weight:800;text-align:center;line-height:24px;font-size:13px}
+
+  footer{margin:40px 14px 0;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:12px;text-align:center}
+  a.btn{display:inline-block;margin:6px;padding:10px 18px;background:linear-gradient(180deg,#ffe39a,#c79a3a);color:#1a1024;
+    text-decoration:none;border-radius:10px;font-weight:700}
+  .toTop{position:fixed;right:14px;bottom:14px;z-index:30;background:var(--gold);color:#0a0e1f;
+    width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    text-decoration:none;font-size:20px;font-weight:800;box-shadow:0 4px 14px rgba(0,0,0,.5);border:2px solid #fff3}
+</style>
+</head>
+<body>
+<a class="toTop" href="#top" aria-label="トップへ">↑</a>
+
+<header class="top" id="top">
+  <h1>ETERNIA ～星を継ぐ者～</h1>
+  <div class="sub">完 全 攻 略 本</div>
+  <div class="tag">バニラJS製ブラウザRPG ／ 全章・全ボス・隠し要素・3エンディング対応</div>
+</header>
+
+<nav class="toc" aria-label="目次">
+  <a href="#start">はじめに</a>
+  <a href="#chart">攻略チャート</a>
+  <a href="#system">システム</a>
+  <a href="#element">属性相性</a>
+  <a href="#chars">キャラ</a>
+  <a href="#skills">スキル</a>
+  <a href="#items">アイテム</a>
+  <a href="#shop">ショップ</a>
+  <a href="#maps">マップ</a>
+  <a href="#bosses">ボス攻略</a>
+  <a href="#secret">隠し・裏ボス</a>
+  <a href="#ending">エンディング</a>
+  <a href="#dex">図鑑報酬</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ はじめに ============ -->
+<section id="start">
+  <h2>はじめに ― この攻略本の使い方</h2>
+  <p class="lead">「星核（ほしのコア）」を巡る兄弟の物語。ターン制バトル＋<strong>属性の弱点突き</strong>と、終盤の<strong>「赦しゲージ」</strong>によるマルチエンディングが核心です。</p>
+  <div class="card">
+    <h4>勝つための3原則</h4>
+    <ul>
+      <li><strong>① 弱点を突く</strong>…属性が弱点なら <span class="weak">ダメージ1.5倍</span>。逆に<span class="abs">吸収（回復させる）</span>属性で殴ると敵が回復してしまう。ボス戦は弱点把握が9割。</li>
+      <li><strong>② HP/MPは戦闘後も回復しない</strong>…宿屋（ハーフェン10G）・村のベッドでこまめに全回復。<code>やくそう</code>と<code>まほうの水</code>は常に補充。</li>
+      <li><strong>③ 「溜め技（charge）」を潰す</strong>…敵が溜め始めたら<strong>ねむり香・睡眠・麻痺</strong>で発動前に妨害。大ダメージ全体攻撃を無効化できる。</li>
+    </ul>
+  </div>
+  <div class="note">操作：移動＝矢印/WASD・十字パッド／決定＝Enter/Space/Z／取消＝Esc/X／メニュー＝Shift/C。スマホは画面下にパッドが自動表示（設定で左右切替）。</div>
+</section>
+
+<!-- ============ 攻略チャート ============ -->
+<section id="chart">
+  <h2>攻略チャート（全体の流れ）</h2>
+  <p class="lead">迷ったらこの順番で。各ボスの詳細は<a href="#bosses">ボス攻略</a>へ。</p>
+  <ol class="steplist">
+    <li><strong>プロローグ：ルミナ村で起床</strong> → 南の<strong>ルミナの森</strong>でやくそう採取（チュートリアル戦闘）。宝箱2つ（じょうやくそう／てつのたて）回収。</li>
+    <li><strong>村へ帰還 → 襲撃イベント</strong>。ミルカ婆との別れ、<strong>星のかけらのペンダント</strong>入手 → 宿場町<strong>ハーフェン</strong>へ自動移動（第1章）。</li>
+    <li><strong>ハーフェンで仲間加入</strong>：ガロード・フィーナ・シオンがパーティに。武器防具屋で<strong>鋼の剣</strong>等を購入、宿屋で全回復。</li>
+    <li><strong>ルミナの森 最奥</strong>へ戻り <span class="pill">BOSS</span> <strong>森獣ヴェルダンテ</strong>（弱点 <span class="e fire">炎</span>）撃破 → 第1章クリア。</li>
+    <li><strong>第2章開始</strong>：盗賊<strong>シノ</strong>加入。以後はハーフェンの<strong>御者</strong>で各地へ移動。</li>
+    <li><strong>腕試し＆強化</strong>（順不同・推奨）：<br>
+      ・<strong>水晶洞</strong>… <span class="pill">BOSS</span> 鉱石ゴーレム（<span class="e thunder">雷</span>）＋<span class="pill">隠し</span> 業火竜イグニス（<span class="e ice">氷</span>／<strong>炎竜の大剣</strong>入手）<br>
+      ・<strong>枯れ谷</strong>… <span class="pill">BOSS</span> レヴナント（<span class="e light">光</span>）<br>
+      ・<strong>霜結の祠</strong>… <span class="pill">BOSS</span> 氷皇フリーゲル（<span class="e fire">炎</span>→後半<span class="e thunder">雷</span>／<strong>氷結の指輪</strong>）</li>
+    <li><strong>古代遺跡</strong>：宝箱で<strong>星核</strong>回収 → <span class="pill">BOSS</span> 水将ネレイド（<span class="e thunder">雷</span>）撃破 → <span class="spoiler-head">★シオン裏切り・星核全奪取（第3章）</span>。</li>
+    <li><strong>終盤（第4〜7章）</strong>：神域<strong>星の祭壇</strong>へ。<span class="pill">BOSS</span> 白銀の執行者シオン（全員Lv44覚醒）→ 真実判明 → <strong>選択肢で「赦しゲージ」</strong>が決まる。</li>
+    <li><strong>最終決戦</strong>：<span class="pill">LAST</span> 創世神アルディア。<strong>不死（毎ターン全回復）</strong>を連携技<strong>ラスト・レクイエム</strong>で砕いて撃破 → <a href="#ending">エンディング分岐</a>。</li>
+    <li><strong>やり込み</strong>：闘技場ボスラッシュ（<strong>勇者の証</strong>）、図鑑コンプ、そして<span class="pill">裏</span> <strong>極・裏ボス アステリオン</strong>へ。</li>
+  </ol>
+</section>
+
+<!-- ============ システム ============ -->
+<section id="system">
+  <h2>基本システム</h2>
+
+  <h3>ダメージ計算式</h3>
+  <div class="grid two">
+    <div class="card">
+      <h4>物理</h4>
+      <p><code>(攻撃力×2 − 防御力) × 技倍率 × 属性 × 乱数(0.9〜1.1)</code></p>
+      <p class="muted">会心時はダメージ×2.0かつ相手の防御を半分として計算。最低保証1。</p>
+    </div>
+    <div class="card">
+      <h4>魔法</h4>
+      <p><code>(魔力×技倍率 − 魔法防御) × 属性 × 乱数(0.9〜1.1)</code></p>
+      <p class="muted">回復量＝<code>魔力×0.5 + 技の値</code>。属性倍率がマイナス＝吸収（回復）。</p>
+    </div>
+  </div>
+
+  <h3>各種ルール</h3>
+  <div class="tbl"><table>
+    <tr><th>要素</th><th>仕様</th></tr>
+    <tr><td class="b">行動順</td><td>AGI（すばやさ）× 乱数 の降順。AGIが高いほど先手。</td></tr>
+    <tr><td class="b">命中</td><td><code>命中 − 回避</code>（20〜99%にクランプ）。くらやみで命中低下。</td></tr>
+    <tr><td class="b">逃走</td><td>基本60%＋AGI差補正。多くのボスは<strong>逃走不可</strong>（イグニス・ゴーレム・レヴナント・フリーゲルは逃走可）。</td></tr>
+    <tr><td class="b">防御</td><td>そのターンの被ダメージ×0.5。溜め技の前に有効。</td></tr>
+    <tr><td class="b">会心</td><td>キャラの運/会心値依存。称号「会心」で会心率+15%。</td></tr>
+    <tr><td class="b">レベル上限</td><td><strong>Lv70</strong>。必要EXP＝<code>floor(12×Lv^2.3 + 8×Lv)</code>。LvアップでHP/MP全回復。</td></tr>
+    <tr><td class="b">控えメンバー</td><td>戦闘に出ていなくてもEXPを<strong>50%</strong>取得。</td></tr>
+  </table></div>
+
+  <h3>状態異常</h3>
+  <div class="tbl"><table>
+    <tr><th>状態</th><th>効果</th><th>備考</th></tr>
+    <tr><td class="b">どく</td><td>5ターン、毎ターン最大HPの約1/16ダメージ</td><td>どくけし草／まんびょう薬</td></tr>
+    <tr><td class="b">ねむり</td><td>3ターン行動不可</td><td><strong>物理を受けると解除</strong>。溜め技潰しに最適</td></tr>
+    <tr><td class="b">まひ</td><td>3ターン、50%で行動不能</td><td>溜め技潰しに有効</td></tr>
+    <tr><td class="b">ちんもく</td><td>3ターン、魔法が使えない</td><td>敵の回復・魔法を封じる</td></tr>
+    <tr><td class="b">こんらん</td><td>3ターン、対象不定</td><td></td></tr>
+    <tr><td class="b">くらやみ</td><td>4ターン、命中低下</td><td>閃光弾（暗闇85%）</td></tr>
+  </table></div>
+  <div class="note">ボスには<strong>状態異常耐性</strong>（25〜80%）があり入りにくい。それでも「溜め技」直前に<strong>ねむり香</strong>を投げて止められれば被害は激減します。アルディアは耐性60%、アステリオンは80%。</div>
+</section>
+
+<!-- ============ 属性相性 ============ -->
+<section id="element">
+  <h2>属性相性チャート</h2>
+  <p class="lead">属性は8種：<span class="e none">無</span><span class="e fire">炎</span><span class="e ice">氷</span><span class="e thunder">雷</span><span class="e wind">風</span><span class="e earth">土</span><span class="e light">光</span><span class="e dark">闇</span>。対の構造（mirror）がある。</p>
+  <div class="card">
+    <div class="kv"><span class="k">倍率</span><span><span class="weak">弱点 ×1.5</span>　通常 ×1.0　<span class="res">耐性(半減) ×0.5</span>　無効 ×0　<span class="abs">吸収 ×−1.0（回復）</span></span></div>
+    <div class="kv"><span class="k">対構造</span><span><span class="e fire">炎</span>⇔<span class="e ice">氷</span>　<span class="e thunder">雷</span>⇔<span class="e earth">土</span>　<span class="e light">光</span>⇔<span class="e dark">闇</span></span></div>
+    <div class="kv"><span class="k">判定優先</span><span>吸収 ＞ 無効 ＞ 耐性 ＞ 弱点 ＞ 通常</span></div>
+  </div>
+  <div class="note">敵の傾向：<strong>アンデッド系（スケルトン/亡者/呪詛人形/レヴナント）は<span class="e light">光</span>が弱点・<span class="e dark">闇</span>耐性</strong>。<strong>氷系（フロスト/アイスゴーレム/フリーゲル）は<span class="e fire">炎</span>弱点</strong>。<strong>炎系（イグニス）は<span class="e ice">氷</span>弱点で炎吸収</strong>。武器に属性を付けると吸収敵で自滅するので、ボスによっては<strong>無属性武器＋魔法で弱点突き</strong>が安全。</div>
+</section>
+
+<!-- ============ キャラクター ============ -->
+<section id="chars">
+  <h2>キャラクター</h2>
+  <div class="grid two">
+    <div class="card">
+      <h4>ルゥ <span class="muted">／ 星継ぎの剣士（hero）</span></h4>
+      <p class="muted">主人公。バランス型の万能アタッカー。光属性の奥義を覚える。連携技<strong>ラスト・レクイエム</strong>の使い手（条件付き）。</p>
+      <p class="muted">初期：Lv1・剣・どうのつるぎ／ぬののふく</p>
+    </div>
+    <div class="card">
+      <h4>ガロード <span class="muted">／ 贖罪の剣闘士（gladiator）</span></h4>
+      <p class="muted">高HP・高STRの物理壁。AGI・INTは低い。<code>パワーストライク</code>〜<code>ギガスラッシュ</code>で前線を支える。ハーフェンで加入。</p>
+    </div>
+    <div class="card">
+      <h4>フィーナ <span class="muted">／ 星詠みの巫女（priestess）</span></h4>
+      <p class="muted"><strong>回復＆全属性魔法の要</strong>。炎/氷/雷/光を一通り覚え、弱点突きの主力。<code>リレイズ</code>(蘇生)・<code>メガヒール</code>も。ハーフェンで加入。</p>
+    </div>
+    <div class="card">
+      <h4>シオン <span class="muted">／ 流浪の剣士（兄）</span></h4>
+      <p class="muted">高速・高STRのアタッカー。<span class="spoiler-head">★物語中盤で離脱しボスとして立ちはだかる。赦しゲージ次第で終盤に再加入し、連携技が解放される。</span></p>
+    </div>
+    <div class="card">
+      <h4>シノ <span class="muted">／ スラムの盗賊（thief）</span></h4>
+      <p class="muted">最速＆高運。<code>ぬすむ</code>でアイテム獲得、<code>毒の刃</code>・<code>アサシネイト</code>(×3.6＋毒)が強力。第2章で加入。</p>
+    </div>
+  </div>
+  <h3>初期ステータス（hp/mp/str/vit/agi/dex/int/spi/luk）</h3>
+  <div class="tbl"><table>
+    <tr><th>キャラ</th><th>Lv</th><th>HP</th><th>MP</th><th>STR</th><th>VIT</th><th>AGI</th><th>INT</th><th>SPI</th><th>得意</th></tr>
+    <tr><td class="b">ルゥ</td><td>1</td><td>18</td><td>8</td><td>7</td><td>6</td><td>6</td><td>5</td><td>5</td><td>万能</td></tr>
+    <tr><td class="b">ガロード</td><td>4</td><td>28</td><td>4</td><td>9</td><td>8</td><td>4</td><td>3</td><td>3</td><td>物理/HP</td></tr>
+    <tr><td class="b">フィーナ</td><td>4</td><td>14</td><td>14</td><td>4</td><td>4</td><td>5</td><td>7</td><td>9</td><td>魔法/回復</td></tr>
+    <tr><td class="b">シオン</td><td>5</td><td>22</td><td>10</td><td>9</td><td>7</td><td>9</td><td>5</td><td>5</td><td>高速物理</td></tr>
+    <tr><td class="b">シノ</td><td>11</td><td>16</td><td>8</td><td>6</td><td>5</td><td>10</td><td>5</td><td>4</td><td>敏捷/盗み</td></tr>
+  </table></div>
+
+  <h3>クラス習得レベル</h3>
+  <div class="tbl"><table>
+    <tr><th>クラス</th><th>習得スキル（Lv）</th></tr>
+    <tr><td class="b">hero（ルゥ）</td><td>ヒール(3)・シャイン(5)・パワーストライク(8)・スターリード(12)・ホーリー(16)・メテオスラッシュ(24)</td></tr>
+    <tr><td class="b">gladiator（ガロード/シオン）</td><td>ガードスタンス(6)・無謀の一撃(10)・アースクリーヴ(14)・ギガスラッシュ(24)</td></tr>
+    <tr><td class="b">priestess（フィーナ）</td><td>アイス(6)・エリアヒール(8)・スパーク(9)・ホーリー(11)・リレイズ(14)・メガヒール(24)</td></tr>
+    <tr><td class="b">thief（シノ）</td><td>スリープダスト(13)・ダブルスラッシュ(16)・アサシネイト(24)</td></tr>
+  </table></div>
+</section>
+
+<!-- ============ スキル ============ -->
+<section id="skills">
+  <h2>スキル一覧</h2>
+  <details open><summary>攻撃（物理）</summary><div class="body">
+    <div class="tbl"><table>
+      <tr><th>技</th><th>MP</th><th>倍率/効果</th><th>対象</th></tr>
+      <tr><td class="b">パワーストライク</td><td>3</td><td>×1.8</td><td>単体</td></tr>
+      <tr><td class="b">無謀の一撃</td><td>6</td><td>×2.6</td><td>単体</td></tr>
+      <tr><td class="b">ダブルスラッシュ</td><td>4</td><td>×1.3（2回）</td><td>単体</td></tr>
+      <tr><td class="b">毒の刃</td><td>3</td><td>毒60%付与</td><td>単体</td></tr>
+      <tr><td class="b">アースクリーヴ <span class="e earth">土</span></td><td>8</td><td>×1.4</td><td>全体</td></tr>
+      <tr><td class="b">ギガスラッシュ</td><td>10</td><td>×2.0</td><td>全体</td></tr>
+      <tr><td class="b">アサシネイト</td><td>8</td><td>×3.6＋毒50%</td><td>単体</td></tr>
+      <tr><td class="b">メテオスラッシュ <span class="e light">光</span></td><td>8</td><td>×3.2</td><td>単体</td></tr>
+    </table></div>
+  </div></details>
+  <details><summary>攻撃（魔法）</summary><div class="body">
+    <div class="tbl"><table>
+      <tr><th>呪文</th><th>MP</th><th>倍率</th><th>対象</th></tr>
+      <tr><td class="b">ファイア <span class="e fire">炎</span></td><td>4</td><td>×2.6</td><td>単体</td></tr>
+      <tr><td class="b">アイス <span class="e ice">氷</span></td><td>4</td><td>×2.6</td><td>単体</td></tr>
+      <tr><td class="b">スパーク <span class="e thunder">雷</span></td><td>5</td><td>×2.6</td><td>単体</td></tr>
+      <tr><td class="b">シャイン <span class="e light">光</span></td><td>5</td><td>×2.8</td><td>単体</td></tr>
+      <tr><td class="b">スターリード <span class="e light">光</span></td><td>6</td><td>×2.4</td><td>単体</td></tr>
+      <tr><td class="b">フレイム <span class="e fire">炎</span></td><td>10</td><td>×2.2</td><td>全体</td></tr>
+      <tr><td class="b">ホーリー <span class="e light">光</span></td><td>14</td><td>×2.6</td><td>全体</td></tr>
+    </table></div>
+    <p class="muted">フィーナは炎/氷/雷/光を網羅。<strong>ボスの弱点に合わせて呪文を撃ち分ける</strong>のが攻略の基本。</p>
+  </div></details>
+  <details><summary>回復・補助</summary><div class="body">
+    <div class="tbl"><table>
+      <tr><th>技</th><th>MP</th><th>効果</th></tr>
+      <tr><td class="b">ヒール</td><td>4</td><td>HP回復(約32＋魔力)</td></tr>
+      <tr><td class="b">エリアヒール</td><td>12</td><td>全体回復(約28＋)</td></tr>
+      <tr><td class="b">メガヒール</td><td>18</td><td>全体大回復(約70＋)</td></tr>
+      <tr><td class="b">リレイズ</td><td>16</td><td>戦闘不能をHP50%で復活</td></tr>
+      <tr><td class="b">ガードスタンス</td><td>—</td><td>自身の防御を上げる</td></tr>
+      <tr><td class="b">スリープダスト</td><td>—</td><td>睡眠70%（溜め技対策）</td></tr>
+      <tr><td class="b">スリ（ぬすむ）</td><td>—</td><td>敵からアイテム入手</td></tr>
+    </table></div>
+  </div></details>
+  <details><summary class="spoiler-head">★ 連携・奥義（ネタバレ）</summary><div class="body">
+    <p><strong>ラスト・レクイエム</strong> <span class="e dark">闇</span>／MP0／×4.0／<code>不死を砕く(breaksRegen)</code>。<br>
+    ルゥとシオンの<strong>共闘技</strong>。<strong>創世神アルディアの「毎ターン全回復する不死」を破壊できる唯一の手段</strong>。<br>
+    使用条件：<strong>赦しゲージ60以上</strong>でシオンが終盤に再加入し、ルゥがこの技を習得する。ゲージが低いと使えず＝アルディアの不死を砕けない＝勝てない。</p>
+  </div></details>
+  <details><summary>敵の溜め技（charge）</summary><div class="body">
+    <p class="muted">1ターン「警告」表示の次ターンに発動する大技。<strong>警告中に睡眠/麻痺/ねむり香で止める</strong>か、全員防御で耐える。</p>
+    <ul>
+      <li><strong>グレートスラム</strong> <span class="e earth">土</span> 全体×1.7</li>
+      <li><strong>グレートツナミ</strong> <span class="e ice">氷</span> ×2.6（ネレイド）</li>
+      <li><strong>ヘルフレイム</strong> <span class="e fire">炎</span> ×2.8（イグニス）</li>
+      <li><strong>ジェネシス</strong> <span class="e light">光</span> ×2.5（アルディア／アステリオン）</li>
+      <li><strong>ウェイル</strong> <span class="e dark">闇</span> ×2.4（呪詛人形／レヴナント）</li>
+    </ul>
+  </div></details>
+</section>
+
+<!-- ============ アイテム ============ -->
+<section id="items">
+  <h2>アイテム・装備</h2>
+  <details open><summary>武器</summary><div class="body">
+    <div class="tbl"><table>
+      <tr><th>武器</th><th>攻</th><th>属性</th><th>入手</th></tr>
+      <tr><td class="b">どうのつるぎ</td><td>8</td><td>無</td><td>初期/120G</td></tr>
+      <tr><td class="b">はがねのつるぎ</td><td>20</td><td>無</td><td>ハーフェン 600G</td></tr>
+      <tr><td class="b">バトルアックス</td><td>—</td><td>無</td><td>ハーフェン（ガロード用）</td></tr>
+      <tr><td class="b">てつのナイフ</td><td>—</td><td>無</td><td>ハーフェン（シノ用）</td></tr>
+      <tr><td class="b">星見の刃</td><td>34</td><td><span class="e light">光</span></td><td>非売（イベント）</td></tr>
+      <tr><td class="b">炎竜の大剣</td><td>68</td><td><span class="e fire">炎</span></td><td><strong>イグニス確定ドロップ</strong></td></tr>
+    </table></div>
+    <p class="muted">杖：かしのつえ→<strong>聖樹の錫杖</strong>(魔力20,720G)／<strong>いかずちの杖</strong>(<span class="e thunder">雷</span>,520G)。</p>
+  </div></details>
+  <details><summary>防具・盾・アクセサリ</summary><div class="body">
+    <div class="tbl"><table>
+      <tr><th>装備</th><th>性能</th><th>入手</th></tr>
+      <tr><td class="b">かわのよろい</td><td>防12</td><td>初期/店</td></tr>
+      <tr><td class="b">くさりかたびら</td><td>防22</td><td>ハーフェン</td></tr>
+      <tr><td class="b">ローブ</td><td>魔防8・MP+10</td><td>ハーフェン（魔法職向け）</td></tr>
+      <tr><td class="b">てつのたて</td><td>防14</td><td>店／森の宝箱(6)</td></tr>
+      <tr><td class="b">ちから/まもりの指輪</td><td>STR/VIT+5</td><td>各800G</td></tr>
+      <tr><td class="b">はやての羽かざり</td><td>AGI+6</td><td>ハーフェン</td></tr>
+      <tr><td class="b">氷結の指輪</td><td>氷ダメージ半減</td><td><strong>フリーゲル確定ドロップ</strong></td></tr>
+      <tr><td class="b">勇者の証</td><td>全能力+5</td><td><strong>闘技場制覇報酬</strong>（非売）</td></tr>
+    </table></div>
+  </div></details>
+  <details><summary>消耗品</summary><div class="body">
+    <div class="tbl"><table>
+      <tr><th>道具</th><th>効果</th><th>値段</th></tr>
+      <tr><td class="b">やくそう</td><td>HP60回復</td><td>15G</td></tr>
+      <tr><td class="b">じょうやくそう</td><td>HP200回復</td><td>80G</td></tr>
+      <tr><td class="b">まほうの水</td><td>MP40回復</td><td>60G</td></tr>
+      <tr><td class="b">まんびょう薬</td><td>全状態異常を治す</td><td>120G</td></tr>
+      <tr><td class="b">ねむり香</td><td>睡眠75%（<strong>溜め技対策の必携品</strong>）</td><td>店</td></tr>
+      <tr><td class="b">閃光弾</td><td>暗闇85%</td><td>店</td></tr>
+      <tr><td class="b">復活のはね</td><td>HP半分で復活</td><td>150G</td></tr>
+    </table></div>
+  </div></details>
+  <details><summary>永続強化のタネ・素材</summary><div class="body">
+    <p><strong>能力のタネ（永久強化／全て非売・宝箱やボスドロップ）</strong>：ちから/まもり/すばやさ/まりょく/せいしんのタネ（各+2）、<strong>いのちのきのみ</strong>（最大HP+25）。見つけたら主力に使うと長く効く。</p>
+    <p><strong>結晶（改造屋で武器に属性付与・300〜400G）</strong>：炎/氷/雷/光結晶。<strong>銘石</strong>＝武器に「銘」(吸血・会心・連撃など特殊効果)を刻むレア素材（ボスドロップ）。</p>
+  </div></details>
+</section>
+
+<!-- ============ ショップ ============ -->
+<section id="shop">
+  <h2>ハーフェンの施設</h2>
+  <p class="lead">宿場町ハーフェンが全章の拠点。御者で各地へ飛べる。</p>
+  <div class="grid two">
+    <div class="card"><h4>🛏 宿屋</h4><p class="muted">10GでHP/MP全回復。ボス前は必ず利用。</p></div>
+    <div class="card"><h4>🧪 道具屋</h4><p class="muted">やくそう・まほうの水・復活のはね・<strong>ねむり香</strong>・閃光弾。</p></div>
+    <div class="card"><h4>⚔ 武器防具屋</h4><p class="muted">鋼剣・バトルアックス・鉄のナイフ・いかずちの杖／鉄盾・兜・鎖帷子・ローブ・羽かざり／各属性結晶。</p></div>
+    <div class="card"><h4>🔨 改造屋（forge）</h4><p class="muted">武器の<strong>+N強化</strong>／結晶で<strong>属性付与</strong>／銘石で<strong>銘</strong>を刻む。</p></div>
+    <div class="card"><h4>🏟 闘技場（arena）</h4><p class="muted"><strong>3連戦</strong>：狼の群れ→洞窟の群れ→鉱石ゴーレム。制覇で<strong>500G＋勇者の証</strong>。</p></div>
+    <div class="card"><h4>🔥 焚き火 / ギルド</h4><p class="muted">焚き火で仲間との絆イベント。ギルド受付で依頼。</p></div>
+  </div>
+</section>
+
+<!-- ============ マップ ============ -->
+<section id="maps">
+  <h2>マップ別データ（宝箱・出口・ボス）</h2>
+
+  <details open><summary>ルミナ村 / ミルカの家 / ルミナの森（序盤）</summary><div class="body">
+    <h4>辺境の村ルミナ</h4>
+    <ul><li>宝箱(13,12)＝<strong>まほうの水</strong></li><li>NPC：テオ(12,9)・村人(15,7)、看板(2,6)</li><li>出口：(2,4)→ミルカの家／下→ルミナの森</li></ul>
+    <h4>ミルカの家</h4>
+    <ul><li>宝箱(2,1)＝<strong>やくそう×2</strong>／出口→ルミナ村</li></ul>
+    <h4>ルミナの森</h4>
+    <ul><li>(9,4) チュートリアル戦（逃走不可の野ネズミ）</li><li>(14,8) やくそう採取地＝<strong>やくそうのたば＋やくそう×2</strong></li><li>宝箱(5,2)＝<strong>じょうやくそう</strong>／(16,2)＝<strong>てつのたて</strong></li><li><span class="pill">BOSS</span> 森獣ヴェルダンテ(16,11)／出口：上→村・下→ハーフェン</li></ul>
+  </div></details>
+
+  <details><summary>古代遺跡（星核＆裏切り）</summary><div class="body">
+    <ul><li>宝箱(3,3)＝<strong>星核（4つ目）</strong></li><li>(9,8) 襲撃戦（狼の群れ）</li><li><span class="pill">BOSS</span> 水将ネレイド(9,1)</li><li class="spoiler-head">★撃破後：シオンが裏切り、星核を全て奪い離脱（第3章へ）</li><li>出口：下→ハーフェン</li></ul>
+  </div></details>
+
+  <details><summary>水晶洞（ゴーレム＆隠しボス）</summary><div class="body">
+    <ul><li>宝箱(3,3)＝<strong>せいしんのタネ</strong>／(16,3)＝<strong>じょうやくそう×2</strong></li><li><span class="pill">BOSS</span> 鉱石ゴーレム(9,1)→星核入手</li><li><span class="pill">隠し</span> 業火竜イグニス(7,8)…<strong>ゴーレム撃破後に隠し通路</strong>が出現。<strong>炎竜の大剣</strong>入手</li><li>出口：下→ハーフェン</li></ul>
+  </div></details>
+
+  <details><summary>枯れ谷 / 霜結の祠（腕試し）</summary><div class="body">
+    <h4>枯れ谷</h4>
+    <ul><li>宝箱(4,2)＝じょうやくそう×3／(16,2)＝<strong>光結晶</strong>／(4,9)＝まりょくのタネ</li><li><span class="pill">BOSS</span> 嘆きの亡霊レヴナント(9,1)→いのちのきのみ</li></ul>
+    <h4>霜結の祠</h4>
+    <ul><li>宝箱(3,2)＝じょうやくそう×3／(16,2)＝<strong>雷結晶</strong>／(7,9)＝まもりのタネ</li><li><span class="pill">BOSS</span> 氷皇フリーゲル(9,1)→<strong>氷結の指輪</strong></li></ul>
+  </div></details>
+
+  <details><summary class="spoiler-head">★ 星の祭壇・神域（終盤・ネタバレ）</summary><div class="body">
+    <ul><li>雑魚なし・ボス専用マップ。連続イベントで進行。</li><li><span class="pill">BOSS</span> 白銀の執行者シオン（直前に全員Lv44へ覚醒）</li><li>真実判明 → <strong>選択肢で赦しゲージが決定</strong>（「許さない」+0／「理由を聞く」+65／「信じたい」+40 等）</li><li>魔王ヴァルゼリオン登場 → <span class="pill">LAST</span> 創世神アルディア</li><li>出口：下→ハーフェン</li></ul>
+  </div></details>
+</section>
+
+<!-- ============ ボス攻略 ============ -->
+<section id="bosses">
+  <h2>ボス完全攻略</h2>
+
+  <div class="card">
+    <h4>ボス弱点 早見表</h4>
+    <div class="tbl"><table>
+      <tr><th>ボス</th><th>HP</th><th>弱点</th><th>要注意</th></tr>
+      <tr><td class="b">森獣ヴェルダンテ</td><td>1100</td><td class="weak">炎</td><td>土耐性。HP40%で核露出→炎+光</td></tr>
+      <tr><td class="b">鉱石ゴーレム</td><td>1900</td><td class="weak">雷</td><td>土耐性・高防御</td></tr>
+      <tr><td class="b">水将ネレイド</td><td>3400</td><td class="weak">雷</td><td><span class="abs">氷吸収</span>・大津波</td></tr>
+      <tr><td class="b">業火竜イグニス</td><td>4200</td><td class="weak">氷</td><td><span class="abs">炎吸収</span>・ヘルフレイム</td></tr>
+      <tr><td class="b">レヴナント</td><td>4200</td><td class="weak">光</td><td>闇耐性・ウェイル</td></tr>
+      <tr><td class="b">氷皇フリーゲル</td><td>4600</td><td class="weak">炎→雷</td><td>後半<span class="abs">炎吸収</span>に変化</td></tr>
+      <tr><td class="b">白銀の執行者シオン</td><td>7500</td><td>なし</td><td>全員Lv44覚醒で挑戦</td></tr>
+      <tr><td class="b">創世神アルディア</td><td>5200</td><td class="weak">闇</td><td><span class="abs">光吸収</span>・毎T全回復・14T全滅</td></tr>
+      <tr><td class="b">アステリオン(裏)</td><td>34000</td><td class="weak">炎→氷→雷→光</td><td>直前弱点を吸収・40T全滅</td></tr>
+    </table></div>
+  </div>
+
+  <div class="boss">
+    <div class="bh"><span class="nm">森獣ヴェルダンテ</span><span class="hp">HP 1100 ／ 第1章ボス</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">弱点</span><span class="weak">炎</span>（土耐性）</div>
+      <div class="kv"><span class="k">攻略</span><span>フィーナの<strong>ファイア</strong>で攻める。HPが40%を切ると<strong>核が露出</strong>して<span class="e fire">炎</span>＋<span class="e light">光</span>がさらに通り、攻撃力が1.15倍に。ガロードが盾、フィーナは回復も兼ねる。毒胞子はまんびょう薬／放置でも可。</span></div>
+      <div class="kv"><span class="k">報酬</span><span>ちからの指輪・ちからのタネ・炎結晶</span></div>
+    </div>
+  </div>
+
+  <div class="boss">
+    <div class="bh"><span class="nm">鉱石ゴーレム</span><span class="hp">HP 1900 ／ 水晶洞</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">弱点</span><span class="weak">雷</span>（土耐性・高防御）</div>
+      <div class="kv"><span class="k">攻略</span><span>物理は防御が高く通りにくい。<strong>スパーク（雷）</strong>主体で。HP40%で核露出し雷がさらに有効＋攻撃1.2倍。グレートスラム（土全体溜め技）は<strong>ねむり香で妨害</strong>。<span class="muted">闘技場の最終戦にも登場。</span></span></div>
+      <div class="kv"><span class="k">報酬</span><span>いのちのきのみ・鎖帷子・雷結晶・銘石</span></div>
+    </div>
+  </div>
+
+  <div class="boss">
+    <div class="bh"><span class="nm">水将ネレイド</span><span class="hp">HP 3400 ／ 古代遺跡</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">弱点</span><span class="weak">雷</span>／<span class="abs">氷を吸収</span></div>
+      <div class="kv"><span class="k">攻略</span><span><strong>氷魔法は厳禁（回復させる）</strong>。スパークで攻める。HP50%で「海の怒り」発動・攻撃1.25倍。<strong>グレートツナミ（氷溜め技×2.6）</strong>は警告中に睡眠/麻痺で止めるか全員防御。逃走不可。</span></div>
+      <div class="kv"><span class="k">報酬</span><span>—（撃破後にストーリー大転換）</span></div>
+    </div>
+  </div>
+
+  <div class="boss">
+    <div class="bh"><span class="nm">嘆きの亡霊レヴナント</span><span class="hp">HP 4200 ／ 枯れ谷</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">弱点</span><span class="weak">光</span>（闇耐性）</div>
+      <div class="kv"><span class="k">攻略</span><span><strong>ホーリー／シャイン／メテオスラッシュ（光）</strong>で押す。HP45%で怨念・1.25倍＆光がさらに通る。ウェイル（闇全体溜め技）に注意。</span></div>
+      <div class="kv"><span class="k">報酬</span><span>いのちのきのみ・光結晶・銘石</span></div>
+    </div>
+  </div>
+
+  <div class="boss">
+    <div class="bh"><span class="nm">氷皇フリーゲル</span><span class="hp">HP 4600 ／ 霜結の祠</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">弱点</span><span class="weak">炎</span> → HP50%で<strong>衣替え</strong> → <span class="weak">雷</span>に変化し<span class="abs">炎を吸収</span></div>
+      <div class="kv"><span class="k">攻略</span><span>前半は<strong>炎</strong>、後半は<strong>雷</strong>に切替える二段構え。<strong>後半に炎を撃つと回復</strong>するので注意。<strong>氷結の指輪</strong>を装備すると敵の氷攻撃が半減して安定。</span></div>
+      <div class="kv"><span class="k">報酬</span><span>氷結の指輪（確定）・氷結晶・銘石</span></div>
+    </div>
+  </div>
+
+  <div class="boss">
+    <div class="bh"><span class="nm">白銀の執行者シオン</span><span class="hp">HP 7500 ／ 神域</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">弱点</span><span>なし（属性で1.5倍は狙えない）</span></div>
+      <div class="kv"><span class="k">攻略</span><span>戦闘直前に<strong>全員がLv44へ覚醒（empower）し奥義が解放</strong>される救済あり。素の火力勝負。HP50%で本気・1.3倍。<strong>メガヒール</strong>で立て直しつつ、無謀の一撃・ギガスラッシュ・アサシネイトで削る。</span></div>
+      <div class="kv"><span class="k">報酬</span><span>すばやさのタネ・銘石</span></div>
+    </div>
+  </div>
+
+  <div class="boss">
+    <div class="bh"><span class="nm">★ 創世神アルディア（最終ボス）</span><span class="hp">HP 5200 ／ 神域</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">特性</span><span><strong>毎ターン全回復する「不死」</strong>／弱点<span class="weak">闇</span>・<span class="abs">光吸収</span>／<strong>14ターン経過で世界初期化＝全滅</strong>（doomTurn）</span></div>
+      <div class="kv"><span class="k">勝ち筋</span><span>普通に削っても<strong>毎ターン全回復で絶対に倒せない</strong>。<strong>連携技「ラスト・レクイエム」（不死を砕く）</strong>で<code>_broken</code>状態にしてから一気に削る。<strong>使用には赦しゲージ60以上</strong>が必須（＝シオン再加入条件）。</span></div>
+      <div class="kv"><span class="k">立ち回り</span><span>ジェネシス（光全体溜め技）は防御＋メガヒールで耐える。ラスト・レクイエムで不死を割ったターンに無謀の一撃・ギガスラッシュ・闇属性で総攻撃。14ターンの制限があるので<strong>赦しゲージは事前に90以上に上げておく</strong>のが理想（TRUE END条件も兼ねる）。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 隠し・裏ボス ============ -->
+<section id="secret">
+  <h2>隠し要素・裏ボス</h2>
+  <div class="boss">
+    <div class="bh"><span class="nm">業火竜イグニス（隠しボス）</span><span class="hp">HP 4200 ／ 水晶洞</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">出現</span><span>水晶洞のゴーレム撃破後、<strong>隠し通路(7,8付近)</strong>が開く</span></div>
+      <div class="kv"><span class="k">弱点</span><span class="weak">氷</span>／<span class="abs">炎吸収</span></div>
+      <div class="kv"><span class="k">攻略</span><span><strong>アイス連発</strong>。炎は絶対NG。HP50%で激昂・1.3倍。<strong>ヘルフレイム（炎溜め技×2.8）</strong>は氷結の指輪＋防御＋睡眠で対処。</span></div>
+      <div class="kv"><span class="k">報酬</span><span><strong>炎竜の大剣（攻68・確定）</strong>・いのちのきのみ・銘石。最強クラスの武器なので早めに取りに行く価値大。</span></div>
+    </div>
+  </div>
+
+  <div class="boss">
+    <div class="bh"><span class="nm">★ 極・裏ボス アステリオン</span><span class="hp">HP 34000 ／ 図鑑除外</span></div>
+    <div class="bb">
+      <div class="kv"><span class="k">特性</span><span>HP割合で<strong>弱点属性が遷移</strong>し、<strong>直前の弱点属性を吸収</strong>するようになる。<strong>40ターンで全滅</strong>（doomTurn）。状態異常耐性80%。</span></div>
+      <div class="kv"><span class="k">弱点遷移</span><span>
+        HP100〜75% → <span class="weak">炎</span>（光闇耐性）<br>
+        HP75%以下 → <span class="weak">氷</span>（<span class="abs">炎吸収</span>・グレートツナミ）<br>
+        HP50%以下 → <span class="weak">雷</span>（<span class="abs">氷吸収</span>・1.2倍・ヘルフレイム）<br>
+        HP25%以下 → <span class="weak">光</span>（<span class="abs">雷吸収</span>・闇耐性・1.45倍・ジェネシス連発）
+      </span></div>
+      <div class="kv"><span class="k">攻略</span><span>合言葉は<strong>「炎→氷→雷→光」</strong>。フィーナの属性魔法を<strong>フェーズに合わせて撃ち分け</strong>、<strong>武器は無属性のまま</strong>（属性武器だと吸収フェーズで敵が回復）。HPの%を見ながら、<strong>1つ前の弱点属性に切り替えるタイミングを早めに</strong>。回復と蘇生を切らさず40ターン以内に押し切る。Lv70・じょうやくそう・復活のはねを潤沢に。</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>その他のやり込み</h4>
+    <ul>
+      <li><strong>闘技場ボスラッシュ</strong>：3連戦制覇で<strong>勇者の証（全能力+5）</strong>。</li>
+      <li><strong>改造屋</strong>：炎竜の大剣に+強化や銘（吸血・会心・連撃）を重ねると裏ボス級も安定。</li>
+      <li><strong>図鑑コンプ</strong>：下記「図鑑報酬」参照（称号＆タネ）。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ エンディング ============ -->
+<section id="ending">
+  <h2 class="spoiler-head">エンディング分岐（重大ネタバレ）</h2>
+  <p class="lead">終盤、シオンの真実を知った後の<strong>選択肢の合計＝赦しゲージ</strong>でラストと結末が変わります。</p>
+  <div class="card">
+    <div class="tbl"><table>
+      <tr><th>赦しゲージ</th><th>結末</th><th>内容</th></tr>
+      <tr><td class="b weak">90以上</td><td>TRUE END</td><td>ラスト・レクイエムが神を討ち、奪われた全て（故郷・仲間・兄）が還る。<strong>真の大団円</strong>。</td></tr>
+      <tr><td class="b">60〜89</td><td>NORMAL END</td><td>神は倒すが、連携の代償にシオンが微笑んで消える。ほろ苦い勝利。</td></tr>
+      <tr><td class="b bad">59以下</td><td>BAD END</td><td>シオンを拒み<strong>不死を砕けず敗北</strong>。世界はリセットされ、次の世界にルゥは生まれない。</td></tr>
+    </table></div>
+  </div>
+  <div class="warn"><strong>TRUE ENDを狙うコツ</strong>：神域の選択肢で<strong>「理由を聞く」(+65)→「信じたい」</strong>系を選び、ゲージを<strong>90以上</strong>に。これでシオン再加入＋ラスト・レクイエム習得（不死破壊）＋TRUE条件を同時に満たせます。逆に「許さない」(+0)中心だと60未満でアルディアに勝てず<strong>BAD直行</strong>。</div>
+  <p class="muted">※体験版（TrialScene）では、最初に赦しゲージの高/中/低を直接選んで最終決戦だけを試せます。本編クリア前の予行演習に。</p>
+</section>
+
+<!-- ============ 図鑑報酬 ============ -->
+<section id="dex">
+  <h2>図鑑コンプリート報酬</h2>
+  <div class="tbl"><table>
+    <tr><th>図鑑</th><th>50%</th><th>100%</th></tr>
+    <tr><td class="b">モンスター図鑑</td><td>200G＋じょうやくそう×2</td><td>ちからのタネ＋称号「魔物博士」</td></tr>
+    <tr><td class="b">アイテム図鑑</td><td>200G＋まほうの水×3</td><td>まもりのタネ＋称号「収集家」</td></tr>
+  </table></div>
+  <p class="muted">※裏ボス・アステリオンは図鑑の対象外（コンプには不要）。盗む（シノ）でしか手に入らないレア素材もあるので、図鑑埋めはシノを連れて。</p>
+
+  <h3>通常モンスター 弱点表（抜粋）</h3>
+  <div class="tbl"><table>
+    <tr><th>モンスター</th><th>HP</th><th>弱点</th><th>備考</th></tr>
+    <tr><td class="b">野ネズミ</td><td>18</td><td class="weak">風</td><td></td></tr>
+    <tr><td class="b">グリーンスライム</td><td>26</td><td class="weak">炎</td><td>盗：やくそう</td></tr>
+    <tr><td class="b">森オオカミ</td><td>44</td><td class="weak">氷</td><td></td></tr>
+    <tr><td class="b">毒蛾</td><td>30</td><td class="weak">炎・風</td><td>毒胞子</td></tr>
+    <tr><td class="b">ケイブバット</td><td>48</td><td class="weak">風・雷</td><td></td></tr>
+    <tr><td class="b">いわトカゲ</td><td>96</td><td class="weak">氷</td><td>土耐性・高防御</td></tr>
+    <tr><td class="b">スケルトン</td><td>72</td><td class="weak">光</td><td>闇耐性</td></tr>
+    <tr><td class="b">枯れ木の精</td><td>88</td><td class="weak">炎・光</td><td>土耐性</td></tr>
+    <tr><td class="b">さまよう亡者</td><td>110</td><td class="weak">光</td><td>闇耐性</td></tr>
+    <tr><td class="b">砂蟲</td><td>78</td><td class="weak">氷・風</td><td></td></tr>
+    <tr><td class="b">呪詛人形</td><td>96</td><td class="weak">炎・光</td><td>闇耐性・ウェイル</td></tr>
+    <tr><td class="b">フロストウルフ</td><td>92</td><td class="weak">炎</td><td>氷耐性</td></tr>
+    <tr><td class="b">アイスゴーレム</td><td>140</td><td class="weak">炎・雷</td><td>氷耐性</td></tr>
+    <tr><td class="b">ブリザード妖精</td><td>80</td><td class="weak">炎</td><td>氷耐性</td></tr>
+    <tr><td class="b">クリスタルリザード</td><td>104</td><td class="weak">雷・炎</td><td>氷耐性</td></tr>
+  </table></div>
+</section>
+
+<footer>
+  <p>ETERNIA ～星を継ぐ者～ 完全攻略本</p>
+  <p class="muted">本攻略本はゲーム内データ（characters / monsters / skills / items / maps / world）に基づいて作成。バランス調整で数値が変わる場合があります。</p>
+  <p><a class="btn" href="./eternia-standalone.html">▶ ゲームを起動する</a></p>
+</footer>
+
+</div>
+</body>
+</html>
